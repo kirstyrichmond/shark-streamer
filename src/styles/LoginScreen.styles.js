@@ -16,8 +16,6 @@ export const BodyContainer = styled.div`
   position: absolute;
   top: 25%;
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
   display: flex;
   flex-direction: column;
   align-items: center;

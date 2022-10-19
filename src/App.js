@@ -22,13 +22,17 @@ function App() {
   const [searchKey, setSearchKey] = useState("");
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState({});
-
+  const [showSignInScreen, setShowSignInScreen] = useState(false);
+  const [showSignUpScreen, setShowSignUpScreen] = useState(false);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((userAuth) => {
       if (userAuth) {
+        setShowSignInScreen(false);
+        setShowSignUpScreen(false);
+
         dispatch(
           login({
             uid: userAuth.uid,
@@ -72,37 +76,52 @@ function App() {
           searchKey={searchKey}
           setSearchKey={setSearchKey}
           searchMovies={searchMovies}
+          showSignInScreen={showSignInScreen}
+          setShowSignInScreen={setShowSignInScreen}
+          setShowSignUpScreen={setShowSignUpScreen}
         />
 
-        {!user.info ? (
-          <LoginScreen />
-        ) : (
-          <Routes>
+        <Routes>
+          {!user.info ? (
             <Route
               exact
               path="/"
               element={
-                searchKey && showSearchBar ? (
-                  <SearchScreen
-                    movies={movies}
-                    setSelectedMovie={setSelectedMovie}
-                    selectedMovie={selectedMovie}
-                  />
-                ) : (
-                  <HomeScreen
-                    selectedMovie={selectedMovie}
-                    setSelectedMovie={setSelectedMovie}
-                  />
-                )
+                <LoginScreen
+                  showSignInScreen={showSignInScreen}
+                  showSignUpScreen={showSignUpScreen}
+                  setShowSignUpScreen={setShowSignUpScreen}
+                />
               }
             />
-            <Route exact path="/account" element={<AccountScreen />} />
-            <Route exact path="/change-plan" element={<ChangePlanScreen />} />
-            <Route exact path="/profiles" element={<Profiles />} />
-            <Route exact path="/manage-profile" element={<ManageProfile />} />
-            <Route exact path="/add-profile" element={<AddProfileScreen />} />
-          </Routes>
-        )}
+          ) : (
+            <>
+              <Route
+                exact
+                path="/"
+                element={
+                  searchKey && showSearchBar ? (
+                    <SearchScreen
+                      movies={movies}
+                      setSelectedMovie={setSelectedMovie}
+                      selectedMovie={selectedMovie}
+                    />
+                  ) : (
+                    <HomeScreen
+                      selectedMovie={selectedMovie}
+                      setSelectedMovie={setSelectedMovie}
+                    />
+                  )
+                }
+              />
+              <Route exact path="/account" element={<AccountScreen />} />
+              <Route exact path="/change-plan" element={<ChangePlanScreen />} />
+              <Route exact path="/profiles" element={<Profiles />} />
+              <Route exact path="/manage-profile" element={<ManageProfile />} />
+              <Route exact path="/add-profile" element={<AddProfileScreen />} />
+            </>
+          )}
+        </Routes>
       </BrowserRouter>
     </div>
   );

@@ -2,41 +2,45 @@ import React, { useRef } from "react";
 import { auth } from "../firebase.js";
 import {
   Container,
-  InnerContainer,
+  DescriptionSpan,
   Form,
+  InnerContainer,
   Input,
   SignUpButton,
+  SignUpDescription,
+  SpanLink,
   Title,
 } from "../styles/SignUpScreen.styles.js";
 
-export const SignUpScreen = ({ emailRef }) => {
+export const SignInScreen = ({ setShowSignUpScreen }) => {
   const passwordRef = useRef(null);
+  const emailRef = useRef(null);
 
-  const register = (e) => {
+  const signIn = (e) => {
     e.preventDefault();
 
     auth
-      .createUserWithEmailAndPassword(
-        emailRef.current.value,
+      .signInWithEmailAndPassword(
+        emailRef?.current.value,
         passwordRef.current.value
       )
       .then((authUser) => {
         console.log({ authUser });
       })
-      .catch((error) => alert(error.message));
+      .catch(() => alert("That user does not exist. Please try again."));
   };
 
   return (
     <Container>
       <InnerContainer>
         <Form>
-          <Title>Sign Up</Title>
+          <Title>Sign In</Title>
           <Input
             ref={emailRef}
             defaultValue={emailRef?.current?.value}
             type="email"
             placeholder="Email"
-            autoFocus={!emailRef?.current?.value}
+            autoFocus
           />
           <Input
             ref={passwordRef}
@@ -44,7 +48,13 @@ export const SignUpScreen = ({ emailRef }) => {
             placeholder="Password"
             autoFocus={!!emailRef?.current?.value}
           />
-          <SignUpButton onClick={register}>Sign Up</SignUpButton>
+          <SignUpButton onClick={signIn}>Sign In</SignUpButton>
+          <SignUpDescription>
+            <DescriptionSpan>New to Netflix?</DescriptionSpan>{" "}
+            <SpanLink onClick={() => setShowSignUpScreen(true)}>
+              Sign Up Now.
+            </SpanLink>
+          </SignUpDescription>
         </Form>
       </InnerContainer>
     </Container>

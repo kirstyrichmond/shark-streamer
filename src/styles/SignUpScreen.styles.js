@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
-  max-width: 400px;
-  width: 70%;
+export const Container = styled.div``;
+
+export const InnerContainer = styled.div`
+  max-height: 400px;
+  width: 100%;
   padding: 60px 68px 40px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
   background-color: rgba(0, 0, 0, 0.75);
   border-radius: 4px;
 `;

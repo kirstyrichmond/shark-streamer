@@ -29,12 +29,14 @@ export const Nav = ({
   searchKey,
   setSearchKey,
   searchMovies,
+  setShowSignInScreen,
+  showSignInScreen,
+  setShowSignUpScreen,
 }) => {
   const { innerWidth: screenWidth } = window;
   const user = useSelector(selectUser);
   const profileState = useSelector(profiles);
   const [show, handleShow] = useState(false);
-  // const [signIn, setSignIn] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [activeProfile, setActiveProfile] = useState(
     profileState.payload.user.user.profiles.some((profile) => {
@@ -42,7 +44,6 @@ export const Nav = ({
     }) ?? {}
   );
   const navigate = useNavigate();
-
   const isHomeScreen = window.location.pathname === "/";
 
   const transitionNavBar = () => {
@@ -81,8 +82,16 @@ export const Nav = ({
         }}
       />
       <RightContainer>
-        {!user.info ? null : (
-          // <SignInButton onClick={() => setSignIn(true)}>Sign In</SignInButton>
+        {!user.info ? (
+          <SignInButton
+            onClick={() => {
+              setShowSignUpScreen(false);
+              setShowSignInScreen(true);
+            }}
+          >
+            Sign In
+          </SignInButton>
+        ) : (
           <>
             {screenWidth > 390 && (
               <div>
@@ -149,7 +158,7 @@ export const Nav = ({
                 }}
                 component="button"
               >
-                Switch Profiles
+                {user.profiles.length ? "Switch Profiles" : "Add Profile"}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
