@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { CDropdownMenu, CDropdownItem } from "@coreui/bootstrap-react";
 import { breakpoints } from "../breakpoints";
+import { CDropdownMenu, CDropdownItem } from "@coreui/react";
 
 export const Container = styled.div`
   z-index: 1;
