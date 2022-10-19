@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRef } from "react";
 import {
   BodyContainer,
   Container,
@@ -15,12 +16,13 @@ import { SignUpScreen } from "./SignUpScreen";
 
 export const LoginScreen = () => {
   const [signIn, setSignIn] = useState(false);
+  const emailRef = useRef("");
 
   return (
     <Container>
       <BodyContainer>
         {signIn ? (
-          <SignUpScreen />
+          <SignUpScreen emailRef={emailRef} />
         ) : (
           <>
             <Title>Unlimited films, TV programmes and more.</Title>
@@ -31,7 +33,11 @@ export const LoginScreen = () => {
             </DescTwo>
             <InputContainer>
               <Form>
-                <Input type="email" placeholder="Email address" />
+                <Input
+                  ref={emailRef}
+                  type="email"
+                  placeholder="Email address"
+                />
                 <GetStartedButton onClick={() => setSignIn(true)}>
                   Get Started
                 </GetStartedButton>

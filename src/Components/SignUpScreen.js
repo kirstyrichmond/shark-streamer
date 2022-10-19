@@ -11,8 +11,7 @@ import {
   Title,
 } from "../styles/SignUpScreen.styles.js";
 
-export const SignUpScreen = () => {
-  const emailRef = useRef(null);
+export const SignUpScreen = ({ emailRef }) => {
   const passwordRef = useRef(null);
 
   const register = (e) => {
@@ -47,8 +46,19 @@ export const SignUpScreen = () => {
     <Container>
       <Form>
         <Title>Sign In</Title>
-        <Input ref={emailRef} type="email" placeholder="Email" />
-        <Input ref={passwordRef} type="password" placeholder="Password" />
+        <Input
+          ref={emailRef}
+          defaultValue={emailRef.current.value}
+          type="email"
+          placeholder="Email"
+          autoFocus={!emailRef.current.value}
+        />
+        <Input
+          ref={passwordRef}
+          type="password"
+          placeholder="Password"
+          autoFocus={!!emailRef.current.value}
+        />
         <SignUpButton onClick={signIn}>Sign In</SignUpButton>
         <SignUpDescription>
           <DescriptionSpan>New to Netflix?</DescriptionSpan>{" "}

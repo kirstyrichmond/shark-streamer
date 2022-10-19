@@ -19,7 +19,6 @@
 .env.development.local
 .env.test.local
 .env.production.local
-firebase.js
 Requests.js
 
 npm-debug.log*
