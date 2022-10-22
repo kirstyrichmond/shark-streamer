@@ -16,6 +16,9 @@ export const BannerContainer = styled.div`
   @media (min-width: ${breakpoints.tablet}px) {
     height: 44vw;
   }
+  @media (min-width: ${breakpoints.desktop}px) {
+    height: 36vw;
+  }
 `;
 
 export const BannerContent = styled.div`
@@ -24,7 +27,11 @@ export const BannerContent = styled.div`
 
   @media (min-width: ${breakpoints.tablet}px) {
     max-width: 44%;
-    padding: 4.8% 3%;
+    padding: 3% 3%;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    max-width: 44%;
+    padding: 2.2% 3%;
   }
 `;
 
@@ -34,6 +41,9 @@ export const BannerTitle = styled.h1`
 
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 3.7vw;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    font-size: 3.2vw;
   }
 `;
 
@@ -51,8 +61,9 @@ export const BannerDescription = styled.p`
   }
   @media (min-width: ${breakpoints.desktop}px) {
     padding-top: 1rem;
-    padding-bottom: 1rem;
-    font-size: 1.2vw;
+    padding-bottom: 1.4rem;
+    padding-right: 7rem;
+    font-size: 1.1vw;
   }
 `;
 
@@ -125,7 +136,7 @@ export const InfoButton = styled.button`
   }
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 1.2rem;
-    padding: 1.2% 3.4%;
+    padding: 1.2% 2.2%;
   }
 `;
 

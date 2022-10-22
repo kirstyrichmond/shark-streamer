@@ -59,7 +59,8 @@ export const Banner = () => {
   const renderTrailer = () => {
     const trailer = videos?.find((vid) => vid.type === "Trailer");
 
-    const trailerHeight = screenWidth < 744 ? "380px" : "984px";
+    const trailerHeight =
+      screenWidth < 744 ? "240px" : screenWidth < 1280 ? "360px" : "400px";
 
     return (
       <div>

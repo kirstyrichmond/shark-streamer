@@ -80,11 +80,12 @@ export const DropdownMenu = styled(CDropdownMenu)`
   background-color: #191919;
   list-style: none;
   padding: 0.5rem;
-  width: 160px;
+  width: 120px;
 
   @media (min-width: ${breakpoints.tablet}px) {
     right: 22px;
     top: 72px;
+    width: 160px;
   }
 
   @media (min-width: ${breakpoints.desktop}px) {
@@ -102,8 +103,12 @@ export const DropdownMenuUser = styled(CDropdownItem)`
   background-color: transparent;
   padding: 0.3rem 0.7rem;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.8rem;
 
+  @media (min-width: ${breakpoints.tablet}px) {
+    padding: 0.5rem 0.7rem;
+    font-size: 1rem;
+  }
   @media (min-width: ${breakpoints.desktop}px) {
     padding: 0.5rem 0.7rem;
   }
@@ -134,7 +139,7 @@ export const DropdownMenuItem = styled(CDropdownItem)`
   background-color: transparent;
   padding: 0.6rem 0.7rem;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.8rem;
 
   @media (min-width: ${breakpoints.desktop}px) {
     padding: 0.7rem 0.7rem;
