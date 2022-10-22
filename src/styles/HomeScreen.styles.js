@@ -29,6 +29,7 @@ export const SearchMovieContainer = styled.div`
 
 export const SearchMovieImage = styled.img`
   width: auto;
+  object-fit: contain;
 `;
 
 export const SearchMovieTitle = styled.h4`
