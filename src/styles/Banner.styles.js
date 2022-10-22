@@ -3,7 +3,7 @@ import { breakpoints } from "../breakpoints";
 
 export const BannerContainer = styled.div`
   position: relative;
-  height: 56vw;
+  height: 70vw;
   color: white;
   object-fit: contain;
   display: flex;
@@ -46,13 +46,13 @@ export const BannerDescription = styled.p`
   max-height: 80px;
 
   @media (min-width: ${breakpoints.tablet}px) {
-    font-size: 1.2vw;
-    font-weight: 300;
+    font-size: 1.4vw;
     line-height: 1.2;
   }
   @media (min-width: ${breakpoints.desktop}px) {
     padding-top: 1rem;
     padding-bottom: 1rem;
+    font-size: 1.2vw;
   }
 `;
 

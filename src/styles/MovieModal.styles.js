@@ -2,13 +2,17 @@ import styled from "styled-components";
 import { breakpoints } from "../breakpoints";
 
 export const ModalContainer = styled.div`
-  height: 75vh;
+  height: 70vh;
   width: 90vw;
   background: #141414;
 
   @media (min-width: ${breakpoints.tablet}px) {
-    width: 60vw;
-    height: 80vh;
+    width: 70vw;
+    height: 70vh;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    width: 50vw;
+    height: 70vh;
   }
 `;
 
@@ -16,30 +20,42 @@ export const HeaderContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-
-  height: 340px;
+  height: 200px;
 
   @media (min-width: ${breakpoints.tablet}px) {
-    height: 500px;
+    height: 360px;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    height: 400px;
   }
 `;
 
 export const TrailerContainer = styled.div`
-  height: 400px;
+  height: 200px;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    height: 360px;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    height: 400px;
+  }
 `;
 
 export const MovieCoverImage = styled.img`
   width: 100%;
   object-fit: cover;
-  height: 340px;
+  height: 200px;
 
   @media (min-width: ${breakpoints.tablet}px) {
-    height: 500px;
+    height: 360px;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    height: 400px;
   }
 `;
 
 export const MovieTitle = styled.h2`
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: #fff;
   position: absolute;
   z-index: 10;
@@ -83,27 +99,31 @@ export const PlayButton = styled.button`
   outline: none;
   border: none;
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   border-radius: 4px;
   margin-right: 1rem;
   background-color: #fff;
-  padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
   position: absolute;
   bottom: 20px;
   left: 24px;
 
   @media (min-width: ${breakpoints.tablet}px) {
-    font-size: 1rem;
+    font-size: 0.8rem;
     padding: 0.4rem 0.7rem 0.4rem 0.7rem;
   }
 `;
 
 export const PlayIcon = styled.img`
-  width: 16px;
-  margin-right: 0.6rem;
+  width: 14px;
+  margin-right: 0.4rem;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    width: 16px;
   }
 `;
 
@@ -116,7 +136,7 @@ export const MovieInfoContainer = styled.div`
 export const ReleaseDate = styled.p`
   color: #fff;
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: 0.8rem;
   margin-bottom: 24px;
 `;
 

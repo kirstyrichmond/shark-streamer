@@ -62,7 +62,8 @@ export const MovieModal = ({
     fetchData();
   }, [selectedMovie?.id]);
 
-  const trailerHeight = screenWidth < 744 ? "340px" : "500px";
+  const trailerHeight =
+    screenWidth < 744 ? "200px" : screenWidth < 1280 ? "360px" : "400px";
 
   const rendertrailer = () => {
     const trailer = videos?.find((vid) => vid.type === "Trailer");
