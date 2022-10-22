@@ -20,10 +20,20 @@ export const userSlice = createSlice({
 
       state.user.profiles.push(...action.payload);
     },
+    editProfile: (state, action) => {
+      const selectedProfile = action.payload.selectedProfile;
+      const newUsername = action.payload.newUsername;
+
+      const profileToUpdate = state.user.profiles.find(
+        (profile) => profile.name === selectedProfile.name
+      );
+
+      profileToUpdate.name = newUsername;
+    },
   },
 });
 
-export const { login, logout, profiles } = userSlice.actions;
+export const { login, logout, profiles, editProfile } = userSlice.actions;
 
 export const selectUser = (state) => state.user.user;
 

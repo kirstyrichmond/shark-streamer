@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/userSlice";
 import { auth } from "../firebase";
-import { profiles } from "../features/userSlice";
 import {
   CancelButton,
   Container,
@@ -35,11 +34,10 @@ export const Nav = ({
 }) => {
   const { innerWidth: screenWidth } = window;
   const user = useSelector(selectUser);
-  const profileState = useSelector(profiles);
   const [show, handleShow] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [activeProfile, setActiveProfile] = useState(
-    profileState.payload.user.user.profiles.some((profile) => {
+    user.profiles.some((profile) => {
       return profile.activeProfile === true;
     }) ?? {}
   );
@@ -61,13 +59,11 @@ export const Nav = ({
   });
 
   useEffect(() => {
-    const currentProfile = profileState.payload.user.user.profiles.find(
-      (profile) => {
-        return profile.activeProfile === true;
-      }
-    );
+    const currentProfile = user.profiles.find((profile) => {
+      return profile.activeProfile === true;
+    });
     setActiveProfile(currentProfile);
-  }, [profileState.payload.user.user.profiles]);
+  }, [user.profiles]);
 
   return (
     <Container black={show || !isHomeScreen}>
@@ -170,7 +166,11 @@ export const Nav = ({
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => auth.signOut()}
+                onClick={() => {
+                  setShowMenu(!showMenu);
+                  navigate("/");
+                  auth.signOut();
+                }}
                 component="button"
               >
                 Sign Out

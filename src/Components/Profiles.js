@@ -76,6 +76,7 @@ export const Profiles = () => {
         <ManageProfile
           setEditProfilePage={setEditProfilePage}
           profileName={selectedProfile.name}
+          selectedProfile={selectedProfile}
         />
       ) : (
         <>

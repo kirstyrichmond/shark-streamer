@@ -25,13 +25,13 @@ export const LoginScreen = ({
   return (
     <>
       <Container>
-        <BodyContainer>
-          {showSignUpScreen ? (
-            <SignUpScreen emailRef={emailRef} />
-          ) : showSignInScreen ? (
-            <SignInScreen setShowSignUpScreen={setShowSignUpScreen} />
-          ) : (
-            <>
+        {showSignUpScreen ? (
+          <SignUpScreen emailRef={emailRef} />
+        ) : showSignInScreen ? (
+          <SignInScreen setShowSignUpScreen={setShowSignUpScreen} />
+        ) : (
+          <>
+            <BodyContainer>
               <Title>Unlimited films, TV programmes and more.</Title>
               <DescOne>Watch anywhere. Cancel at any time.</DescOne>
               <DescTwo>
@@ -50,10 +50,10 @@ export const LoginScreen = ({
                   </GetStartedButton>
                 </Form>
               </InputContainer>
-            </>
-          )}
-          {/* <Gradient className="loginScreen_gradient" /> */}
-        </BodyContainer>
+            </BodyContainer>
+          </>
+        )}
+        {/* <Gradient className="loginScreen_gradient" /> */}
       </Container>
     </>
   );

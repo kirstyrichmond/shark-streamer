@@ -48,7 +48,7 @@ export const AccountScreen = () => {
             <CancelMembershipButton>Cancel Membership</CancelMembershipButton>
           </MembershipHeader>
           <div>
-            <EmailText>{user.email}</EmailText>
+            <EmailText>{user.info.email}</EmailText>
           </div>
         </MiddleContainer>
         <BottomContainer>

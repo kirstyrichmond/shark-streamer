@@ -1,6 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { profiles } from "../features/userSlice";
+import { editProfile, selectUser } from "../features/userSlice";
+import db from "../firebase";
 import {
   AvatarImage,
   ButtonsContainer,
@@ -12,27 +13,43 @@ import {
   TransparentButton,
 } from "../styles/ManageProfile.styles";
 
-export const ManageProfile = ({ profileName, setEditProfilePage }) => {
-  const usersState = useSelector(profiles);
+export const ManageProfile = ({
+  profileName,
+  setEditProfilePage,
+  selectedProfile,
+}) => {
+  const userState = useSelector(selectUser);
   const dispatch = useDispatch();
   const newUsername = useRef();
-  const [selectedProfile, setSelectedProfile] = useState({});
 
-  const updateUsername = (e) => {
-    const arrayCopy = [...usersState.payload.user.user.profiles];
+  const updateProfile = async (e) => {
     e.preventDefault();
 
-    let selectedProfileIndex = arrayCopy.findIndex((profile) => {
-      setSelectedProfile(profile);
-      return profile.name === profileName;
+    dispatch(
+      editProfile({
+        selectedProfile: selectedProfile,
+        newUsername: newUsername.current.value,
+      })
+    );
+
+    const docRef = await db
+      .collection("customers")
+      .doc(userState.info.uid)
+      .collection("profiles")
+      .where("id", "==", selectedProfile.id)
+      .get();
+
+    docRef.forEach((doc) => {
+      const profileRef = db
+        .collection("customers")
+        .doc(userState.info.uid)
+        .collection("profiles")
+        .doc(doc.id);
+
+      profileRef.update({
+        name: newUsername.current.value,
+      });
     });
-
-    arrayCopy[selectedProfileIndex] = {
-      ...selectedProfile,
-      name: newUsername.current.value,
-    };
-
-    dispatch(profiles(arrayCopy));
     setEditProfilePage(false);
   };
 
@@ -49,7 +66,7 @@ export const ManageProfile = ({ profileName, setEditProfilePage }) => {
         <NameInput type="text" ref={newUsername} defaultValue={profileName} />
       </MiddleContainer>
       <ButtonsContainer>
-        <SaveButton onClick={(e) => updateUsername(e)}>Save</SaveButton>
+        <SaveButton onClick={updateProfile}>Save</SaveButton>
         <TransparentButton onClick={() => setEditProfilePage(false)}>
           Cancel
         </TransparentButton>
