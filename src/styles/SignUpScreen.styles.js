@@ -1,20 +1,40 @@
 import styled from "styled-components";
+import { breakpoints } from "../breakpoints";
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  height: 100vh;
+  overflow-y: hidden;
+`;
 
 export const InnerContainer = styled.div`
-  max-height: 400px;
-  width: 100%;
-  padding: 60px 68px 40px;
+  padding-top: 124px;
   margin: auto;
   background-color: rgba(0, 0, 0, 0.75);
   border-radius: 4px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    padding-top: 300px;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    padding-top: 360px;
+  }
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  padding: 0 18px;
+  width: 100%;
+  max-width: 440px;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    max-width: 500px;
+  }
 `;
 
 export const Title = styled.h1`
@@ -26,8 +46,10 @@ export const Title = styled.h1`
 
 export const Input = styled.input`
   outline-width: 0;
+  outline: none;
+
   height: 50px;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
   padding: 0px 20px 0px;
   font-size: 1.2rem;
   background: #333;
@@ -48,11 +70,21 @@ export const SignUpButton = styled.button`
   cursor: pointer;
   border: none;
   color: #fff;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    max-width: 500px;
+    font-size: 20px;
+  }
 `;
 
 export const SignUpDescription = styled.h4`
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 500;
+  text-align: center;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    font-size: 18px;
+  }
 `;
 
 export const DescriptionSpan = styled.span`
@@ -61,6 +93,7 @@ export const DescriptionSpan = styled.span`
 `;
 
 export const SpanLink = styled(DescriptionSpan)`
+  color: #fff;
   &:hover {
     cursor: pointer;
     text-decoration: underline;

@@ -15,6 +15,7 @@ export const Container = styled.div`
   background-color: ${(props) => props.black && "#111"};
   display: flex;
   justify-content: space-between;
+  z-index: 10;
 `;
 
 export const NavContent = styled.div`
@@ -27,13 +28,14 @@ export const NavContent = styled.div`
 export const NavLogo = styled.img`
   object-fit: contain;
   cursor: pointer;
-  width: 20%;
+  width: 24%;
   max-width: 120px;
   margin: 0 0 8px 12px;
 
   @media (min-width: ${breakpoints.tablet}px) {
     margin-left: 18px;
     margin-top: 4px;
+    max-width: 140px;
   }
   @media (min-width: ${breakpoints.desktop}px) {
     margin-left: 28px;
@@ -144,17 +146,23 @@ export const SignInButton = styled.button`
   position: fixed;
   border: none;
   border-radius: 4px;
-  font-size: 1.2rem;
-  padding: 0.5rem 1.2rem;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.5rem;
   right: 25px;
   top: 20px;
   cursor: pointer;
   background-color: #e50914;
   color: #fff;
 
-  @media (min-width: ${breakpoints.desktop}px) {
-    top: 26px;
+  @media (min-width: ${breakpoints.tablet}px) {
+    font-size: 1.1rem;
+    padding: 0.5rem 0.8rem;
     right: 28px;
+    top: 26px;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    font-size: 1.2rem;
+    padding: 0.6rem 0.9rem;
   }
 `;
 

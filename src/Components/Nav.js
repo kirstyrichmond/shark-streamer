@@ -75,6 +75,11 @@ export const Nav = ({
           setSearchKey("");
           setShowMenu(false);
           navigate("/");
+
+          if (user.info === null) {
+            setShowSignUpScreen(false);
+            setShowSignInScreen(false);
+          }
         }}
       />
       <RightContainer>
