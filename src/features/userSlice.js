@@ -30,6 +30,13 @@ export const userSlice = createSlice({
 
       profileToUpdate.name = newUsername;
     },
+    // deleteProfile: (state, action) => {
+    //   const selectedProfile = action.payload;
+
+    //   state.user.profiles = state.user.profiles.filter(
+    //     (profile) => profile.id !== selectedProfile.id
+    //   );
+    // },
   },
 });
 

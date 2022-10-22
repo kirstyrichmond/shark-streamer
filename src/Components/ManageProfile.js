@@ -53,6 +53,30 @@ export const ManageProfile = ({
     setEditProfilePage(false);
   };
 
+  const deleteProfile = async () => {
+    const docRef = await db
+      .collection("customers")
+      .doc(userState.info.uid)
+      .collection("profiles")
+      .where("id", "==", selectedProfile.id)
+      .get();
+
+    docRef.forEach((doc) => {
+      const profileRef = db
+        .collection("customers")
+        .doc(userState.info.uid)
+        .collection("profiles")
+        .doc(doc.id);
+
+      profileRef.delete();
+    });
+
+    window.location.reload(true);
+
+    // dispatch(deleteProfile(selectedProfile));
+    setEditProfilePage(false);
+  };
+
   return (
     <Container>
       <div>
@@ -70,7 +94,9 @@ export const ManageProfile = ({
         <TransparentButton onClick={() => setEditProfilePage(false)}>
           Cancel
         </TransparentButton>
-        <TransparentButton>Delete profile</TransparentButton>
+        <TransparentButton onClick={deleteProfile}>
+          Delete profile
+        </TransparentButton>
       </ButtonsContainer>
     </Container>
   );

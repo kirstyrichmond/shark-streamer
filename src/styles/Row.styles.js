@@ -36,11 +36,16 @@ export const MovieImage = styled.img`
   max-width: 200px;
   transition: transform 450ms;
 
+  @media (min-width: ${breakpoints.desktop}px) {
+    max-width: 260px;
+    margin-right: 8px;
+  }
+
   ${(props) =>
     props.large &&
     css`
       width: 36vw;
       max-width: 200px;
-      margin-right: 10px;
+      margin-right: 8px;
     `}
 `;
