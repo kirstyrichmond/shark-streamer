@@ -1,11 +1,19 @@
 import styled from "styled-components";
+import { breakpoints } from "../breakpoints";
 
 export const ProfileContainer = styled.div`
   margin: auto;
-  padding-top: 200px;
+  padding-top: 110px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    padding-top: 200px;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    padding-top: 240px;
+  }
 `;
 
 export const AddProfileContainer = styled.div`
@@ -14,18 +22,31 @@ export const AddProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 `;
 
 export const PageTitle = styled.h2`
   color: #fff;
-  font-size: 2rem;
-  margin-bottom: 80px;
+  font-size: 1.4rem;
+  margin-bottom: 40px;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    font-size: 2rem;
+    margin-bottom: 50px;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    font-size: 3rem;
+  }
 `;
 
 export const AddProfileImage = styled.img`
   width: 72px;
   margin-bottom: 12px;
+
+  @media (min-width: ${breakpoints.desktop}px) {
+    width: 80px;
+    margin-bottom: 18px;
+  }
 `;
 
 export const ProfileTitle = styled.p`
@@ -35,12 +56,30 @@ export const ProfileTitle = styled.p`
 
 export const ProfilesRow = styled.div`
   display: flex;
-  margin-bottom: 80px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  max-width: 340px;
+  justify-content: center;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    max-width: 500px;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    max-width: 800px;
+    margin-bottom: 36px;
+  }
 `;
 
 export const ProfileAvatar = styled.img`
-  width: 100px;
+  width: 90px;
   border-radius: 8px;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    width: 112px;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    width: 128px;
+  }
 `;
 
 export const SingleProfileName = styled.p`
@@ -55,6 +94,8 @@ export const SingleProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-right: 12px;
+  margin-bottom: 18px;
 
   &:hover {
     ${ProfileAvatar} {
@@ -64,6 +105,10 @@ export const SingleProfileContainer = styled.div`
     ${SingleProfileName} {
       color: #fff;
     }
+  }
+
+  @media (min-width: ${breakpoints.desktop}px) {
+    margin-right: 18px;
   }
 `;
 
@@ -75,6 +120,16 @@ export const ManageProfilesButton = styled.button`
   color: rgb(182, 182, 182);
   border: 2px solid rgb(182, 182, 182);
   cursor: pointer;
+  margin-bottom: 48px;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    margin-bottom: 0;
+  }
+  @media (min-width: ${breakpoints.desktop}px) {
+    font-size: 1.4rem;
+    width: 220px;
+    height: 56px;
+  }
 `;
 
 export const AvatarContainer = styled.div`
@@ -99,4 +154,8 @@ export const AddProfileText = styled.p`
   color: #fff;
   font-size: 1.2rem;
   font-weight: 500;
+
+  @media (min-width: ${breakpoints.desktop}px) {
+    font-size: 1.3rem;
+  }
 `;
