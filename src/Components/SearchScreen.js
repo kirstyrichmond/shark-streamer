@@ -3,7 +3,6 @@ import {
   SearchAllMovieContainer,
   SearchMovieContainer,
   SearchMovieImage,
-  SearchMovieTitle,
 } from "../styles/HomeScreen.styles";
 import { MovieModal } from "./MovieModal";
 
@@ -30,7 +29,6 @@ const SearchScreen = ({ movies, setSelectedMovie, selectedMovie }) => {
               src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
               alt=""
             />
-            {/* <SearchMovieTitle>{movie.title}</SearchMovieTitle> */}
           </SearchMovieContainer>
         ))}
       </SearchAllMovieContainer>

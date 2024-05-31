@@ -60,7 +60,7 @@ export const MovieModal = ({
       return request;
     }
     fetchData();
-  }, [selectedMovie?.id]);
+  }, [selectedMovie?.id, type2]);
 
   const trailerHeight =
     screenWidth < 744 ? "200px" : screenWidth < 1280 ? "360px" : "400px";

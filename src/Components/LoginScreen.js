@@ -7,7 +7,6 @@ import {
   DescTwo,
   Form,
   GetStartedButton,
-  Gradient,
   Input,
   InputContainer,
   Title,

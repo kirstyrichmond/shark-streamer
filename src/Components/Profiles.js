@@ -39,7 +39,7 @@ export const Profiles = () => {
           documents.every(arr)
         ) && dispatch(profiles(documents));
       });
-  }, []);
+  }, [dispatch, usersState.payload.user.user.info.uid, usersState.payload.user.user.profiles]);
 
   const handlePage = (profile) => {
     setSelectedProfile(profile);

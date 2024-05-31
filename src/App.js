@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
@@ -58,14 +58,14 @@ function App() {
     return request;
   }
 
+  const searchMovies = useCallback(() => {
+    fetchMovies(searchKey);
+  }, [searchKey]);
+
   useEffect(() => {
     fetchMovies();
     searchMovies();
-  }, [searchKey]);
-
-  const searchMovies = (e) => {
-    fetchMovies(searchKey);
-  };
+  }, [searchKey, searchMovies]);
 
   return (
     <div className="app">

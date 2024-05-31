@@ -21,6 +21,7 @@ import {
   SearchIcon,
   SignInButton,
 } from "../styles/Nav.styles";
+import NetflixLogo from "../Images/netflix-logo.png"
 
 export const Nav = ({
   showSearchBar,
@@ -68,7 +69,7 @@ export const Nav = ({
   return (
     <Container black={show || !isHomeScreen}>
       <NavLogo
-        src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c529.png"
+        src={ NetflixLogo }
         alt="netflix logo"
         onClick={() => {
           setShowSearchBar(false);

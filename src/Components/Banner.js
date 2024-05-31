@@ -7,7 +7,6 @@ import {
   BannerContent,
   BannerDescription,
   BannerTitle,
-  BottomFade,
   ButtonsContainer,
   InfoButton,
   InfoIcon,
@@ -117,7 +116,6 @@ export const Banner = () => {
               </InfoButton>
             </ButtonsContainer>
           </BannerContent>
-          {/* <BottomFade /> */}
         </BannerContainer>
       )}
     </>
