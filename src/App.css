@@ -2,3 +2,50 @@
   background-color: #141414;
   min-height: 100vh;
 }
+
+/* Add these styles to your global CSS file */
+
+/* Hide YouTube controls and branding */
+.ytp-chrome-top,
+.ytp-chrome-bottom,
+.ytp-gradient-top,
+.ytp-gradient-bottom,
+.ytp-watermark,
+.ytp-large-play-button,
+.ytp-youtube-button,
+.ytp-button,
+.ytp-share-button,
+.ytp-watch-later-button,
+.ytp-title-link,
+.ytp-show-cards-button,
+.ytp-pause-overlay,
+.ytp-caption-window-container,
+.ytp-impression-link {
+  display: none !important;
+}
+
+/* Force the YouTube player to hide any overlays */
+.ytp-pause-overlay-container,
+.ytp-related-on-pause-overlay {
+  display: none !important;
+}
+
+/* Hide annotations */
+.annotation {
+  display: none !important;
+}
+
+/* Ensure no YouTube logo is shown */
+.ytp-youtube-button {
+  display: none !important;
+}
+
+/* Additional CSS to ensure clean player */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* This helps hide YouTube's end screens */
+.html5-endscreen {
+  display: none !important;
+}

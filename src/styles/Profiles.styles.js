@@ -141,9 +141,10 @@ export const AvatarContainer = styled.div`
 `;
 
 export const IconContainer = styled.div`
-  background: ${(props) => props.edit && "#fff"};
+  background: ${(props) => props.$isedit === "true" ? "#fff" : "transparent"};
 `;
 
+// Fixed the EditProfileIcon to use regular props
 export const EditProfileIcon = styled.img`
   z-index: 10;
   height: 40px;

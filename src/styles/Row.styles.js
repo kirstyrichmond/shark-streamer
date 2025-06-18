@@ -1,51 +1,61 @@
 import styled from "styled-components";
-import { css } from "styled-components";
-import { breakpoints } from "../breakpoints";
 
 export const Container = styled.div`
-  color: #fff;
   margin-left: 20px;
-  margin-top: 16px;
+  color: white;
 `;
 
 export const Title = styled.h2`
-  color: #999;
-  font-size: 1rem;
-
-  @media (min-width: ${breakpoints.tablet}px) {
-    font-size: 1.2rem;
-  }
+  margin-left: 20px;
 `;
 
-export const MovieContainer = styled.div`
+export const RowContainer = styled.div`
   display: flex;
   overflow-y: hidden;
   overflow-x: scroll;
-  padding: 12px 0 12px 0;
+  padding: 20px;
+  scrollbar-width: none;
 
-  ::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     display: none;
   }
 `;
 
-export const MovieImage = styled.img`
-  cursor: pointer;
-  object-fit: contain;
-  margin-right: 6px;
-  width: 42vw;
-  max-width: 200px;
+export const Posters = styled.div`
+  display: flex;
   transition: transform 450ms;
+`;
 
-  @media (min-width: ${breakpoints.desktop}px) {
-    max-width: 260px;
-    margin-right: 8px;
+export const PosterImage = styled.img`
+  max-height: 125px;
+  object-fit: contain;
+  margin-right: 15px;
+  transition: transform 450ms;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.08);
+    opacity: 1;
   }
 
-  ${(props) =>
-    props.large &&
-    css`
-      width: 36vw;
-      max-width: 200px;
-      margin-right: 8px;
-    `}
+  @media (max-width: 768px) {
+    max-height: 90px;
+  }
+`;
+
+export const PosterLarge = styled.img`
+  max-height: 250px;
+  object-fit: contain;
+  margin-right: 15px;
+  transition: transform 450ms;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.09);
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    max-height: 140px;
+  }
 `;

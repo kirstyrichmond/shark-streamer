@@ -1,28 +1,35 @@
 import styled from "styled-components";
 import { breakpoints } from "../breakpoints";
-import { CDropdownMenu, CDropdownItem } from "@coreui/react";
 
 export const Container = styled.div`
-  z-index: 1;
   position: fixed;
   top: 0;
-  box-sizing: border-box;
-  width: 100vw;
-  min-height: 68px;
-  height: auto;
+  // padding: 20px;
+  width: 100%;
+  height: 60px;
+  z-index: 8;
+  display: flex;
+  justify-content: space-between;
+  // background-color: ${(props) => props.isblack === true ? "#111" : "#fff"};
   transition-timing-function: ease-in;
   transition: all 0.5s;
-  background-color: ${(props) => props.black && "#111"};
-  display: flex;
-  justify-content: space-between;
-  z-index: 10;
+
+  @media (max-width: 390px) {
+    padding: 13px;
+  }
 `;
 
-export const NavContent = styled.div`
+export const RightContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  position: absolute;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  justify-content: flex-end;
+  padding-right: 50px;
+  gap: 10px;
+  @media (max-width: 390px) {
+    padding-right: 20px;
+  }
 `;
 
 export const NavLogo = styled.img`
@@ -30,195 +37,183 @@ export const NavLogo = styled.img`
   cursor: pointer;
   width: 24%;
   max-width: 120px;
-  margin: 0 0 8px 12px;
-
-  @media (min-width: ${breakpoints.tablet}px) {
-    margin-left: 18px;
-    margin-top: 4px;
-    max-width: 140px;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    margin-left: 28px;
-    margin-top: 8px;
-  }
 `;
 
 export const NavAvatar = styled.img`
-  width: 32px;
-  height: 32px;
-  margin: 20px 18px 12px 12px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
-  border-radius: 4px;
-  box-sizing: border-box;
+  border-radius: 5px;
 
-  @media (min-width: ${breakpoints.tablet}px) {
-    margin-right: 24px;
-    margin-top: 22px;
-    width: 40px;
-    height: 40px;
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    margin-right: 28px;
+  @media (max-width: 390px) {
+    width: 23px;
+    height: 23px;
+    right: 13px;
   }
 `;
 
-export const ProfileName = styled.h3`
-  color: #fff;
+export const ProfileName = styled.p`
+  margin-left: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  
+  @media (max-width: 450px) {
+    display: none;
+  }
+`;
+
+export const SignInButton = styled.button`
   position: fixed;
-  right: 32px;
-  width: 48px;
-  top: 75px;
+  right: 20px;
+  padding: 7px 17px;
+  font-size: 1rem;
+  color: white;
+  background-color: #e50914;
+  border: none;
   cursor: pointer;
-`;
+  border-radius: 3px;
 
-export const DropdownMenu = styled(CDropdownMenu)`
-  display: ${(props) => props.closed && "none"};
-  position: fixed;
-  right: 12px;
-  top: 60px;
-  background-color: #191919;
-  list-style: none;
-  padding: 0.5rem;
-  width: 120px;
-
-  @media (min-width: ${breakpoints.tablet}px) {
-    right: 22px;
-    top: 72px;
-    width: 160px;
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    right: 28px;
-    width: 200px;
+  @media (max-width: 390px) {
+    right: 13px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
   }
 `;
 
-export const DropdownMenuUser = styled(CDropdownItem)`
+export const Form = styled.form`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: 30px;
+`;
+
+// Fixed: Using props directly instead of hasAttribute
+
+export const DropdownMenu = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isclosed",
+})`
+  position: absolute;
+  top: 40px;
+  right: 50px;
+  background-color: rgba(0, 0, 0, 0.851);
+  width: 180px;
+  border: 1px solid rgba(151, 151, 151, 0.34);
+  border-radius: 5px;
+  padding: 10px 0;
+  display: ${(props) => (props.isclosed === "true" ? "none" : "block")};
+  z-index: 40;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent rgba(0, 0, 0, 0.851) transparent;
+  }
+`;
+
+export const DropdownMenuUser = styled.div`
   display: flex;
   align-items: center;
+  color: white;
+  font-size: 11px;
+  padding: 5px 10px;
   cursor: pointer;
-  color: #fff;
-  border: none;
   background-color: transparent;
-  padding: 0.3rem 0.7rem;
-  cursor: pointer;
-  font-size: 0.8rem;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: left;
 
-  @media (min-width: ${breakpoints.tablet}px) {
-    padding: 0.5rem 0.7rem;
-    font-size: 1rem;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    padding: 0.5rem 0.7rem;
+  &:hover {
+    text-decoration: underline;
   }
 `;
 
 export const DropdownMenuAvatar = styled.img`
   width: 32px;
   margin-right: 10px;
-  border-radius: 4px;
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    width: 38px;
-  }
+  border-radius: 5px;
 `;
 
-export const DropdownMenuUsername = styled.p`
-  color: #fff;
-  font-size: 0.9rem;
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    font-size: 1.1rem;
-  }
+export const DropdownMenuUsername = styled.span`
+  margin-top: 5px;
+  color: white;
 `;
 
-export const DropdownMenuItem = styled(CDropdownItem)`
-  color: #fff;
-  border: none;
-  background-color: transparent;
-  padding: 0.6rem 0.7rem;
-  cursor: pointer;
-  font-size: 0.8rem;
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    padding: 0.7rem 0.7rem;
-    font-size: 1.1rem;
-  }
-`;
-
-export const SignInButton = styled.button`
-  position: fixed;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  padding: 0.3rem 0.5rem;
-  right: 25px;
-  top: 20px;
-  cursor: pointer;
-  background-color: #e50914;
-  color: #fff;
-
-  @media (min-width: ${breakpoints.tablet}px) {
-    font-size: 1.1rem;
-    padding: 0.5rem 0.8rem;
-    right: 28px;
-    top: 26px;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    font-size: 1.2rem;
-    padding: 0.6rem 0.9rem;
-  }
-`;
-
-export const SearchIcon = styled.img`
-  width: 30px;
-  margin-top: 22px;
-  margin-right: 12px;
-  cursor: pointer;
-
-  @media (min-width: ${breakpoints.tablet}px) {
-    margin-top: 26px;
-    margin-right: 18px;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    width: 36px;
-  }
-`;
-
-export const Form = styled.form`
-  margin-top: 20px;
-  margin-right: 14px;
-  cursor: pointer;
-`;
-
-export const RightContainer = styled.div`
+export const DropdownMenuItem = styled.div`
   display: flex;
+  justify-content: center;
+  color: white;
+  font-size: 13px;
+  padding: 10px 0px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: center;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export const InputContainer = styled.div`
-  color: #fff;
-  background: #111;
-  border: 1.5px solid #fff;
-  outline: none;
-  font-size: 1.2rem;
-  padding: 0.3rem 0.6rem 0.3rem 0.6rem;
+  position: relative;
+  height: 30px;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
 `;
 
 export const Input = styled.input`
-  color: #fff;
-  background: transparent;
-  border: none;
+  width: 200px;
+  background-color: rgba(0, 0, 0, 0.75);
+  border: 1px solid white;
+  color: white;
+  padding: 5px 40px 5px 10px;
+  height: 100%;
+  border-radius: 4px;
   outline: none;
-  font-size: 1.2rem;
-  padding: 0.3rem 1rem 0.3rem 0.6rem;
+  
+  &::placeholder {
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+  
+  @media (min-width: 768px) {
+    width: 240px;
+  }
 `;
 
 export const CancelButton = styled.button`
-  background-color: transparent;
-  color: #fff;
+  position: absolute;
+  right: 8px;
+  background: transparent;
   border: none;
-  font-size: 20px;
-  font-weight: 500;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const SearchIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  margin-right: 20px;
+  cursor: pointer;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
 `;

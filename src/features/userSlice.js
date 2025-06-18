@@ -16,19 +16,31 @@ export const userSlice = createSlice({
       state.user.info = null;
     },
     profiles: (state, action) => {
-      state.user.profiles.length = 0;
-
-      state.user.profiles.push(...action.payload);
+      // Clear the profiles array
+      state.user.profiles = [];
+      
+      // Check if action.payload is an array before spreading
+      if (Array.isArray(action.payload)) {
+        // Add new profiles using concat instead of push with spread
+        state.user.profiles = state.user.profiles.concat(action.payload);
+      } else if (action.payload) {
+        // If it's a single profile object, add it directly
+        state.user.profiles.push(action.payload);
+      }
     },
     editProfile: (state, action) => {
       const selectedProfile = action.payload.selectedProfile;
       const newUsername = action.payload.newUsername;
 
-      const profileToUpdate = state.user.profiles.find(
+      // Find the profile safely
+      const profileIndex = state.user.profiles.findIndex(
         (profile) => profile.name === selectedProfile.name
       );
-
-      profileToUpdate.name = newUsername;
+      
+      // Only update if profile exists
+      if (profileIndex !== -1) {
+        state.user.profiles[profileIndex].name = newUsername;
+      }
     },
     // deleteProfile: (state, action) => {
     //   const selectedProfile = action.payload;

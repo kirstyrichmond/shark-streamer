@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase.js";
 import {
   Container,
@@ -9,42 +10,93 @@ import {
   Title,
 } from "../styles/SignUpScreen.styles.js";
 
-export const SignUpScreen = ({ emailRef }) => {
+export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
   const passwordRef = useRef(null);
+  const [email, setEmail] = useState(propsEmailRef?.current?.value || "");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [registered, setRegistered] = useState(false);
+  const navigate = useNavigate();
 
-  const register = (e) => {
+  // Listen for auth state changes within the component
+  useEffect(() => {
+    const authListener = auth.onAuthStateChanged((user) => {
+      if (user && registered) {
+        console.log("User authenticated in SignUpScreen, redirecting to home");
+        // Force navigation to home page
+        navigate("/");
+      }
+    });
+
+    return () => {
+      // Clean up the listener
+      authListener();
+    };
+  }, [registered, navigate]);
+
+  const register = async (e) => {
     e.preventDefault();
-
-    auth
-      .createUserWithEmailAndPassword(
-        emailRef.current.value,
+    
+    if (!email) {
+      setError("Email is required");
+      return;
+    }
+    
+    if (!passwordRef.current?.value) {
+      setError("Password is required");
+      return;
+    }
+    
+    setLoading(true);
+    setError("");
+    
+    try {
+      console.log("Attempting to register with:", email);
+      
+      // Wait for the registration to complete
+      const userCredential = await auth.createUserWithEmailAndPassword(
+        email,
         passwordRef.current.value
-      )
-      .then((authUser) => {
-        console.log({ authUser });
-      })
-      .catch((error) => alert(error.message));
+      );
+      
+      console.log("Registration successful:", userCredential.user.email);
+      
+      // Set registered flag to trigger navigation in useEffect
+      setRegistered(true);
+    } catch (error) {
+      console.error("Registration error:", error.code, error.message);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Container>
       <InnerContainer>
-        <Form>
+        <Form onSubmit={register}>
           <Title>Sign Up</Title>
+          
+          {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
+          
           <Input
-            ref={emailRef}
-            defaultValue={emailRef?.current?.value}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="Email"
-            autoFocus={!emailRef?.current?.value}
+            required
           />
+          
           <Input
             ref={passwordRef}
             type="password"
             placeholder="Password"
-            autoFocus={!!emailRef?.current?.value}
+            required
           />
-          <SignUpButton onClick={register}>Sign Up</SignUpButton>
+          
+          <SignUpButton type="submit" disabled={loading}>
+            {loading ? "Signing Up..." : "Sign Up"}
+          </SignUpButton>
         </Form>
       </InnerContainer>
     </Container>

@@ -22,24 +22,32 @@ import { ManageProfile } from "./ManageProfile";
 export const Profiles = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const usersState = useSelector(profiles);
+  const user = useSelector(state => state.user.user);
   const [selectedProfile, setSelectedProfile] = useState({});
   const [manageProfiles, setManageProfiles] = useState(false);
   const [editProfilePage, setEditProfilePage] = useState(false);
 
   useEffect(() => {
-    db.collection("customers")
-      .doc(usersState.payload.user.user.info.uid)
-      .collection("profiles")
-      .get()
-      .then((querySnapshot) => {
-        const documents = querySnapshot.docs.map((doc) => doc.data());
-
-        !usersState.payload.user.user.profiles.includes((arr) =>
-          documents.every(arr)
-        ) && dispatch(profiles(documents));
-      });
-  }, [dispatch, usersState.payload.user.user.info.uid, usersState.payload.user.user.profiles]);
+    // Make sure user.info exists before trying to access it
+    if (user?.info?.uid) {
+      db.collection("customers")
+        .doc(user.info.uid)
+        .collection("profiles")
+        .get()
+        .then((querySnapshot) => {
+          const documents = querySnapshot.docs.map((doc) => doc.data());
+          
+          // Check if we need to update profiles
+          if (documents.length > 0) {
+            // Dispatch documents directly - the reducer will handle it
+            dispatch(profiles(documents));
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching profiles:", error);
+        });
+    }
+  }, [dispatch, user?.info?.uid]);
 
   const handlePage = (profile) => {
     setSelectedProfile(profile);
@@ -47,28 +55,26 @@ export const Profiles = () => {
   };
 
   const setActiveUser = (e, profile) => {
-    setSelectedProfile(profile);
-    const arrayCopy = [...usersState.payload.user.user.profiles];
     e.preventDefault();
+    setSelectedProfile(profile);
+    
+    // Make sure profiles exist before attempting to map
+    if (user?.profiles && Array.isArray(user.profiles)) {
+      // Create a new array of profiles with updated active status
+      const updatedProfiles = user.profiles.map(p => ({
+        ...p,
+        activeProfile: p.id === profile.id
+      }));
 
-    const newArr = arrayCopy.map((profile) => {
-      return (profile = {
-        ...profile,
-        activeProfile: false,
-      });
-    });
+      // Dispatch the updated array of profiles
+      dispatch(profiles(updatedProfiles));
+      navigate("/")
+    }
 
-    let selectedProfileIndex = newArr.findIndex((profile) => {
-      return profile.id === selectedProfile.id;
-    });
-
-    newArr[selectedProfileIndex] = {
-      ...selectedProfile,
-      activeProfile: true,
-    };
-
-    dispatch(profiles(newArr));
   };
+
+  // Ensure profiles exist and are an array before rendering
+  const userProfiles = user?.profiles || [];
 
   return (
     <ProfileContainer>
@@ -84,34 +90,33 @@ export const Profiles = () => {
             {manageProfiles ? "Manage Profiles" : "Who's Watching?"}
           </PageTitle>
           <ProfilesRow>
-            {usersState.payload.user.user.profiles.map((profile) => {
-              return (
-                <SingleProfileContainer
-                  onClick={(e) => {
-                    if (!manageProfiles) {
-                      setActiveUser(e, profile);
-                    }
-
-                    manageProfiles && handlePage(profile);
-                  }}
-                >
-                  <AvatarContainer>
-                    {manageProfiles && (
-                      <EditProfileIcon
-                        src="https://img.icons8.com/sf-regular/48/FFFFFF/edit.png"
-                        alt=""
-                        edit={manageProfiles}
-                      />
-                    )}
-                    <ProfileAvatar
-                      src="https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"
-                      alt="profile avatar"
+            {userProfiles.map((profile, index) => (
+              <SingleProfileContainer
+                key={profile.id || index}
+                onClick={(e) => {
+                  if (!manageProfiles) {
+                    setActiveUser(e, profile);
+                  } else {
+                    handlePage(profile);
+                  }
+                }}
+              >
+                <AvatarContainer>
+                  {manageProfiles && (
+                    <EditProfileIcon
+                      src="https://img.icons8.com/sf-regular/48/FFFFFF/edit.png"
+                      alt="Edit profile icon"
+                      $isedit={manageProfiles ? "true" : "false"}
                     />
-                  </AvatarContainer>
-                  <SingleProfileName>{profile.name}</SingleProfileName>
-                </SingleProfileContainer>
-              );
-            })}
+                  )}
+                  <ProfileAvatar
+                    src="https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"
+                    alt="profile avatar"
+                  />
+                </AvatarContainer>
+                <SingleProfileName>{profile.name}</SingleProfileName>
+              </SingleProfileContainer>
+            ))}
           </ProfilesRow>
           <AddProfileContainer onClick={() => navigate("/add-profile")}>
             <AddProfileImage
@@ -120,14 +125,10 @@ export const Profiles = () => {
             />
             <AddProfileText>Add Profile</AddProfileText>
           </AddProfileContainer>
-          {usersState.payload.user.user.profiles.length && (
+          {userProfiles.length > 0 && (
             <div>
               <ManageProfilesButton
-                onClick={() =>
-                  manageProfiles
-                    ? setManageProfiles(false)
-                    : setManageProfiles(true)
-                }
+                onClick={() => setManageProfiles(!manageProfiles)}
               >
                 {manageProfiles ? "Done" : "Manage Profiles"}
               </ManageProfilesButton>

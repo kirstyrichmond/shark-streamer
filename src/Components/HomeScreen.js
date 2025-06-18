@@ -3,8 +3,21 @@ import requests from "../Requests";
 
 import { Banner } from "./Banner";
 import { Row } from "./Row";
+import { useSearch } from "../context/SearchContext";
+import SearchScreen from "./SearchScreen";
 
 export const HomeScreen = ({ selectedMovie, setSelectedMovie }) => {
+  const { isSearching } = useSearch();
+
+  if (isSearching) {
+    return (
+      <SearchScreen 
+        selectedMovie={selectedMovie}
+        setSelectedMovie={setSelectedMovie}
+      />
+    );
+  }
+
   return (
     <>
       <Banner />
