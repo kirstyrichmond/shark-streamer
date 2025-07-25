@@ -1,46 +1,112 @@
-# Getting Started with Create React App and Redux
+# Netflix Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+Created by Kirsty Richmond.
 
-## Available Scripts
+## Visit Site
+https://kirsty-richmond-netflix.vercel.app/
 
-In the project directory, you can run:
+## Setup Instructions
 
-### `npm start`
+### Prerequisites
+- Node.js (v16 or higher)
+- Git
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Installation
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. **Clone the repository**
+   ```bash
+   $ git clone <repository-url>
+   $ cd netflix-clone
+   ```
 
-### `npm test`
+2. **Install dependencies**
+   ```bash
+   $ npm install
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. **Start the development server**
+   ```bash
+   $ npm start
+   ```
+   The application will run on `http://localhost:3000`
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Description:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+** **Built for learning purposes only** **
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This project is a Netflix clone that replicates the core functionality and user interface of the popular streaming platform.
 
-### `npm run eject`
+Currently in the project you can:
+- Create an account using email and password
+- Sign in and out of your account
+- Create and manage multiple user profiles
+- Browse movies and TV shows
+- Search for content
+- View movie/show details and trailers
+- Change subscription plans
+- Responsive design for mobile and desktop
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Future implementations:
+- Add/remove content from watchlist
+- Personalized recommendations
+- Download for offline viewing
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Design choices:
+- Used Firebase for authentication and data storage to handle user accounts and profile management
+- Implemented Redux for state management to maintain user authentication state and profile data across components
+- Used styled-components for styling to keep component styles modular and maintainable
+- Integrated with The Movie Database (TMDb) API for movie and TV show data
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## File info:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+/src/App.js
+Main application component that handles routing and global state management.
 
-## Learn More
+/src/Components/HomeScreen.js
+The main dashboard displaying movie rows, banner, and navigation.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+/src/Components/LoginScreen.js
+Authentication component handling user login and registration flows.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+/src/Components/Profiles.js
+Component for managing user profiles within an account.
+
+/src/Components/Nav.js
+Navigation component with search functionality and user menu.
+
+/src/Components/Banner.js
+Hero banner component displaying featured content.
+
+/src/Components/Row.js
+Component for displaying horizontal rows of movies/shows.
+
+/src/Components/MovieModal.js
+Modal component for displaying detailed movie information and trailers.
+
+/src/Components/SearchScreen.js
+Component for displaying search results.
+
+/src/Components/AccountScreen.js
+User account management interface.
+
+/src/features/userSlice.js
+Redux slice for managing user authentication state.
+
+/src/firebase.js
+Firebase configuration and initialization.
+
+/src/Requests.js
+API endpoints for fetching movie data from TMDb.
+
+/src/axios.js
+Axios configuration for API requests.
+
+#### Created with:
+
+[![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#)
+[![React Router](https://img.shields.io/badge/React_Router-CA4245?logo=react-router&logoColor=white)](#)
+[![Redux](https://img.shields.io/badge/Redux-764ABC?logo=redux&logoColor=fff)](#)
+[![Firebase](https://img.shields.io/badge/Firebase-039BE5?logo=Firebase&logoColor=white)](#)
+[![Styled Components](https://img.shields.io/badge/styled--components-DB7093?logo=styled-components&logoColor=white)](#)
+[![Axios](https://img.shields.io/badge/Axios-5A29E4?logo=axios&logoColor=fff)](#)
