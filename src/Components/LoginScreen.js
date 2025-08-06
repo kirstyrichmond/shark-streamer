@@ -25,11 +25,11 @@ export const LoginScreen = () => {
     dispatch(showSignUp());
   };
 
-  if (uiState.showSignUp) {
+  if (uiState?.showSignUp) {
     return <SignUpScreen emailRef={emailRef} />;
   }
 
-  if (uiState.showSignIn) {
+  if (uiState?.showSignIn) {
     return <SignInScreen />;
   }
 
