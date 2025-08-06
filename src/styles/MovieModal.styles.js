@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { breakpoints } from "../breakpoints";
-
 import { GoMute, GoUnmute } from "react-icons/go";
 
 export const MovieInfo = styled.div`
@@ -8,7 +7,6 @@ export const MovieInfo = styled.div`
 `
 
 export const ModalContainer = styled.div`
-  // height: 80vh;
   width: 90vw;
   background: #141414;
   z-index: 1001;
@@ -17,11 +15,9 @@ export const ModalContainer = styled.div`
 
   @media (min-width: ${breakpoints.tablet}px) {
     width: 75vw;
-  //   height: 70vh;
   }
   @media (min-width: ${breakpoints.desktop}px) {
     width: 55vw;
-  //   height: 70vh;
   }
 `;
 
@@ -77,7 +73,7 @@ export const PlayerWrapper = styled.div`
     width: 120%;
     height: calc(100% + 120px);
     border: none;
-    pointer-events: none; /* Prevent clicking on YouTube elements */
+    pointer-events: none;
   }
   
   /* Add a gradient overlay to ensure content is visible */
@@ -218,17 +214,18 @@ export const PlayIcon = styled.div`
 export const MovieInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 16px 36px;
+  padding: 12px 16px 30px 16px;
   height: 100%;
   overflow-y: auto;
-  max-height: calc(70vh - 30px); /* Subtract header height */
+  max-height: calc(70vh - 30px);
   
   @media (min-width: ${breakpoints.tablet}px) {
-    max-height: calc(70vh - 190px); /* Subtract header height */
+    max-height: calc(70vh - 190px);
+    padding: 16px 36px 60px 36px;
   }
   
   @media (min-width: ${breakpoints.desktop}px) {
-    max-height: calc(70vh - 110px); /* Subtract header height */
+    padding: 16px 36px 60px 36px;
   }
 `;
 
@@ -244,19 +241,27 @@ export const ReleaseDate = styled.p`
 export const MovieDescription = styled.p`
   color: #e8e8e8;
   font-weight: 400;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
 
   @media (min-width: ${breakpoints.tablet}px) {
-    // font-size: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
 `;
 
  export const DescriptionHeader = styled.div`
     display: flex;
-    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+    
+    @media (min-width: ${breakpoints.tablet}px) {
+      margin-bottom: 24px;
+      gap: 12px;
+    }
  `;
 
-// Custom mute button styles
 export const CustomMuteButton = styled.button`
   position: absolute;
   bottom: 45px;
@@ -284,7 +289,6 @@ export const CustomMuteButton = styled.button`
   }
 `;
 
-// Base styles shared by both icons
 const IconBase = `
   width: 24px;
   height: 24px;
@@ -296,17 +300,14 @@ const IconBase = `
   }
 `;
 
-// Unmute icon (volume on)
 export const UnmuteIcon = styled(GoUnmute)`
   ${IconBase}
 `;
 
-// Mute icon (volume off)
 export const MuteIcon = styled(GoMute)`
   ${IconBase}
 `;
 
-// New styles for movie logo and buttons in the modal
 export const ModalContent = styled.div`
   position: absolute;
   bottom: 0;
@@ -435,12 +436,10 @@ export const ModalInfoIcon = styled.img`
   }
 `;
 
-// New styles for the enhanced modal
 export const ExpandedContent = styled.div`
   padding: 32px 48px;
   background: #141414;
   overflow-y: auto;
-  // max-height: 60vh;
 `;
 
 export const MovieDetails = styled.div`
@@ -478,19 +477,28 @@ export const SimilarSection = styled.div`
 
 export const SimilarTitle = styled.h3`
   color: #fff;
-  font-size: 1.3rem;
-  margin-bottom: 16px;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
   font-weight: 700;
+  
+  @media (min-width: ${breakpoints.tablet}px) {
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+  }
 `;
 
 export const SimilarGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
   
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+  @media (min-width: ${breakpoints.tablet}px) {
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+  }
+  
+  @media (min-width: ${breakpoints.desktop}px) {
+    gap: 24px;
   }
 `;
 
@@ -500,6 +508,7 @@ export const SimilarCard = styled.div`
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.2s;
+  padding-bottom: 8px;
   
   &:hover {
     transform: scale(1.05);
@@ -508,8 +517,12 @@ export const SimilarCard = styled.div`
 
 export const SimilarImage = styled.img`
   width: 100%;
-  height: 120px;
+  height: 100px;
   object-fit: cover;
+  
+  @media (min-width: ${breakpoints.tablet}px) {
+    height: 120px;
+  }
 `;
 
 export const SimilarCardTitle = styled.h4`
@@ -532,12 +545,16 @@ export const TrailersSection = styled.div`
 
 export const TrailerGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 12px;
   
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+  @media (min-width: ${breakpoints.tablet}px) {
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+  }
+  
+  @media (min-width: ${breakpoints.desktop}px) {
+    gap: 24px;
   }
 `;
 
@@ -547,6 +564,7 @@ export const TrailerCard = styled.div`
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.2s;
+  padding-bottom: 8px;
   
   &:hover {
     transform: scale(1.02);
@@ -555,7 +573,7 @@ export const TrailerCard = styled.div`
 
 export const TrailerThumbnail = styled.img`
   width: 100%;
-  height: 120px;
+  max-height: 200px;
   object-fit: cover;
 `;
 
@@ -575,10 +593,14 @@ export const TrailerDuration = styled.span`
 
 export const MovieMetaRow = styled.div`
   display: flex;
-  // align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
   margin-bottom: 16px;
-  // flex-wrap: wrap;
+  
+  @media (min-width: ${breakpoints.tablet}px) {
+    flex-direction: row;
+    gap: 12px;
+  }
   
   & > span {
     color: #fff;
@@ -589,7 +611,7 @@ export const MovieMetaRow = styled.div`
 export const MetaLabel = styled.span`
   color: #999;
   font-size: 0.85rem;
-  min-width: 80px;
+  min-width: 50px;
   margin-right: 8px;
 `;
 
@@ -612,6 +634,8 @@ export const AgeRating = styled.span`
 export const Duration = styled.span`
   color: #fff;
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
 `;
 
 export const MoreDetailsButton = styled.button`

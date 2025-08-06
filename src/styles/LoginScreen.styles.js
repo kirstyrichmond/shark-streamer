@@ -5,28 +5,43 @@ export const Container = styled.div`
   background: url("https://assets.nflxext.com/ffe/siteui/vlv3/b321426e-35ae-4661-b899-d63bca17648a/e30a1639-d705-4d84-9835-b06b9c013e2c/GB-en-20220926-popsignuptwoweeks-perspective_alpha_website_large.jpg")
     center no-repeat;
   background-size: cover;
+  background-position: center;
   height: 100vh;
-  overflow-y: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  
+  @media (max-width: ${breakpoints.mobile}px) {
+    background-position: center top;
+  }
 `;
 
 export const BodyContainer = styled.div`
   z-index: 1;
   color: #fff;
-  padding: 20px;
+  padding: 16px;
   box-sizing: border-box;
   position: absolute;
-  padding-top: 180px;
+  padding-top: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   height: 100vh;
+  min-height: 100vh;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
 
+  @media (min-width: ${breakpoints.mobile}px) {
+    padding: 20px;
+    padding-top: 150px;
+  }
+  
   @media (min-width: ${breakpoints.tablet}px) {
     padding-top: 300px;
+    background-color: rgba(0, 0, 0, 0.5);
   }
+  
   @media (min-width: ${breakpoints.desktop}px) {
     padding-top: 340px;
   }
@@ -37,21 +52,34 @@ export const InputContainer = styled.div`
 `;
 
 export const Input = styled.input`
-  padding: 0.8rem 1.5rem 0.7rem 0.8rem;
+  padding: 1rem 0.8rem;
   outline-width: 0;
   width: 100%;
   border: none;
-  max-width: 298px;
-  font-size: 0.8rem;
-  border-radius: 2px;
+  max-width: 280px;
+  font-size: 1rem;
+  border-radius: 4px;
   margin-bottom: 16px;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  
+  &::placeholder {
+    color: #757575;
+  }
+
+  @media (min-width: ${breakpoints.mobile}px) {
+    max-width: 298px;
+    font-size: 1.1rem;
+  }
 
   @media (min-width: ${breakpoints.tablet}px) {
     border-radius: 2px 0 0 2px;
     padding: 1rem 2.4rem 1rem 0.8rem;
     font-size: 1.2rem;
     max-width: 320px;
+    margin-bottom: 0;
   }
+  
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 1.2rem;
     max-width: 360px;
@@ -60,25 +88,41 @@ export const Input = styled.input`
 `;
 
 export const GetStartedButton = styled.button`
-  font-size: 0.9rem;
-  border-radius: 2px;
-  max-width: 130px;
-  height: 36px;
-  margin: auto;
+  font-size: 1rem;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 280px;
+  height: 48px;
+  margin: 0 auto;
   margin-bottom: 10px;
   border: none;
   color: #fff;
   background-color: #e50914;
-  border: none;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: #f40612;
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+
+  @media (min-width: ${breakpoints.mobile}px) {
+    max-width: 298px;
+    font-size: 1.1rem;
+  }
 
   @media (min-width: ${breakpoints.tablet}px) {
-    padding: 1rem 1.4rem 1rem 1.4rem;
+    padding: 1rem 1.4rem;
     height: auto;
     margin: 0;
     font-size: 1.2rem;
     border-radius: 0 2px 2px 0;
     max-width: 150px;
+    width: auto;
   }
 
   @media (min-width: ${breakpoints.desktop}px) {
@@ -106,40 +150,68 @@ export const Form = styled.form`
 `;
 
 export const Title = styled.h1`
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   margin-bottom: 16px;
-  max-width: 900px;
+  max-width: 320px;
+  line-height: 1.2;
+  font-weight: 700;
+
+  @media (min-width: ${breakpoints.mobile}px) {
+    font-size: 1.8rem;
+    max-width: 400px;
+  }
 
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 3.2rem;
+    max-width: 900px;
   }
+  
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 4.2rem;
   }
 `;
 
 export const DescOne = styled.h2`
-  font-size: 1.1rem;
-  margin-bottom: 18px;
+  font-size: 1rem;
+  margin-bottom: 16px;
   font-weight: 400;
+  line-height: 1.3;
+  max-width: 320px;
+
+  @media (min-width: ${breakpoints.mobile}px) {
+    font-size: 1.2rem;
+    max-width: 400px;
+  }
 
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 1.7rem;
+    margin-bottom: 18px;
+    max-width: none;
   }
+  
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 2rem;
   }
 `;
 
 export const DescTwo = styled.h3`
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+  max-width: 320px;
+
+  @media (min-width: ${breakpoints.mobile}px) {
+    font-size: 1rem;
+    max-width: 400px;
+  }
 
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 1.2rem;
     margin-bottom: 32px;
+    max-width: none;
   }
+  
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 1.4rem;
     margin-bottom: 32px;

@@ -4,39 +4,54 @@ import { breakpoints } from "../breakpoints";
 export const Container = styled.div`
   position: fixed;
   top: 0;
-  // padding: 20px;
+  left: 0;
   width: 100%;
-  height: 60px;
+  height: 56px;
   z-index: 8;
   display: flex;
   justify-content: space-between;
-  // background-color: ${(props) => props.isblack === true ? "#111" : "#fff"};
+  align-items: center;
+  padding: 0 16px;
+  box-sizing: border-box;
   transition-timing-function: ease-in;
   transition: all 0.5s;
 
-  @media (max-width: 390px) {
-    padding: 13px;
+  @media (max-width: 450px) {
+    padding: 0 12px;
+    height: 52px;
+  }
+  
+  @media (min-width: ${breakpoints.tablet}px) {
+    height: 60px;
+    padding: 0 20px;
   }
 `;
 
 export const RightContainer = styled.div`
   display: flex;
   align-items: center;
-  position: relative;
-  width: 100%;
   justify-content: flex-end;
-  padding-right: 50px;
   gap: 10px;
-  @media (max-width: 390px) {
-    padding-right: 20px;
+  
+  @media (max-width: 450px) {
+    gap: 8px;
   }
 `;
 
 export const NavLogo = styled.img`
   object-fit: contain;
   cursor: pointer;
-  width: 24%;
-  max-width: 120px;
+  width: 80px;
+  flex-shrink: 0;
+  
+  @media (max-width: 450px) {
+    width: 70px;
+  }
+  
+  @media (min-width: ${breakpoints.tablet}px) {
+    width: 100px;
+    max-width: 120px;
+  }
 `;
 
 export const NavAvatar = styled.img`
@@ -65,20 +80,37 @@ export const ProfileName = styled.p`
 `;
 
 export const SignInButton = styled.button`
-  position: fixed;
-  right: 20px;
-  padding: 7px 17px;
-  font-size: 1rem;
+  padding: 6px 14px;
+  font-size: 0.9rem;
   color: white;
   background-color: #e50914;
   border: none;
   cursor: pointer;
   border-radius: 3px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  min-height: 36px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  
+  &:hover {
+    background-color: #f40612;
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
 
-  @media (max-width: 390px) {
-    right: 13px;
-    padding: 5px 12px;
+  @media (max-width: 450px) {
+    padding: 4px 10px;
     font-size: 0.8rem;
+    min-height: 32px;
+  }
+  
+  @media (min-width: ${breakpoints.tablet}px) {
+    padding: 7px 17px;
+    font-size: 1rem;
+    min-height: 40px;
   }
 `;
 
@@ -89,21 +121,35 @@ export const Form = styled.form`
   height: 30px;
 `;
 
-// Fixed: Using props directly instead of hasAttribute
-
 export const DropdownMenu = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== "isclosed",
 })`
-  position: absolute;
-  top: 40px;
-  right: 50px;
-  background-color: rgba(0, 0, 0, 0.851);
+  top: 58px;
+  right: 14px;
   width: 180px;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.851);
   border: 1px solid rgba(151, 151, 151, 0.34);
   border-radius: 5px;
   padding: 10px 0;
   display: ${(props) => (props.isclosed === "true" ? "none" : "block")};
   z-index: 40;
+
+  @media (min-width: 390px) {
+    top: 58px;
+    right: 14px;
+    width: 180px;
+  }
+  @media (min-width: 450px) {
+    top: 52px;
+    right: 40px;
+    width: 180px;
+  }
+  @media (min-width: 800px) {
+    top: 58px;
+    right: 34px;
+    width: 160px;
+  }
 
   &::after {
     content: "";
@@ -173,7 +219,7 @@ export const InputContainer = styled.div`
 `;
 
 export const Input = styled.input`
-  width: 200px;
+  width: 160px;
   background-color: rgba(0, 0, 0, 0.75);
   border: 1px solid white;
   color: white;
@@ -184,11 +230,24 @@ export const Input = styled.input`
   
   &::placeholder {
     color: #aaa;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+  }
+  
+  @media (max-width: 480px) {
+    width: 140px;
+    font-size: 0.85rem;
+    
+    &::placeholder {
+      font-size: 0.75rem;
+    }
   }
   
   @media (min-width: 768px) {
     width: 240px;
+    
+    &::placeholder {
+      font-size: 0.9rem;
+    }
   }
 `;
 
@@ -210,10 +269,16 @@ export const CancelButton = styled.button`
 export const SearchIcon = styled.img`
   width: 24px;
   height: 24px;
-  margin-right: 20px;
+  margin-right: 15px;
   cursor: pointer;
   
   &:hover {
     transform: scale(1.1);
+  }
+  
+  @media (max-width: 480px) {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
   }
 `;

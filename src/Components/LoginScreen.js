@@ -1,4 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { showSignUp } from "../features/userSlice";
 import {
   BodyContainer,
   Container,
@@ -13,67 +15,24 @@ import {
 import { SignInScreen } from "./SignInScreen";
 import { SignUpScreen } from "./SignUpScreen";
 
-export const LoginScreen = ({
-  // We'll still accept these props but will manage state locally as well
-  showSignInScreen: propShowSignIn,
-  showSignUpScreen: propShowSignUp,
-  setShowSignInScreen,
-  setShowSignUpScreen
-}) => {
-  // Manage state locally so it works regardless of parent component behavior
-  const [localShowSignIn, setLocalShowSignIn] = useState(false);
-  const [localShowSignUp, setLocalShowSignUp] = useState(false);
+export const LoginScreen = () => {
   const emailRef = useRef(null);
+  const uiState = useSelector(state => state.user.ui);
+  const dispatch = useDispatch();
 
-  // Determine which state to use - prefer props if they're true, otherwise use local state
-  const effectiveShowSignIn = propShowSignIn || localShowSignIn;
-  const effectiveShowSignUp = propShowSignUp || localShowSignUp;
-
-  console.log("LoginScreen state:", { 
-    propSignIn: propShowSignIn, 
-    propSignUp: propShowSignUp,
-    localSignIn: localShowSignIn,
-    localSignUp: localShowSignUp,
-    effective: {
-      signIn: effectiveShowSignIn,
-      signUp: effectiveShowSignUp
-    }
-  });
-
-  // Handle Get Started click
   const handleGetStarted = (e) => {
     e.preventDefault();
-    console.log("Get Started clicked, email:", emailRef.current?.value);
-    
-    // Update both local and parent state if available
-    setLocalShowSignUp(true);
-    if (typeof setShowSignUpScreen === 'function') {
-      setShowSignUpScreen(true);
-    }
+    dispatch(showSignUp());
   };
 
-  // Render based on effective state
-  if (effectiveShowSignUp) {
-    console.log("Rendering SignUpScreen component");
+  if (uiState.showSignUp) {
     return <SignUpScreen emailRef={emailRef} />;
   }
 
-  if (effectiveShowSignIn) {
-    console.log("Rendering SignInScreen component");
-    const handleSignUpClick = () => {
-      setLocalShowSignUp(true);
-      setLocalShowSignIn(false);
-      if (typeof setShowSignUpScreen === 'function') {
-        setShowSignUpScreen(true);
-      }
-      if (typeof setShowSignInScreen === 'function') {
-        setShowSignInScreen(false);
-      }
-    };
-    return <SignInScreen setShowSignUpScreen={handleSignUpClick} />;
+  if (uiState.showSignIn) {
+    return <SignInScreen />;
   }
 
-  // Main login screen
   return (
     <Container>
       <BodyContainer>

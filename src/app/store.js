@@ -15,6 +15,7 @@ import userSlice from "../features/userSlice";
 const persistConfig = {
   key: "user",
   storage,
+  blacklist: ['avatars']
 };
 
 const reducers = combineReducers({ user: userSlice });

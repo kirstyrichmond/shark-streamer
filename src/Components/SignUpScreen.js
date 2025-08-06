@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase.js";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../features/userSlice.js";
 import {
   Container,
   InnerContainer,
@@ -15,24 +16,8 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
   const [email, setEmail] = useState(propsEmailRef?.current?.value || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [registered, setRegistered] = useState(false);
   const navigate = useNavigate();
-
-  // Listen for auth state changes within the component
-  useEffect(() => {
-    const authListener = auth.onAuthStateChanged((user) => {
-      if (user && registered) {
-        console.log("User authenticated in SignUpScreen, redirecting to home");
-        // Force navigation to home page
-        navigate("/");
-      }
-    });
-
-    return () => {
-      // Clean up the listener
-      authListener();
-    };
-  }, [registered, navigate]);
+  const dispatch = useDispatch();
 
   const register = async (e) => {
     e.preventDefault();
@@ -51,20 +36,17 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
     setError("");
     
     try {
-      console.log("Attempting to register with:", email);
+      const resultAction = await dispatch(registerUser({ 
+        email, 
+        password: passwordRef.current.value 
+      }));
       
-      // Wait for the registration to complete
-      const userCredential = await auth.createUserWithEmailAndPassword(
-        email,
-        passwordRef.current.value
-      );
-      
-      console.log("Registration successful:", userCredential.user.email);
-      
-      // Set registered flag to trigger navigation in useEffect
-      setRegistered(true);
+      if (registerUser.fulfilled.match(resultAction)) {
+        navigate("/add-profile");
+      } else {
+        setError(resultAction.payload || 'Registration failed');
+      }
     } catch (error) {
-      console.error("Registration error:", error.code, error.message);
       setError(error.message);
     } finally {
       setLoading(false);
@@ -76,9 +58,7 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
       <InnerContainer>
         <Form onSubmit={register}>
           <Title>Sign Up</Title>
-          
           {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
-          
           <Input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -86,14 +66,12 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
             placeholder="Email"
             required
           />
-          
           <Input
             ref={passwordRef}
             type="password"
             placeholder="Password"
             required
           />
-          
           <SignUpButton type="submit" disabled={loading}>
             {loading ? "Signing Up..." : "Sign Up"}
           </SignUpButton>

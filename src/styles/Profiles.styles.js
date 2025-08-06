@@ -138,17 +138,31 @@ export const AvatarContainer = styled.div`
   align-items: center;
   position: relative;
   height: auto;
+  cursor: pointer;
+  
+  &::after {
+    content: ${(props) => props.$isedit === "true" ? "''" : "none"};
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    z-index: 5;
+    opacity: ${(props) => props.$isedit === "true" ? "0.7" : "0"};
+  }
 `;
 
 export const IconContainer = styled.div`
   background: ${(props) => props.$isedit === "true" ? "#fff" : "transparent"};
 `;
 
-// Fixed the EditProfileIcon to use regular props
 export const EditProfileIcon = styled.img`
   z-index: 10;
   height: 40px;
   position: absolute;
+  filter: brightness(0) invert(1);
 `;
 
 export const AddProfileText = styled.p`

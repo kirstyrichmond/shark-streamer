@@ -1,7 +1,7 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "../features/userSlice";
-import { auth } from "../firebase";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectUser, logoutUser } from "../features/userSlice";
 import {
   AccountContainer,
   BottomContainer,
@@ -28,6 +28,13 @@ import {
 
 export const AccountScreen = () => {
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    dispatch(logoutUser());
+    navigate("/");
+  };
 
   return (
     <Container>
@@ -70,7 +77,7 @@ export const AccountScreen = () => {
             </div>
           </ChangePlanContainer>
         </BottomContainer>
-        <SignOutButton onClick={() => auth.signOut()}>Sign Out</SignOutButton>
+        <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
       </AccountContainer>
     </Container>
   );

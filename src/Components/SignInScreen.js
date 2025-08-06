@@ -1,5 +1,7 @@
 import React, { useRef, useState } from "react";
-import { auth } from "../firebase.js";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginUser, showSignUp } from "../features/userSlice.js";
 import {
   Container,
   DescriptionSpan,
@@ -12,11 +14,13 @@ import {
   Title,
 } from "../styles/SignUpScreen.styles.js";
 
-export const SignInScreen = ({ setShowSignUpScreen }) => {
+export const SignInScreen = () => {
   const passwordRef = useRef(null);
   const emailRef = useRef(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   console.log("SignInScreen rendered");
 
@@ -24,7 +28,6 @@ export const SignInScreen = ({ setShowSignUpScreen }) => {
     e.preventDefault();
     setError("");
     
-    // Basic validation
     if (!emailRef.current?.value) {
       setError("Email is required");
       return;
@@ -34,32 +37,29 @@ export const SignInScreen = ({ setShowSignUpScreen }) => {
       return;
     }
 
-    setLoading(true);
-    console.log("Attempting to sign in with:", emailRef.current.value);
-    
+    setLoading(true);    
     try {
-      const result = await auth.signInWithEmailAndPassword(
-        emailRef.current.value,
-        passwordRef.current.value
-      );
-      console.log("Sign in successful:", result.user.email);
+      const resultAction = await dispatch(loginUser({ 
+        email: emailRef.current.value, 
+        password: passwordRef.current.value 
+      }));
+      
+      if (loginUser.fulfilled.match(resultAction)) {
+        navigate("/");
+      } else {
+        setError(resultAction.payload || 'Login failed');
+      }
     } catch (err) {
-      console.error("Sign in error:", err.message);
       setError(err.message || "Failed to sign in");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSignUpClick = (e) => {
+  const handleSignInClick = (e) => {
     e.preventDefault();
     console.log("Sign Up Now clicked");
-    if (typeof setShowSignUpScreen === 'function') {
-      console.log("Switching to sign up screen");
-      setShowSignUpScreen(true);
-    } else {
-      console.error("setShowSignUpScreen is not a function");
-    }
+    dispatch(showSignUp());
   };
 
   return (
@@ -85,7 +85,7 @@ export const SignInScreen = ({ setShowSignUpScreen }) => {
           </SignUpButton>
           <SignUpDescription>
             <DescriptionSpan>New to Netflix?</DescriptionSpan>{" "}
-            <SpanLink onClick={handleSignUpClick}>
+            <SpanLink onClick={handleSignInClick}>
               Sign Up Now.
             </SpanLink>
           </SignUpDescription>

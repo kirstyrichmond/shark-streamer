@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectUser } from "../features/userSlice";
-import { auth } from "../firebase";
-import { useSearch } from "../context/SearchContext"; // Import the search context hook
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, logoutUser, showSignIn, selectSelectedProfile, setSelectedProfile } from "../features/userSlice";
+import { useSearch } from "../context/SearchContext";
 import {
   CancelButton,
   Container,
@@ -24,16 +23,15 @@ import {
 } from "../styles/Nav.styles";
 import NetflixLogo from "../Images/netflix-logo.png";
 
-export const Nav = ({ setShowSignInScreen, setShowSignUpScreen }) => {
-  const { innerWidth: screenWidth } = window;
+export const Nav = () => {
   const user = useSelector(selectUser);
+  const selectedProfile = useSelector(selectSelectedProfile);
+  const dispatch = useDispatch();
   const [show, handleShow] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [activeProfile, setActiveProfile] = useState(null);
   const navigate = useNavigate();
   const isHomeScreen = window.location.pathname === "/";
   
-  // Use the search context
   const { 
     searchKey, 
     setSearchKey, 
@@ -57,13 +55,18 @@ export const Nav = ({ setShowSignInScreen, setShowSignUpScreen }) => {
   }, []);
 
   useEffect(() => {
-    if (user?.profiles?.length > 0) {
+    if (user?.profiles?.length > 0 && !selectedProfile) {
       const currentProfile = user.profiles.find((profile) => {
         return profile.activeProfile === true;
       });
-      setActiveProfile(currentProfile);
+      
+      if (!currentProfile && user.profiles.length === 1) {
+        dispatch(setSelectedProfile(user.profiles[0]));
+      } else if (currentProfile) {
+        dispatch(setSelectedProfile(currentProfile));
+      }
     }
-  }, [user?.profiles]);
+  }, [user?.profiles, selectedProfile, dispatch]);
 
   const handleSearchIconClick = () => {
     console.log("Search icon clicked");
@@ -75,13 +78,6 @@ export const Nav = ({ setShowSignInScreen, setShowSignUpScreen }) => {
     toggleSearchBar(false);
   };
 
-  const handleSignInClick = (e) => {
-    e.preventDefault();
-    
-    setShowSignUpScreen(false);
-    setShowSignInScreen(true);
-  };
-
   return (
     <Container style={{ backgroundColor: (show || !isHomeScreen) ? "#111" : "" }}>
       <NavLogo
@@ -91,60 +87,57 @@ export const Nav = ({ setShowSignInScreen, setShowSignUpScreen }) => {
           toggleSearchBar(false);
           setShowMenu(false);
           navigate("/");
-
-          if (!user.info) {
-            setShowSignUpScreen(false);
-            setShowSignInScreen(false);
-          }
         }}
       />
       <RightContainer>
         {!user.info ? (
-          <SignInButton onClick={handleSignInClick}>
+          <SignInButton onClick={() => dispatch(showSignIn())}>
             Sign In
           </SignInButton>
         ) : (
           <>
-            {screenWidth > 390 && (
-              <div>
-                {showSearchBar ? (
-                  <Form onSubmit={handleSearchSubmit}>
-                    <InputContainer>
-                      <Input
-                        autoFocus
-                        type="text"
-                        value={searchKey}
-                        placeholder="Titles, people, genres"
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            handleSearchSubmit(e);
-                          }
-                        }}
-                      />
-                      <CancelButton
-                        onClick={handleSearchCancel}
-                        type="button"
-                      >
-                        X
-                      </CancelButton>
-                    </InputContainer>
-                  </Form>
-                ) : (
-                  <SearchIcon
-                    src="https://img.icons8.com/sf-regular/48/FFFFFF/search.png"
-                    alt="search icon"
-                    onClick={handleSearchIconClick}
-                  />
-                )}
-              </div>
+            <div>
+              {showSearchBar ? (
+                <Form onSubmit={handleSearchSubmit}>
+                  <InputContainer>
+                    <Input
+                      autoFocus
+                      type="text"
+                      value={searchKey}
+                      placeholder="Titles, people, genres"
+                      onChange={(e) => setSearchKey(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSearchSubmit(e);
+                        }
+                      }}
+                    />
+                    <CancelButton
+                      onClick={handleSearchCancel}
+                      type="button"
+                    >
+                      X
+                    </CancelButton>
+                  </InputContainer>
+                </Form>
+              ) : (
+                <SearchIcon
+                  src="https://img.icons8.com/sf-regular/48/FFFFFF/search.png"
+                  alt="search icon"
+                  onClick={handleSearchIconClick}
+                />
+              )}
+            </div>
+            {selectedProfile && (
+              <>
+                <NavAvatar
+                  src={selectedProfile.avatar_url || "https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"}
+                  alt="profile avatar"
+                  onClick={() => setShowMenu(!showMenu)}
+                />
+                <ProfileName>{selectedProfile.name}</ProfileName>
+              </>
             )}
-            <NavAvatar
-              src="https://ih0.redbubble.net/image.618427277.3222/flat,1000x1000,075,f.u2.jpg"
-              alt="netflix avatar"
-              onClick={() => setShowMenu(!showMenu)}
-            />
-            <ProfileName>{activeProfile?.name ?? null}</ProfileName>
             <DropdownMenu 
               isclosed={showMenu ? "false" : "true"}
             >
@@ -154,11 +147,11 @@ export const Nav = ({ setShowSignInScreen, setShowSignUpScreen }) => {
                     key={index}
                     onClick={() => {
                       setShowMenu(!showMenu);
-                      setActiveProfile(profile);
+                      dispatch(setSelectedProfile(profile))
                     }}
                   >
                     <DropdownMenuAvatar
-                      src="https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"
+                      src={profile.avatar_url}
                       alt="profile"
                     />
                     <DropdownMenuUsername>{profile.name}</DropdownMenuUsername>
@@ -182,10 +175,10 @@ export const Nav = ({ setShowSignInScreen, setShowSignUpScreen }) => {
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => {
+                onClick={async () => {
                   setShowMenu(!showMenu);
+                  dispatch(logoutUser());
                   navigate("/");
-                  auth.signOut();
                 }}
               >
                 Sign Out

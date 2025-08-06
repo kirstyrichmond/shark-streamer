@@ -29,24 +29,19 @@ export const Banner = () => {
   const [isMuted, setIsMuted] = useState(true);
   const youtubePlayerRef = useRef(null);
 
-  // Load YouTube API
   useEffect(() => {
-    // Only load if not already loaded
     if (window.YT) return;
     
-    // Create YouTube API script
     const tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     
-    // Define the callback function
     window.onYouTubeIframeAPIReady = function() {
       console.log('YouTube API is ready');
     };
     
     return () => {
-      // Clean up
       window.onYouTubeIframeAPIReady = null;
     };
   }, []);
@@ -78,7 +73,6 @@ export const Banner = () => {
         
         if (request.data.results && request.data.results.length > 0) {
           setVideos(request.data.results);
-          // Auto-play trailer when available
           setPlayTrailer(true);
         }
         return request;
@@ -97,7 +91,12 @@ export const Banner = () => {
         );
         
         if (request.data.logos && request.data.logos.length > 0) {
-          setLogo(request.data.logos[0].file_path);
+          const englishLogo = request.data.logos.find(logo => 
+            logo.iso_639_1 === 'en' || logo.iso_639_1 === null
+          );
+          
+          const selectedLogo = englishLogo || request.data.logos[0];
+          setLogo(selectedLogo.file_path);
         }
         return request;
       } catch (error) {
@@ -111,29 +110,23 @@ export const Banner = () => {
     }
   }, [movie]);
 
-  // Initialize YouTube player when iframe exists
   useEffect(() => {
     if (playTrailer && videos.length > 0) {
-      // Wait for the iframe to be inserted into the DOM
       const checkForIframe = setInterval(() => {
         if (document.getElementById('banner-trailer-iframe')) {
           clearInterval(checkForIframe);
           
-          // Connect to the player once the iframe is loaded
           const connectOnLoad = () => {
             if (window.YT && window.YT.Player) {
-              // Connect to the player
               if (youtubePlayerRef.current) return;
               
               const iframe = document.getElementById('banner-trailer-iframe');
               if (iframe) {
                 try {
-                  // Create a new YT.Player instance to control the existing iframe
                   youtubePlayerRef.current = new window.YT.Player('banner-trailer-iframe', {
                     events: {
                       'onReady': (event) => {
                         console.log('Banner YouTube player ready');
-                        // Make sure it starts muted
                         event.target.mute();
                         setIsMuted(true);
                       }
@@ -144,18 +137,15 @@ export const Banner = () => {
                 }
               }
             } else {
-              // If YouTube API isn't loaded yet, wait a bit and try again
               setTimeout(connectOnLoad, 100);
             }
           };
-          
           connectOnLoad();
         }
       }, 100);
       
       return () => clearInterval(checkForIframe);
     } else {
-      // Clean up player when not playing trailer
       youtubePlayerRef.current = null;
     }
   }, [playTrailer, videos]);
@@ -167,7 +157,6 @@ export const Banner = () => {
   };
 
   const toggleMute = () => {
-    // If we have a YouTube player instance, use the API methods
     if (youtubePlayerRef.current) {
       if (isMuted) {
         youtubePlayerRef.current.unMute();
@@ -177,7 +166,6 @@ export const Banner = () => {
         setIsMuted(true);
       }
     } else {
-      // Direct iframe postMessage as a fallback
       const iframe = document.getElementById('banner-trailer-iframe');
       if (iframe) {
         try {
@@ -211,7 +199,6 @@ export const Banner = () => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           ></iframe>
         </div>
-        
         <BannerContent>
           {logo ? (
             <MovieIcon 
@@ -223,11 +210,9 @@ export const Banner = () => {
               {movie?.title || movie?.name || movie?.original_name}
             </BannerTitle>
           )}
-          
           <BannerDescription>
             {truncate(movie?.overview, truncateAmount)}
           </BannerDescription>
-          
           <ButtonsContainer>
             <PlayButton onClick={() => setOpenMovieModal(true)}>
               <PlayIcon
@@ -245,8 +230,6 @@ export const Banner = () => {
             </InfoButton>
           </ButtonsContainer>
         </BannerContent>
-        
-        {/* Custom mute button */}
         <CustomMuteButton onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
           {isMuted ? <MuteIcon /> : <UnmuteIcon />}
         </CustomMuteButton>
@@ -260,8 +243,10 @@ export const Banner = () => {
         selectedMovie={movie}
         isOpen={openMovieModal}
         handleClose={setOpenMovieModal}
+        onMovieChange={(newMovie) => {
+          setMovie(newMovie);
+        }}
       />
-      
       {playTrailer && videos?.length > 0 ? (
         renderTrailer()
       ) : (
@@ -283,11 +268,9 @@ export const Banner = () => {
                 {movie?.title || movie?.name || movie?.original_name}
               </BannerTitle>
             )}
-            
             <BannerDescription>
               {truncate(movie?.overview, truncateAmount)}
             </BannerDescription>
-            
             <ButtonsContainer>
               <PlayButton onClick={() => setPlayTrailer(true)}>
                 <PlayIcon

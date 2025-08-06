@@ -1,9 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editProfile, selectUser } from "../features/userSlice";
-import db from "../firebase";
+import { updateProfile, deleteProfile, updateProfileAvatar, createProfile, selectUser, selectSelectedProfile, clearSelectedProfile, fetchUserProfiles } from "../features/userSlice";
 import {
-  AvatarImage,
   ButtonsContainer,
   Container,
   MiddleContainer,
@@ -11,93 +9,200 @@ import {
   PageTitle,
   SaveButton,
   TransparentButton,
+  CheckboxContainer,
+  CheckboxLabel,
+  AvatarLoadingOverlay,
+  HiddenFileInput,
+  AvatarPlaceholder,
 } from "../styles/ManageProfile.styles";
+import { AvatarContainer, EditProfileIcon, ProfileAvatar } from "../styles/Profiles.styles";
+import { AvatarPicker } from "./AvatarPicker";
 
 export const ManageProfile = ({
-  profileName,
   setEditProfilePage,
-  selectedProfile,
+  isCreating = false,
 }) => {
-  const userState = useSelector(selectUser);
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const selectedProfile = useSelector(selectSelectedProfile);
   const newUsername = useRef();
+  const fileInputRef = useRef();
+  const [isKids, setIsKids] = useState(isCreating ? false : selectedProfile?.is_kids || false);
+  const [avatarLoading, setAvatarLoading] = useState(false);
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState(
+    isCreating ? null : 
+    selectedProfile?.avatar_url || 
+    "https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"
+  );
 
-  const updateProfile = async (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
 
-    dispatch(
-      editProfile({
-        selectedProfile: selectedProfile,
-        newUsername: newUsername.current.value,
-      })
-    );
+    const profileName = newUsername.current.value?.trim();
+    if (!profileName) {
+      alert('Profile name is required');
+      return;
+    }
 
-    const docRef = await db
-      .collection("customers")
-      .doc(userState.info.uid)
-      .collection("profiles")
-      .where("id", "==", selectedProfile.id)
-      .get();
+    if (isCreating && !avatarPreview) {
+      alert('Please select an avatar');
+      return;
+    }
 
-    docRef.forEach((doc) => {
-      const profileRef = db
-        .collection("customers")
-        .doc(userState.info.uid)
-        .collection("profiles")
-        .doc(doc.id);
+    try {
+      if (isCreating) {
+        await dispatch(createProfile({
+          userId: user.info.id,
+          name: profileName,
+          avatarUrl: avatarPreview,
+          isKids: isKids
+        })).unwrap();
+        
+        await dispatch(fetchUserProfiles(user.info.id));
+      } else {
+        await dispatch(updateProfile({
+          profileId: selectedProfile.id,
+          updates: { 
+            name: profileName,
+            is_kids: isKids
+          }
+        })).unwrap();
 
-      profileRef.update({
-        name: newUsername.current.value,
-      });
-    });
-    setEditProfilePage(false);
+        if (avatarPreview !== selectedProfile?.avatar_url) {
+          await dispatch(updateProfileAvatar({
+            profileId: selectedProfile.id,
+            avatarData: avatarPreview
+          })).unwrap();
+        }
+      }
+      
+      if (!isCreating) {
+        dispatch(clearSelectedProfile());
+      }
+      setEditProfilePage(false);
+    } catch (error) {
+      alert('Error saving profile. Please try again.');
+    }
   };
 
-  const deleteProfile = async () => {
-    const docRef = await db
-      .collection("customers")
-      .doc(userState.info.uid)
-      .collection("profiles")
-      .where("id", "==", selectedProfile.id)
-      .get();
+  const handleAvatarChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    docRef.forEach((doc) => {
-      const profileRef = db
-        .collection("customers")
-        .doc(userState.info.uid)
-        .collection("profiles")
-        .doc(doc.id);
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
 
-      profileRef.delete();
-    });
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be less than 5MB');
+      return;
+    }
 
-    window.location.reload(true);
+    setAvatarLoading(true);
 
-    // dispatch(deleteProfile(selectedProfile));
-    setEditProfilePage(false);
+    try {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64Data = e.target.result;
+        setAvatarPreview(base64Data);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      alert('Error processing image');
+    } finally {
+      setAvatarLoading(false);
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    try {
+      await dispatch(deleteProfile(selectedProfile.id)).unwrap();
+      dispatch(clearSelectedProfile());
+      setEditProfilePage(false);
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+    }
   };
 
   return (
     <Container>
       <div>
-        <PageTitle>Edit Profile</PageTitle>
+        <PageTitle>{isCreating ? 'Add' : 'Edit'} Profile</PageTitle>
       </div>
       <MiddleContainer>
-        <AvatarImage
-          src="https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"
-          alt="profile"
+        <AvatarContainer 
+          onClick={() => setShowAvatarPicker(true)}
+          $isedit="true"
+        >
+          {avatarPreview ? (
+            <ProfileAvatar
+              src={avatarPreview}
+              alt="profile"
+              $loading={avatarLoading}
+            />
+          ) : (
+            <AvatarPlaceholder>
+              <span>Click to</span>
+              <span>Select Avatar</span>
+            </AvatarPlaceholder>
+          )}
+          {avatarLoading && (
+            <AvatarLoadingOverlay>
+              Uploading...
+            </AvatarLoadingOverlay>
+          )}
+          <HiddenFileInput
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+          />
+          {avatarPreview && (
+            <EditProfileIcon
+            src="https://img.icons8.com/sf-regular/48/FFFFFF/edit.png"
+            alt="Edit profile icon"
+            />
+          )}
+        </AvatarContainer>
+        <NameInput 
+          type="text" 
+          ref={newUsername} 
+          defaultValue={isCreating ? '' : selectedProfile?.name || ''}
+          placeholder="Enter profile name"
         />
-        <NameInput type="text" ref={newUsername} defaultValue={profileName} />
       </MiddleContainer>
+      <CheckboxContainer>
+        <CheckboxLabel>
+          <input
+            type="checkbox"
+            checked={isKids}
+            onChange={(e) => setIsKids(e.target.checked)}
+          />
+          Kids Profile
+        </CheckboxLabel>
+      </CheckboxContainer>
       <ButtonsContainer>
-        <SaveButton onClick={updateProfile}>Save</SaveButton>
+        <SaveButton onClick={handleSaveProfile}>
+          {isCreating ? 'Create' : 'Save'}
+        </SaveButton>
         <TransparentButton onClick={() => setEditProfilePage(false)}>
           Cancel
         </TransparentButton>
-        <TransparentButton onClick={deleteProfile}>
-          Delete profile
-        </TransparentButton>
+        {!isCreating && user?.profiles?.length > 1 && (
+          <TransparentButton onClick={handleDeleteProfile}>
+            Delete profile
+          </TransparentButton>
+        )}
       </ButtonsContainer>
+      <AvatarPicker
+        isOpen={showAvatarPicker}
+        onClose={() => setShowAvatarPicker(false)}
+        profileId={selectedProfile?.id}
+        currentAvatar={avatarPreview}
+        onAvatarUpdate={(newAvatar) => setAvatarPreview(newAvatar)}
+      />
     </Container>
   );
 };

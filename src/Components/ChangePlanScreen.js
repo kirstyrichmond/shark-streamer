@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import db from "../firebase";
-import { selectUser } from "../features/userSlice";
-import { loadStripe } from "@stripe/stripe-js";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, selectPlans, fetchPlans, updateSubscription } from "../features/userSlice";
 import {
   Container,
   PlanContainer,
@@ -15,113 +13,75 @@ import {
 } from "../styles/ChangePlan.styles";
 
 export const ChangePlanScreen = () => {
-  const [products, setProducts] = useState([]);
-  const [subscription, setSubscription] = useState(null);
+  const [loading, setLoading] = useState(false);
   const user = useSelector(selectUser);
+  const plans = useSelector(selectPlans);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    db.collection("customers")
-      .doc(user.uid)
-      .collection("subscriptions")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach(async (subscription) => {
-          setSubscription({
-            role: subscription.data().role,
-            current_period_end: subscription.data().current_period_end.seconds,
-            current_period_start:
-              subscription.data().current_period_start.seconds,
-          });
-        });
-      });
-  }, [user.uid]);
+    if (plans.items.length === 0 && !plans.loading) {
+      dispatch(fetchPlans());
+    }
+  }, [dispatch, plans.items.length, plans.loading]);
 
-  useEffect(() => {
-    db.collection("products")
-      .where("active", "==", true)
-      .get()
-      .then((querySnapshot) => {
-        const products = {};
-
-        querySnapshot.forEach(async (productDoc) => {
-          products[productDoc.id] = productDoc.data();
-
-          const priceSnap = await productDoc.ref.collection("prices").get();
-          priceSnap.docs.forEach((price) => {
-            products[productDoc.id].prices = {
-              priceId: price.id,
-              priceData: price.data,
-            };
-          });
-        });
-        setProducts(products);
-      });
-  }, []);
-
-  const loadCheckout = async (priceId) => {
-    const docRef = await db
-      .collection("customers")
-      .doc(user.uid)
-      .collection("checkout_sessions")
-      .add({
-        price: priceId,
-        success_url: window.location.origin,
-        cancel_url: window.location.origin,
-      });
-
-    docRef.onSnapshot(async (snap) => {
-      const { error, sessionId } = snap.data();
-
-      if (error) {
-        alert(`An error occurred: ${error.message}`);
-      }
-
-      if (sessionId) {
-        const stripe = await loadStripe(
-          "pk_test_51LoajfFxbZ9BipI10qJIIE5ygUBbB4HqRLQaRESa8jk8i6oKYcKhpE53p2aa0jrTGYRC3McmeRIcfuJR5RMlQ7Jd00Z60NjVJm"
-        );
-
-        stripe.redirectToCheckout({ sessionId });
-      }
-    });
+  const changePlan = async (planId) => {
+    if (planId === user.info?.subscription_plan) return;
+    
+    setLoading(true);
+    try {
+      await dispatch(updateSubscription({ 
+        userId: user.info.id, 
+        planId 
+      })).unwrap();
+      
+      alert(`Successfully changed to ${planId} plan!`);
+    } catch (error) {
+      alert('Failed to change plan. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Container>
       <ScreenContainer>
         <Title>Change Streaming Plan</Title>
-        {subscription && (
+        {user.info?.subscription_plan && (
           <p>
-            Renewal date:{" "}
-            {new Date(
-              subscription?.current_period_end * 1000
-            ).toLocaleDateString()}
+            Current Plan: <strong>
+              {user.info.subscription_plan.charAt(0).toUpperCase() + 
+               user.info.subscription_plan.slice(1)}
+            </strong>
           </p>
         )}
-        {Object.entries(products).map(([productId, productData]) => {
-          const isCurrentPackage = productData.name
-            ?.toLowerCase()
-            .includes(subscription?.role);
+        
+        {plans.loading ? (
+          <p>Loading plans...</p>
+        ) : plans.error ? (
+          <p>Error loading plans: {plans.error}</p>
+        ) : (
+          plans.items.map((plan) => {
+            const isCurrentPlan = plan.id === user.info?.subscription_plan;
 
-          return (
-            <PlanContainer key={productId}>
-              <PlanTitle>{productData.name}</PlanTitle>
-              <PlanDescription className="changePlanScreen_planDescription">
-                {productData.description}
-              </PlanDescription>
-              <PlanPrice className="changePlanScreen_planPrice">
-                GBP 6.99/month
-              </PlanPrice>
-              <SubscribeButton
-                onClick={() =>
-                  !isCurrentPackage && loadCheckout(productData.prices.priceId)
-                }
-              >
-                {isCurrentPackage ? "Current Package" : "Subscribe"}
-              </SubscribeButton>
-            </PlanContainer>
-          );
-        })}
+            return (
+              <PlanContainer key={plan.id}>
+                <PlanTitle>{plan.name}</PlanTitle>
+                <PlanDescription>{plan.description}</PlanDescription>
+                <PlanPrice>{plan.price}</PlanPrice>
+                <SubscribeButton
+                  onClick={() => changePlan(plan.id)}
+                  disabled={isCurrentPlan || loading}
+                  style={{
+                    opacity: isCurrentPlan || loading ? 0.6 : 1,
+                    cursor: isCurrentPlan || loading ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  {isCurrentPlan ? "Current Plan" : loading ? "Updating..." : "Select Plan"}
+                </SubscribeButton>
+              </PlanContainer>
+            );
+          })
+        )}
       </ScreenContainer>
     </Container>
   );
