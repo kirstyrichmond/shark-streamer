@@ -192,12 +192,12 @@ export const userSlice = createSlice({
       }
     },
     showSignUp: (state) => {
-      state.ui.showSignUp = true;
-      state.ui.showSignIn = false;
+      state.ui?.showSignUp = true;
+      state.ui?.showSignIn = false;
     },
     showSignIn: (state) => {
-      state.ui.showSignIn = true;
-      state.ui.showSignUp = false;
+      state.ui?.showSignIn = true;
+      state.ui?.showSignUp = false;
     },
     setSelectedProfile: (state, action) => {
       state.selectedProfile = action.payload;
@@ -213,8 +213,8 @@ export const userSlice = createSlice({
         if (action.payload.user.profiles) {
           state.user.profiles = action.payload.user.profiles;
         }
-        state.ui.showSignIn = false;
-        state.ui.showSignUp = false;
+        state.ui?.showSignIn = false;
+        state.ui?.showSignUp = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
         console.error('Login failed:', action.payload);
@@ -225,8 +225,8 @@ export const userSlice = createSlice({
           state.user.profiles = action.payload.user.profiles;
         }
         state.selectedProfile = null;
-        state.ui.showSignIn = false;
-        state.ui.showSignUp = false;
+        state.ui?.showSignIn = false;
+        state.ui?.showSignUp = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
         console.error('Registration failed:', action.payload);
@@ -234,8 +234,8 @@ export const userSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.user.info = null;
         state.user.profiles = [];
-        state.ui.showSignIn = false;
-        state.ui.showSignUp = false;
+        state.ui?.showSignIn = false;
+        state.ui?.showSignUp = false;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.user.info = action.payload.user;
@@ -246,8 +246,8 @@ export const userSlice = createSlice({
       .addCase(getCurrentUser.rejected, (state) => {
         state.user.info = null;
         state.user.profiles = [];
-        state.ui.showSignIn = false;
-        state.ui.showSignUp = false;
+        state.ui?.showSignIn = false;
+        state.ui?.showSignUp = false;
       })
       .addCase(fetchUserProfiles.fulfilled, (state, action) => {
         state.user.profiles = action.payload;
