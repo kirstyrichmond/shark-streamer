@@ -192,13 +192,11 @@ export const userSlice = createSlice({
       }
     },
     showSignUp: (state) => {
-      console.log('showSignUp reducer - before:', state.ui);
       if (!state.ui) {
         state.ui = { showSignUp: false, showSignIn: false };
       }
       state.ui.showSignUp = true;
       state.ui.showSignIn = false;
-      console.log('showSignUp reducer - after:', state.ui);
     },
     showSignIn: (state) => {
       if (!state.ui) {

@@ -22,7 +22,6 @@ export const LoginScreen = () => {
 
   const handleGetStarted = (e) => {
     e.preventDefault();
-    console.log('Current state:', uiState);
     dispatch(showSignUp());
   };
 
