@@ -15,7 +15,16 @@ import userSlice from "../features/userSlice";
 const persistConfig = {
   key: "user",
   storage,
-  blacklist: ['avatars']
+  blacklist: ['avatars'],
+  migrate: (state) => {
+    if (state && state.user && !state.user.ui) {
+      state.user.ui = {
+        showSignUp: false,
+        showSignIn: false,
+      };
+    }
+    return Promise.resolve(state);
+  }
 };
 
 const reducers = combineReducers({ user: userSlice });
