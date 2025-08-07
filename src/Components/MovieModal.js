@@ -294,10 +294,7 @@ export const MovieModal = ({
   };
 
   const getAgeRating = () => {
-    if (!movieDetails?.release_dates && !movieDetails?.content_ratings) return null;
-
-    console.log({ movieDetails });
-    
+    if (!movieDetails?.release_dates && !movieDetails?.content_ratings) return null;    
     
     if (movieDetails.release_dates?.results) {
       const usRating = movieDetails.release_dates.results.find(r => r.iso_3166_1 === 'GB' ?? r.iso_3166_1 === 'US');
