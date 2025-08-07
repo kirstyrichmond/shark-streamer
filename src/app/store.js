@@ -13,7 +13,7 @@ import {
 import userSlice from "../features/userSlice";
 
 const persistConfig = {
-  key: "user",
+  key: "user-v2",
   storage,
   blacklist: ['avatars'],
   migrate: (state) => {
