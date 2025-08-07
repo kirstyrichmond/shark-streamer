@@ -17,11 +17,12 @@ import { SignUpScreen } from "./SignUpScreen";
 
 export const LoginScreen = () => {
   const emailRef = useRef(null);
-  const uiState = useSelector(state => state.user.ui);
+  const uiState = useSelector(state => state.user?.ui);
   const dispatch = useDispatch();
 
   const handleGetStarted = (e) => {
     e.preventDefault();
+    console.log('Current state:', uiState);
     dispatch(showSignUp());
   };
 
