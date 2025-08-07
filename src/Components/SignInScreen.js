@@ -7,6 +7,7 @@ import { loginUser, showSignUp } from "../features/userSlice.js";
 import {
   Container,
   DescriptionSpan,
+  Form,
   InnerContainer,
   Input,
   SignUpButton,
@@ -62,7 +63,7 @@ export const SignInScreen = () => {
           onSubmit={handleSubmit}
         >
           {() => (
-            <FormikForm>
+            <Form as={FormikForm}>
               <Title>Sign In</Title>
               {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
               <Field
@@ -88,7 +89,7 @@ export const SignInScreen = () => {
                   Sign Up Now.
                 </SpanLink>
               </SignUpDescription>
-            </FormikForm>
+            </Form>
           )}
         </Formik>
       </InnerContainer>

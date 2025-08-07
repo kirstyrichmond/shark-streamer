@@ -7,6 +7,7 @@ import { registerUser } from "../features/userSlice.js";
 import {
   Container,
   InnerContainer,
+  Form,
   Input,
   SignUpButton,
   Title,
@@ -54,7 +55,7 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
           onSubmit={handleSubmit}
         >
           {() => (
-            <FormikForm>
+            <Form as={FormikForm}>
               <Title>Sign Up</Title>
               {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
               <Field
@@ -74,7 +75,7 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
               <SignUpButton type="submit" disabled={loading}>
                 {loading ? "Signing Up..." : "Sign Up"}
               </SignUpButton>
-            </FormikForm>
+            </Form>
           )}
         </Formik>
       </InnerContainer>
