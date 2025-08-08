@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Modal from "react-modal";
+import YouTube from "react-youtube";
+import { useYouTubePlayer } from "../hooks/useYouTubePlayer";
 import {
   CloseButton,
   CloseButtonContainer,
@@ -11,6 +13,7 @@ import {
   MovieTitle,
   PlayButton,
   PlayIcon,
+  PauseIcon,
   ReleaseDate,
   CustomMuteButton,
   MuteIcon,
@@ -82,42 +85,38 @@ export const MovieModal = ({
   const [videos, setVideos] = useState([]);
   const [playTrailer, setPlayTrailer] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [isMuted, setIsMuted] = useState(true);
   const [movieLogo, setMovieLogo] = useState(null);
   const [movieDetails, setMovieDetails] = useState(null);
   const [castAndCrew, setCastAndCrew] = useState(null);
   const [similarMovies, setSimilarMovies] = useState([]);
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const type2 = fetchUrl?.includes("tv") ? "tv" : "movie";
-  const youtubePlayerRef = useRef(null);
   const modalContentRef = useRef(null);
+  
+  const {
+    isPlaying,
+    videoEnded,
+    isMuted,
+    youtubePlayerRef,
+    handleVideoEnd,
+    handleVideoStateChange,
+    handleVideoReady,
+    handlePlayPause,
+    toggleMute,
+    getYouTubeOptions,
+    resetPlayer
+  } = useYouTubePlayer();
 
-  useEffect(() => {
-    if (window.YT) return;
-    
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    
-    window.onYouTubeIframeAPIReady = function() {
-      console.log('YouTube API is ready');
-    };
-    
-    return () => {
-      window.onYouTubeIframeAPIReady = null;
-    };
-  }, []);
 
   useEffect(() => {
     if (!isOpen) {
       setPlayTrailer(false);
       setSelectedVideo(null);
-      setIsMuted(true);
       setShowMoreDetails(false);
+      resetPlayer();
       youtubePlayerRef.current = null;
     }
-  }, [isOpen]);
+  }, [isOpen, resetPlayer]);
 
   useEffect(() => {
     if (!selectedMovie?.id || !isOpen) return;
@@ -198,55 +197,7 @@ export const MovieModal = ({
     fetchDetails();
   }, [selectedMovie?.id, type2, isOpen]);
 
-  useEffect(() => {
-    if (playTrailer && videos.length > 0) {
-      const checkForIframe = setInterval(() => {
-        if (document.getElementById('netflix-trailer-iframe')) {
-          clearInterval(checkForIframe);
-          
-          const connectOnLoad = () => {
-            if (window.YT && window.YT.Player) {
-              if (youtubePlayerRef.current) return;
-              
-              const iframe = document.getElementById('netflix-trailer-iframe');
-              if (iframe) {
-                try {
-                  youtubePlayerRef.current = new window.YT.Player('netflix-trailer-iframe', {
-                    events: {
-                      'onReady': (event) => {
-                        event.target.mute();
-                        setIsMuted(true);
-                      }
-                    }
-                  });
-                } catch (err) {
-                  console.error('Error connecting to YouTube player:', err);
-                }
-              }
-            } else {
-              setTimeout(connectOnLoad, 100);
-            }
-          };
-          
-          connectOnLoad();
-        }
-      }, 100);
-      
-      return () => clearInterval(checkForIframe);
-    }
-  }, [playTrailer, videos]);
 
-  const toggleMute = () => {
-    if (youtubePlayerRef.current) {
-      if (isMuted) {
-        youtubePlayerRef.current.unMute();
-        setIsMuted(false);
-      } else {
-        youtubePlayerRef.current.mute();
-        setIsMuted(true);
-      }
-    }
-  };
 
   const handleModalClose = () => {
     if (youtubePlayerRef.current) {
@@ -318,17 +269,51 @@ export const MovieModal = ({
     
     if (!trailer) return <div>No trailer available</div>;
     
+    if (videoEnded) {
+      return (
+        <PlayerWrapper>
+          <MovieCoverImage
+            src={`${base_url}${selectedMovie?.backdrop_path || ""}`}
+            alt={selectedMovie?.title || selectedMovie?.name || ""}
+          />
+          <ModalContent>
+            {movieLogo ? (
+              <MovieLogo 
+                src={`${base_url}${movieLogo}`} 
+                alt={selectedMovie?.title || selectedMovie?.name || ""}
+              />
+            ) : (
+              <MovieTitle>
+                {selectedMovie?.title || selectedMovie?.name || ""}
+              </MovieTitle>
+            )}
+            <ModalButtonsContainer>
+              <ModalPlayButton onClick={() => {
+                const action = handlePlayPause();
+                if (action === 'restart') {
+                  setPlayTrailer(true);
+                }
+              }}>
+                {videoEnded || !isPlaying ? <PlayIcon /> : <PauseIcon />}
+                {videoEnded || !isPlaying ? "Play" : "Pause"}
+              </ModalPlayButton>
+            </ModalButtonsContainer>
+          </ModalContent>
+        </PlayerWrapper>
+      );
+    }
+    
     return (
       <PlayerWrapper>
         <div className="youtube-wrapper">
-          <iframe
-            id="netflix-trailer-iframe"
-            src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&fs=0&disablekb=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`}
-            title="Trailer"
-            frameBorder="0"
-            allowFullScreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          ></iframe>
+          <YouTube
+            videoId={trailer.key}
+            opts={getYouTubeOptions()}
+            onReady={handleVideoReady}
+            onEnd={handleVideoEnd}
+            onStateChange={handleVideoStateChange}
+            ref={youtubePlayerRef}
+          />
         </div>
         <ModalContent>
           {movieLogo ? (
@@ -343,23 +328,14 @@ export const MovieModal = ({
           )}
           <ModalButtonsContainer>
             <ModalPlayButton onClick={() => {
-              if (youtubePlayerRef.current) {
-                youtubePlayerRef.current.playVideo();
+              const action = handlePlayPause();
+              if (action === 'restart') {
+                setPlayTrailer(true);
               }
             }}>
-              <ModalPlayIcon
-                src="https://img.icons8.com/ios-glyphs/100/000000/play--v1.png"
-                alt="play movie"
-              />
-              Play
+              {videoEnded || !isPlaying ? <PlayIcon /> : <PauseIcon />}
+              {videoEnded || !isPlaying ? "Play" : "Pause"}
             </ModalPlayButton>
-            {/* <ModalInfoButton onClick={() => setShowMoreDetails(true)}>
-              <ModalInfoIcon
-                src="https://img.icons8.com/pastel-glyph/64/FFFFFF/info--v1.png"
-                alt="more movie info"
-              />
-              More Info
-            </ModalInfoButton> */}
           </ModalButtonsContainer>
         </ModalContent>
         <CustomMuteButton onClick={toggleMute}>

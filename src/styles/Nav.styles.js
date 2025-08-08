@@ -216,6 +216,10 @@ export const InputContainer = styled.div`
   margin-right: 20px;
   display: flex;
   align-items: center;
+  
+  @media (max-width: 480px) {
+    margin-right: 8px;
+  }
 `;
 
 export const Input = styled.input`
@@ -234,11 +238,12 @@ export const Input = styled.input`
   }
   
   @media (max-width: 480px) {
-    width: 140px;
+    width: 100px;
     font-size: 0.85rem;
+    padding: 5px 30px 5px 8px;
     
     &::placeholder {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
   }
   
@@ -264,6 +269,11 @@ export const CancelButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  @media (max-width: 480px) {
+    right: 5px;
+    font-size: 0.9rem;
+  }
 `;
 
 export const SearchIcon = styled.img`

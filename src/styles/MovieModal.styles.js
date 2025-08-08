@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { breakpoints } from "../breakpoints";
 import { GoMute, GoUnmute } from "react-icons/go";
+import { FaPlay, FaPause } from "react-icons/fa";
 
 export const MovieInfo = styled.div`
   display: flex;
@@ -198,16 +199,27 @@ export const PlayButton = styled.button`
   }
 `;
 
-export const PlayIcon = styled.div`
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 5px 0 5px 10px;
-  border-color: transparent transparent transparent black;
+export const PlayIcon = styled(FaPlay)`
+  width: 12px;
+  height: 12px;
   margin-right: 8px;
+  color: black;
 
   @media (min-width: ${breakpoints.tablet}px) {
-    border-width: 7px 0 7px 14px;
+    width: 16px;
+    height: 16px;
+  }
+`;
+
+export const PauseIcon = styled(FaPause)`
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  color: black;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    width: 16px;
+    height: 16px;
   }
 `;
 
@@ -356,6 +368,7 @@ export const ModalPlayButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   color: #000;
   outline: none;
   border: none;
@@ -365,6 +378,7 @@ export const ModalPlayButton = styled.button`
   margin-right: 1rem;
   background-color: #fff;
   padding: 1% 4%;
+  width: 70px;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.7);
@@ -373,10 +387,12 @@ export const ModalPlayButton = styled.button`
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 0.8rem;
     padding: 0.6rem 1.2rem;
+    width: 90px;
   }
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 1.2rem;
     padding: 0.7rem 1.5rem;
+    width: 130px;
   }
 `;
 

@@ -3,7 +3,6 @@ import axios from 'axios';
 export const getApiUrl = () => {
   if (process.env.REACT_APP_API_BASE_URL) {
     const envUrl = process.env.REACT_APP_API_BASE_URL.replace(/\/$/, '');
-    console.log('Using REACT_APP_API_BASE_URL:', envUrl);
     return envUrl;
   }
 
@@ -11,11 +10,9 @@ export const getApiUrl = () => {
   
   if (hostname.includes('render.com') || hostname.includes('onrender.com')) {
     const prodUrl = 'https://netflix-clone-dcjp.onrender.com/api';
-    console.log('Using production URL:', prodUrl);
     return prodUrl;
   } else {
     const devUrl = 'http://localhost:5000/api';
-    console.log('Using development URL:', devUrl);
     return devUrl;
   }
 };

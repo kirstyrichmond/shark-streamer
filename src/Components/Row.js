@@ -70,7 +70,7 @@ export const Row = ({
               (movie) =>
                 ((isLargeRow && movie.poster_path) ||
                   (!isLargeRow && movie.backdrop_path)) && (
-                  <div key={movie.id}>
+                  <div key={movie.id} style={{ marginTop: '10px'}}>
                     {!loadedImages[movie.id] && (
                       <Skeleton
                         height={250}

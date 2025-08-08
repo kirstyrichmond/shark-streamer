@@ -1,7 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import YouTube from "react-youtube";
 import requests, { API_KEY } from "../Requests";
 import axios from "../axios";
 import { MovieModal } from "./MovieModal";
+import { useYouTubePlayer } from "../hooks/useYouTubePlayer";
 import {
   BannerContainer,
   BannerContent,
@@ -12,6 +14,7 @@ import {
   InfoIcon,
   PlayButton,
   PlayIcon,
+  PauseIcon,
   BannerPlayerWrapper,
   CustomMuteButton,
   MuteIcon,
@@ -26,25 +29,21 @@ export const Banner = () => {
   const [videos, setVideos] = useState([]);
   const [playTrailer, setPlayTrailer] = useState(false);
   const [openMovieModal, setOpenMovieModal] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const youtubePlayerRef = useRef(null);
+  
+  const {
+    isPlaying,
+    videoEnded,
+    isMuted,
+    youtubePlayerRef,
+    handleVideoEnd,
+    handleVideoStateChange,
+    handleVideoReady,
+    handlePlayPause,
+    toggleMute,
+    getYouTubeOptions,
+    resetPlayer
+  } = useYouTubePlayer();
 
-  useEffect(() => {
-    if (window.YT) return;
-    
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    
-    window.onYouTubeIframeAPIReady = function() {
-      console.log('YouTube API is ready');
-    };
-    
-    return () => {
-      window.onYouTubeIframeAPIReady = null;
-    };
-  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -110,45 +109,6 @@ export const Banner = () => {
     }
   }, [movie]);
 
-  useEffect(() => {
-    if (playTrailer && videos.length > 0) {
-      const checkForIframe = setInterval(() => {
-        if (document.getElementById('banner-trailer-iframe')) {
-          clearInterval(checkForIframe);
-          
-          const connectOnLoad = () => {
-            if (window.YT && window.YT.Player) {
-              if (youtubePlayerRef.current) return;
-              
-              const iframe = document.getElementById('banner-trailer-iframe');
-              if (iframe) {
-                try {
-                  youtubePlayerRef.current = new window.YT.Player('banner-trailer-iframe', {
-                    events: {
-                      'onReady': (event) => {
-                        console.log('Banner YouTube player ready');
-                        event.target.mute();
-                        setIsMuted(true);
-                      }
-                    }
-                  });
-                } catch (err) {
-                  console.error('Error connecting to YouTube player:', err);
-                }
-              }
-            } else {
-              setTimeout(connectOnLoad, 100);
-            }
-          };
-          connectOnLoad();
-        }
-      }, 100);
-      
-      return () => clearInterval(checkForIframe);
-    } else {
-      youtubePlayerRef.current = null;
-    }
-  }, [playTrailer, videos]);
 
   const truncateAmount = screenWidth < 1280 ? 82 : 158;
 
@@ -156,80 +116,79 @@ export const Banner = () => {
     return string?.length > n ? string.substr(0, n - 1) + " ..." : string;
   };
 
-  const toggleMute = () => {
-    if (youtubePlayerRef.current) {
-      if (isMuted) {
-        youtubePlayerRef.current.unMute();
-        setIsMuted(false);
-      } else {
-        youtubePlayerRef.current.mute();
-        setIsMuted(true);
-      }
-    } else {
-      const iframe = document.getElementById('banner-trailer-iframe');
-      if (iframe) {
-        try {
-          const message = isMuted 
-            ? JSON.stringify({ event: 'command', func: 'unMute' })
-            : JSON.stringify({ event: 'command', func: 'mute' });
-          
-          iframe.contentWindow.postMessage(message, '*');
-          setIsMuted(!isMuted);
-        } catch (e) {
-          console.error('Failed to control YouTube player:', e);
-        }
-      }
+  const handlePlayPauseAction = () => {
+    const action = handlePlayPause();
+    if (action === 'restart') {
+      setPlayTrailer(true);
     }
   };
+
+
+  const renderBannerContent = (showPlayButton = true, onPlayClick = null) => (
+    <BannerContent>
+      {logo ? (
+        <MovieIcon 
+          src={`https://image.tmdb.org/t/p/original/${logo}`} 
+          alt={movie?.title || movie?.name || movie?.original_name}
+        />
+      ) : (
+        <BannerTitle>
+          {movie?.title || movie?.name || movie?.original_name}
+        </BannerTitle>
+      )}
+      <BannerDescription>
+        {truncate(movie?.overview, truncateAmount)}
+      </BannerDescription>
+      <ButtonsContainer>
+        {showPlayButton && (
+          <PlayButton onClick={onPlayClick || handlePlayPauseAction}>
+            {videoEnded || !isPlaying ? <PlayIcon /> : <PauseIcon />}
+            {videoEnded || !isPlaying ? "Play" : "Pause"}
+          </PlayButton>
+        )}
+        <InfoButton onClick={() => setOpenMovieModal(true)}>
+          <InfoIcon
+            src="https://img.icons8.com/pastel-glyph/64/FFFFFF/info--v1.png"
+            alt="more movie info"
+          />
+          More Info
+        </InfoButton>
+      </ButtonsContainer>
+    </BannerContent>
+  );
 
   const renderTrailer = () => {
     const trailer = videos?.find((vid) => vid.type === "Trailer") || videos[0];
     
     if (!trailer) return null;
 
+    if (videoEnded) {
+      return (
+        <BannerContainer
+          style={{
+            backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie?.backdrop_path}")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        >
+          {renderBannerContent()}
+        </BannerContainer>
+      );
+    }
+
     return (
       <BannerPlayerWrapper>
         <div className="youtube-wrapper">
-          <iframe
-            id="banner-trailer-iframe"
-            src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=1&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&fs=0&disablekb=1&playsinline=1&enablejsapi=1&origin=${window.location.origin}`}
-            title="Banner Trailer"
-            frameborder="0"
-            allowFullScreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          ></iframe>
+          <YouTube
+            videoId={trailer.key}
+            opts={getYouTubeOptions()}
+            onReady={handleVideoReady}
+            onEnd={handleVideoEnd}
+            onStateChange={handleVideoStateChange}
+            ref={youtubePlayerRef}
+          />
         </div>
-        <BannerContent>
-          {logo ? (
-            <MovieIcon 
-              src={`https://image.tmdb.org/t/p/original/${logo}`} 
-              alt={movie?.title || movie?.name || movie?.original_name}
-            />
-          ) : (
-            <BannerTitle>
-              {movie?.title || movie?.name || movie?.original_name}
-            </BannerTitle>
-          )}
-          <BannerDescription>
-            {truncate(movie?.overview, truncateAmount)}
-          </BannerDescription>
-          <ButtonsContainer>
-            <PlayButton onClick={() => setOpenMovieModal(true)}>
-              <PlayIcon
-                src="https://img.icons8.com/ios-glyphs/100/000000/play--v1.png"
-                alt="play movie"
-              />
-              Play
-            </PlayButton>
-            <InfoButton onClick={() => setOpenMovieModal(true)}>
-              <InfoIcon
-                src="https://img.icons8.com/pastel-glyph/64/FFFFFF/info--v1.png"
-                alt="more movie info"
-              />
-              More Info
-            </InfoButton>
-          </ButtonsContainer>
-        </BannerContent>
+        {renderBannerContent()}
         <CustomMuteButton onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
           {isMuted ? <MuteIcon /> : <UnmuteIcon />}
         </CustomMuteButton>
@@ -257,37 +216,10 @@ export const Banner = () => {
             backgroundPosition: "center center",
           }}
         >
-          <BannerContent>
-            {logo ? (
-              <MovieIcon 
-                src={`https://image.tmdb.org/t/p/original/${logo}`} 
-                alt={movie?.title || movie?.name || movie?.original_name}
-              />
-            ) : (
-              <BannerTitle>
-                {movie?.title || movie?.name || movie?.original_name}
-              </BannerTitle>
-            )}
-            <BannerDescription>
-              {truncate(movie?.overview, truncateAmount)}
-            </BannerDescription>
-            <ButtonsContainer>
-              <PlayButton onClick={() => setPlayTrailer(true)}>
-                <PlayIcon
-                  src="https://img.icons8.com/ios-glyphs/100/000000/play--v1.png"
-                  alt="play movie"
-                />
-                Play
-              </PlayButton>
-              <InfoButton onClick={() => setOpenMovieModal(true)}>
-                <InfoIcon
-                  src="https://img.icons8.com/pastel-glyph/64/FFFFFF/info--v1.png"
-                  alt="more movie info"
-                />
-                More Info
-              </InfoButton>
-            </ButtonsContainer>
-          </BannerContent>
+          {renderBannerContent(true, () => {
+            setPlayTrailer(true);
+            resetPlayer();
+          })}
         </BannerContainer>
       )}
     </>

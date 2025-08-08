@@ -1,19 +1,24 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  margin-left: 20px;
   color: white;
+  padding: 12px 0;
+
+  @media (min-width: 768px) {
+    margin-left: 20px;
+  }
 `;
 
 export const Title = styled.h2`
   margin-left: 20px;
+  padding-bottom: 8px;
 `;
 
 export const RowContainer = styled.div`
   display: flex;
   overflow-y: hidden;
   overflow-x: scroll;
-  padding: 20px;
+  padding: 0 20px;
   scrollbar-width: none;
 
   &::-webkit-scrollbar {

@@ -3,7 +3,6 @@ import { breakpoints } from "../breakpoints";
 
 export const Container = styled.div`
   position: relative;
-  height: 240px;
   background-color: #111;
   border-radius: 4px;
   overflow: hidden;
@@ -12,7 +11,6 @@ export const Container = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   
   @media (min-width: ${breakpoints.tablet}px) {
-    height: 280px;
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   }

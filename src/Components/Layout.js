@@ -11,7 +11,6 @@ const Layout = () => {
 
   useEffect(() => {
     if (!user.info && location.pathname !== '/') {
-      console.log("No user info, redirecting to root");
       navigate('/');
     }
   }, [user.info, location.pathname, navigate]);

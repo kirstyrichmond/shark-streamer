@@ -69,12 +69,10 @@ export const Nav = () => {
   }, [user?.profiles, selectedProfile, dispatch]);
 
   const handleSearchIconClick = () => {
-    console.log("Search icon clicked");
     toggleSearchBar(true);
   };
 
   const handleSearchCancel = () => {
-    console.log("Search canceled");
     toggleSearchBar(false);
   };
 
