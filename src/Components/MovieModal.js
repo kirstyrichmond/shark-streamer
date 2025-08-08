@@ -200,15 +200,16 @@ export const MovieModal = ({
 
 
   const handleModalClose = () => {
-    if (youtubePlayerRef.current) {
+    if (youtubePlayerRef.current?.internalPlayer) {
       try {
-        youtubePlayerRef.current.stopVideo();
+        youtubePlayerRef.current.internalPlayer.stopVideo();
       } catch (e) {
         console.error('Error stopping video:', e);
       }
     }
     
     setPlayTrailer(false);
+    resetPlayer();
     setTimeout(() => {
       handleClose(false);
     }, 50);

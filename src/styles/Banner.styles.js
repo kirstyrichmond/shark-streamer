@@ -144,7 +144,6 @@ export const PlayButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
   color: #000;
   outline: none;
   border: none;
@@ -153,54 +152,41 @@ export const PlayButton = styled.button`
   border-radius: 4px;
   margin-right: 1rem;
   background-color: #fff;
-  padding: 0.5rem 1rem;
-  width: 70px;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+  width: 68px;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.75);
   }
 
   @media (min-width: ${breakpoints.tablet}px) {
-    font-size: 0.8rem;
-    padding: 0.6rem 1.2rem;
-    width: 90px;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    font-size: 1.2rem;
-    padding: 0.7rem 1.5rem;
-    width: 130px;
+    font-size: 1rem;
+    padding: 0.4rem 0.7rem 0.4rem 0.7rem;
+    width: 88px;
   }
 `;
 
 export const PlayIcon = styled(FaPlay)`
-  width: 14px;
-  height: 14px;
-  margin-right: 0.4rem;
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  color: black;
 
   @media (min-width: ${breakpoints.tablet}px) {
     width: 16px;
     height: 16px;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    width: 20px;
-    height: 20px;
-    margin-right: 0.7rem;
   }
 `;
 
 export const PauseIcon = styled(FaPause)`
-  width: 14px;
-  height: 14px;
-  margin-right: 0.4rem;
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  color: black;
 
   @media (min-width: ${breakpoints.tablet}px) {
     width: 16px;
     height: 16px;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    width: 20px;
-    height: 20px;
-    margin-right: 0.7rem;
   }
 `;
 
@@ -212,7 +198,7 @@ export const InfoButton = styled.button`
   outline: none;
   border: none;
   font-weight: 600;
-  font-size: 0.6rem;
+  font-size: 0.5rem;
   border-radius: 4px;
   margin-right: 1rem;
   background-color: rgba(109, 109, 110, 0.7);

@@ -7,7 +7,9 @@ export const MovieInfo = styled.div`
   display: flex;
 `
 
-export const ModalContainer = styled.div`
+export const ModalContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'showExpanded',
+})`
   width: 90vw;
   background: #141414;
   z-index: 1001;
@@ -180,11 +182,11 @@ export const PlayButton = styled.button`
   outline: none;
   border: none;
   font-weight: 700;
-  font-size: 0.6rem;
+  font-size: 12px;
   border-radius: 4px;
   margin-right: 1rem;
   background-color: #fff;
-  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+  padding: 1px 2px;
   position: absolute;
   bottom: 20px;
   left: 24px;
@@ -194,15 +196,15 @@ export const PlayButton = styled.button`
   }
 
   @media (min-width: ${breakpoints.tablet}px) {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.7rem 0.4rem 0.7rem;
+    font-size: 14px;
+    // padding: 1px 2px;
   }
 `;
 
 export const PlayIcon = styled(FaPlay)`
   width: 12px;
   height: 12px;
-  margin-right: 8px;
+  margin-right: 10px;
   color: black;
 
   @media (min-width: ${breakpoints.tablet}px) {
@@ -212,9 +214,9 @@ export const PlayIcon = styled(FaPlay)`
 `;
 
 export const PauseIcon = styled(FaPause)`
-  width: 12px;
-  height: 12px;
-  margin-right: 8px;
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
   color: black;
 
   @media (min-width: ${breakpoints.tablet}px) {
@@ -377,7 +379,7 @@ export const ModalPlayButton = styled.button`
   border-radius: 4px;
   margin-right: 1rem;
   background-color: #fff;
-  padding: 1% 4%;
+  padding: 4px 8px;
   width: 70px;
 
   &:hover {
@@ -398,7 +400,7 @@ export const ModalPlayButton = styled.button`
 
 
 export const ModalPlayIcon = styled.img`
-  width: 14px;
+  width: 12px;
   margin-right: 0.4rem;
 
   @media (min-width: ${breakpoints.tablet}px) {
