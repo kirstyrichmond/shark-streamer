@@ -5,11 +5,13 @@ export const Container = styled.div`
   width: 80%;
   margin: auto;
   padding-top: 8px;
+  margin-top: 3rem;
   z-index: 1;
   max-width: 700px;
 
   @media (min-width: ${breakpoints.tablet}px) {
     padding-top: 260px;
+    margin-top: 0;
   }
   @media (min-width: ${breakpoints.desktop}px) {
     padding-top: 120px;

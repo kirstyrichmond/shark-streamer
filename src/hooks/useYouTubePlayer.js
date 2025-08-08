@@ -1,12 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
 
 export const useYouTubePlayer = () => {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const youtubePlayerRef = useRef(null);
 
   useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+    setIsMobile(isMobileDevice);
+    setIsPlaying(!isMobileDevice);
+    
     if (window.YT) return;
     
     const tag = document.createElement('script');
@@ -91,17 +97,30 @@ export const useYouTubePlayer = () => {
   const handleVideoReady = (event) => {
     event.target.mute();
     setIsMuted(true);
+    
+    if (isMobile) {
+      setTimeout(() => {
+        try {
+          event.target.playVideo();
+          setIsPlaying(true);
+        } catch (e) {
+          console.log('Autoplay blocked on mobile');
+          setIsPlaying(false);
+        }
+      }, 100);
+    }
   };
 
   const resetPlayer = () => {
     setVideoEnded(false);
-    setIsPlaying(true);
+    setIsPlaying(!isMobile);
   };
 
   return {
     isPlaying,
     videoEnded,
     isMuted,
+    isMobile,
     youtubePlayerRef,
     handleVideoEnd,
     handleVideoStateChange,
