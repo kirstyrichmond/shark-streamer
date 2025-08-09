@@ -6,7 +6,7 @@ import { FaPlay, FaPause } from "react-icons/fa";
 export const BannerContainer = styled.div`
   position: relative;
   z-index: 5;
-  height: 70vw;
+  height: 90vw;
   width: 100%;
   color: white;
   object-fit: contain;

@@ -34,6 +34,7 @@ export const Banner = () => {
     isPlaying,
     videoEnded,
     isMuted,
+    isMobile,
     youtubePlayerRef,
     handleVideoEnd,
     handleVideoStateChange,
@@ -162,7 +163,7 @@ export const Banner = () => {
     
     if (!trailer) return null;
 
-    if (videoEnded) {
+    if (videoEnded || (isMobile && !isPlaying && playTrailer)) {
       return (
         <BannerContainer
           style={{

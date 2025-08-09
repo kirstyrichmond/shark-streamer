@@ -2,19 +2,21 @@ import styled from "styled-components";
 import { breakpoints } from "../breakpoints";
 
 export const Container = styled.div`
-  width: 80%;
-  margin: auto;
-  padding-top: 8px;
-  margin-top: 3rem;
-  z-index: 1;
-  max-width: 700px;
-
+  width: 90%;
+  max-width: max-content;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  
   @media (min-width: ${breakpoints.tablet}px) {
-    padding-top: 260px;
-    margin-top: 0;
+    padding: 2rem;
   }
   @media (min-width: ${breakpoints.desktop}px) {
-    padding-top: 120px;
+    padding: 3rem;
   }
 `;
 
@@ -86,6 +88,10 @@ export const NameInput = styled.input`
   padding-left: 16px;
   margin: 0 20px;
 
+  &::placeholder {
+    color:rgb(190, 190, 190);
+  }
+
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 2rem;
     height: 52px;
@@ -97,6 +103,7 @@ export const MiddleContainer = styled.div`
   padding: 24px 0px;
   border-bottom: 1px solid grey;
   align-items: center;
+  width: 100%;
 
   @media (min-width: ${breakpoints.tablet}px) {
     padding: 32px 0px;
@@ -105,17 +112,42 @@ export const MiddleContainer = styled.div`
 
 export const ButtonsContainer = styled.div`
   padding: 32px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+
+  @media (min-width: 754px) {
+    flex-direction: row;
+    justify-content: center;
+    gap: 18px;
+  }
+`;
+
+export const PrimaryButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+
+  @media (min-width: 450px) {
+    flex-direction: row;
+    justify-content: center;
+    gap: 18px;
+  }
 `;
 
 export const TransparentButton = styled.button`
   background: transparent;
   min-width: 130px;
+  width: 100%;
   height: 48px;
   font-size: 1.4rem;
   color: rgb(182, 182, 182);
   border: 2px solid rgb(182, 182, 182);
   cursor: pointer;
-  margin-right: 18px;
   font-weight: 500;
 
   &:hover {
@@ -123,10 +155,11 @@ export const TransparentButton = styled.button`
     color: #fff;
   }
 
-  @media (min-width: ${breakpoints.tablet}px) {
-    width: 200px;
+  @media (min-width: ${breakpoints.desktop}px) {
     height: 60px;
     font-size: 1.6rem;
+    width: 200px;
+    flex: 0 0 auto;
   }
 `;
 
@@ -134,7 +167,6 @@ export const SaveButton = styled(TransparentButton)`
   background: #fff;
   color: #191919;
   border: none;
-  margin-bottom: 24px;
 
   &:hover {
     background: red;
@@ -145,6 +177,7 @@ export const SaveButton = styled(TransparentButton)`
 export const CheckboxContainer = styled.div`
   margin-top: 20px;
   padding: 16px 0;
+  width: 100%;
 `;
 
 export const CheckboxLabel = styled.label`
@@ -171,8 +204,8 @@ export const CheckboxLabel = styled.label`
 `;
 
 export const AvatarPlaceholder = styled.div`
-  width: 128px;
-  height: 128px;
+  width: 90px;
+  height: 90px;
   border-radius: 8px;
   border: 2px dashed #666;
   display: flex;
@@ -182,6 +215,7 @@ export const AvatarPlaceholder = styled.div`
   color: #666;
   font-size: 14px;
   cursor: pointer;
+  padding: 6px;
 
   @media (min-width: ${breakpoints.tablet}px) {
     width: 144px;

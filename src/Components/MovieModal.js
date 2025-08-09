@@ -97,6 +97,7 @@ export const MovieModal = ({
     isPlaying,
     videoEnded,
     isMuted,
+    isMobile,
     youtubePlayerRef,
     handleVideoEnd,
     handleVideoStateChange,
@@ -269,7 +270,7 @@ export const MovieModal = ({
     
     if (!trailer) return <div>No trailer available</div>;
     
-    if (videoEnded) {
+    if (videoEnded || (isMobile && !isPlaying && playTrailer)) {
       return (
         <PlayerWrapper>
           <MovieCoverImage

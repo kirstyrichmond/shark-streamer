@@ -24,6 +24,8 @@ export const Profiles = () => {
   const user = useSelector(state => state.user.user);
   const [manageProfiles, setManageProfiles] = useState(false);
   const [editProfilePage, setEditProfilePage] = useState(false);
+  const [addProfilePage, setAddProfilePage] = useState(false);
+  const isFirstProfile = !user?.profiles || user.profiles.length === 0;
 
   useEffect(() => {
     if (user?.info?.id) {
@@ -31,6 +33,12 @@ export const Profiles = () => {
     }
     setManageProfiles(false);
   }, [dispatch, user?.info?.id]);
+
+  useEffect(() => {
+    if (isFirstProfile && user?.info?.id) {
+      setAddProfilePage(true);
+    }
+  }, [isFirstProfile, user?.info?.id]);
 
   const handlePage = (profile) => {
     dispatch(setSelectedProfile(profile));
@@ -61,6 +69,17 @@ export const Profiles = () => {
             setEditProfilePage(value);
             if (!value) {
               setManageProfiles(false);
+            }
+          }}
+        />
+      ) : addProfilePage ? (
+        <ManageProfile
+          isCreating={true}
+          isFirstProfile={isFirstProfile}
+          setEditProfilePage={(value) => {
+            setAddProfilePage(value);
+            if (!value && isFirstProfile) {
+              navigate('/');
             }
           }}
         />
@@ -101,13 +120,15 @@ export const Profiles = () => {
               )
             )}
           </ProfilesRow>
-          <AddProfileContainer onClick={() => navigate("/add-profile")}>
-            <AddProfileImage
-              src="https://img.icons8.com/ios-glyphs/240/FFFFFF/plus--v1.png"
-              alt="add profile"
-            />
-            <AddProfileText>Add Profile</AddProfileText>
-          </AddProfileContainer>
+          {!manageProfiles && (
+            <AddProfileContainer onClick={() => setAddProfilePage(true)}>
+              <AddProfileImage
+                src="https://img.icons8.com/ios-glyphs/240/FFFFFF/plus--v1.png"
+                alt="add profile"
+              />
+              <AddProfileText>Add Profile</AddProfileText>
+            </AddProfileContainer>
+          )}
           {user.profiles.length > 0 && (
             <div>
               <ManageProfilesButton

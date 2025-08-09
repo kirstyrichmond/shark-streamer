@@ -3,26 +3,23 @@ import { breakpoints } from "../breakpoints";
 
 export const ProfileContainer = styled.div`
   margin: auto;
-  padding-top: 110px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  @media (min-width: ${breakpoints.tablet}px) {
-    padding-top: 200px;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    padding-top: 240px;
-  }
+  justify-content: center;
+  padding: 0 1rem;
+  box-sizing: border-box;
 `;
 
 export const AddProfileContainer = styled.div`
   cursor: pointer;
-  width: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 60px;
+  width: 100%;
+  max-width: 160px;
 `;
 
 export const PageTitle = styled.h2`
@@ -55,17 +52,20 @@ export const ProfileTitle = styled.p`
 `;
 
 export const ProfilesRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-  max-width: 340px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
+  grid-gap: 16px;
+  margin: 0 0 28px 0;
   justify-content: center;
+  width: 100%;
 
   @media (min-width: ${breakpoints.tablet}px) {
-    max-width: 500px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, max-content));
+    grid-gap: 20px;
   }
   @media (min-width: ${breakpoints.desktop}px) {
-    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, max-content));
+    grid-gap: 25px;
     margin-bottom: 36px;
   }
 `;
@@ -94,8 +94,8 @@ export const SingleProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 12px;
-  margin-bottom: 18px;
+  width: 100%;
+  max-width: 160px;
 
   &:hover {
     ${ProfileAvatar} {
@@ -105,10 +105,6 @@ export const SingleProfileContainer = styled.div`
     ${SingleProfileName} {
       color: #fff;
     }
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    margin-right: 18px;
   }
 `;
 

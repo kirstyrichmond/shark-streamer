@@ -81,14 +81,6 @@ function App() {
                   </AuthGuard>
                 } 
               />
-              <Route 
-                path={RoutePaths.AddProfile} 
-                element={
-                  <AuthGuard>
-                    <ManageProfile isCreating={true} setEditProfilePage={() => window.location.href = '/'} />
-                  </AuthGuard>
-                } 
-              />
             </Route>
           </Routes>
         </BrowserRouter>

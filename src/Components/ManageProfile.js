@@ -14,6 +14,7 @@ import {
   AvatarLoadingOverlay,
   HiddenFileInput,
   AvatarPlaceholder,
+  PrimaryButtonGroup,
 } from "../styles/ManageProfile.styles";
 import { AvatarContainer, EditProfileIcon, ProfileAvatar } from "../styles/Profiles.styles";
 import { AvatarPicker } from "./AvatarPicker";
@@ -21,6 +22,7 @@ import { AvatarPicker } from "./AvatarPicker";
 export const ManageProfile = ({
   setEditProfilePage,
   isCreating = false,
+  isFirstProfile = false,
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
@@ -128,7 +130,7 @@ export const ManageProfile = ({
 
   return (
     <Container>
-      <div>
+      <div style={{ width: '100%'}}>
         <PageTitle>{isCreating ? 'Add' : 'Edit'} Profile</PageTitle>
       </div>
       <MiddleContainer>
@@ -170,7 +172,7 @@ export const ManageProfile = ({
           type="text" 
           ref={newUsername} 
           defaultValue={isCreating ? '' : selectedProfile?.name || ''}
-          placeholder="Enter profile name"
+          placeholder="Profile name"
         />
       </MiddleContainer>
       <CheckboxContainer>
@@ -184,12 +186,16 @@ export const ManageProfile = ({
         </CheckboxLabel>
       </CheckboxContainer>
       <ButtonsContainer>
-        <SaveButton onClick={handleSaveProfile}>
-          {isCreating ? 'Create' : 'Save'}
-        </SaveButton>
-        <TransparentButton onClick={() => setEditProfilePage(false)}>
-          Cancel
-        </TransparentButton>
+        <PrimaryButtonGroup>
+          <SaveButton onClick={handleSaveProfile}>
+            {isCreating ? 'Create' : 'Save'}
+          </SaveButton>
+          {(!isCreating || (isCreating && !isFirstProfile)) && (
+            <TransparentButton onClick={() => setEditProfilePage(false)}>
+              Cancel
+            </TransparentButton>
+          )}
+        </PrimaryButtonGroup>
         {!isCreating && user?.profiles?.length > 1 && (
           <TransparentButton onClick={handleDeleteProfile}>
             Delete profile
