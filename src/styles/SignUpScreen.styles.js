@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { breakpoints } from "../breakpoints";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export const Container = styled.div`
   height: 100vh;
@@ -57,6 +58,53 @@ export const Input = styled.input`
   border-radius: 4px;
   top: 50%;
   color: #8c8c8c;
+`;
+
+export const PasswordInputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+export const PasswordInput = styled.input`
+  outline-width: 0;
+  outline: none;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 18px;
+  padding: 0px 50px 0px 20px;
+  font-size: 1.2rem;
+  background: #333;
+  border: none;
+  border-radius: 4px;
+  top: 50%;
+  color: #8c8c8c;
+`;
+
+export const PasswordToggleButton = styled.button`
+  position: absolute;
+  right: 15px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #8c8c8c;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  z-index: 1;
+  
+  &:hover {
+    color: #fff;
+  }
+`;
+
+export const EyeIcon = styled(AiOutlineEye)`
+  font-size: 20px;
+`;
+
+export const EyeSlashIcon = styled(AiOutlineEyeInvisible)`
+  font-size: 20px;
 `;
 
 export const SignUpButton = styled.button`

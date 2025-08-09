@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Formik, Form as FormikForm, Field, ErrorMessage } from "formik";
 import { registerSchema } from "../schemas";
 import { registerUser } from "../features/userSlice.js";
+import { PasswordField } from "./PasswordField";
 import {
   Container,
   InnerContainer,
@@ -35,7 +36,7 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
       }));
       
       if (registerUser.fulfilled.match(resultAction)) {
-        navigate("/add-profile");
+        navigate("/profiles");
       } else {
         setError(resultAction.payload || 'Registration failed');
       }
@@ -65,10 +66,8 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
                 placeholder="Email"
               />
               <ErrorMessage name="email" component="div" style={{ color: "red", fontSize: "14px", marginTop: "5px" }} />
-              <Field
-                as={Input}
+              <PasswordField
                 name="password"
-                type="password"
                 placeholder="Password"
               />
               <ErrorMessage name="password" component="div" style={{ color: "red", fontSize: "14px", marginTop: "5px" }} />

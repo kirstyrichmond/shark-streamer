@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form as FormikForm, Field, ErrorMessage } from "formik";
 import { loginSchema } from "../schemas";
 import { loginUser, showSignUp } from "../features/userSlice.js";
+import { PasswordField } from "./PasswordField";
 import {
   Container,
   DescriptionSpan,
@@ -73,10 +74,8 @@ export const SignInScreen = () => {
                 placeholder="Email"
               />
               <ErrorMessage name="email" component="div" style={{ color: "red", fontSize: "14px", marginTop: "5px" }} />
-              <Field
-                as={Input}
+              <PasswordField
                 name="password"
-                type="password"
                 placeholder="Password"
               />
               <ErrorMessage name="password" component="div" style={{ color: "red", fontSize: "14px", marginTop: "5px" }} />
