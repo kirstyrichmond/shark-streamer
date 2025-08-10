@@ -43,7 +43,6 @@ export const LoginScreen = () => {
           membership.
         </DescTwo>
         <InputContainer>
-          <div>
             <Input
               ref={emailRef}
               type="email"
@@ -55,7 +54,6 @@ export const LoginScreen = () => {
             >
               Get Started
             </GetStartedButton>
-          </div>
         </InputContainer>
       </BodyContainer>
     </Container>

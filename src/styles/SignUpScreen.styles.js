@@ -4,11 +4,10 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export const Container = styled.div`
   height: 100vh;
-  overflow-y: hidden;
+  overflow: hidden;
 `;
 
 export const InnerContainer = styled.div`
-  padding-top: 124px;
   margin: auto;
   background-color: rgba(0, 0, 0, 0.75);
   border-radius: 4px;
@@ -16,8 +15,10 @@ export const InnerContainer = styled.div`
   box-sizing: border-box;
   display: flex;
   justify-content: center;
+  align-items: center;
 
   @media (min-width: ${breakpoints.tablet}px) {
+    align-items: flex-start;
     padding-top: 300px;
   }
   @media (min-width: ${breakpoints.desktop}px) {

@@ -8,8 +8,7 @@ export const Container = styled.div`
   background-position: center;
   height: 100vh;
   min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   
   @media (max-width: ${breakpoints.mobile}px) {
     background-position: center top;
@@ -21,25 +20,23 @@ export const BodyContainer = styled.div`
   color: #fff;
   padding: 16px;
   box-sizing: border-box;
-  position: absolute;
-  padding-top: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   height: 100vh;
-  min-height: 100vh;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.6);
 
   @media (min-width: ${breakpoints.mobile}px) {
     padding: 20px;
-    padding-top: 150px;
   }
   
   @media (min-width: ${breakpoints.tablet}px) {
-    padding-top: 300px;
     background-color: rgba(0, 0, 0, 0.5);
+    justify-content: flex-start;
+    padding-top: 300px;
   }
   
   @media (min-width: ${breakpoints.desktop}px) {
@@ -49,6 +46,13 @@ export const BodyContainer = styled.div`
 
 export const InputContainer = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    flex-direction: row;
+    justify-content: center;
+  }
 `;
 
 export const Input = styled.input`
@@ -59,7 +63,7 @@ export const Input = styled.input`
   max-width: 280px;
   font-size: 1rem;
   border-radius: 4px;
-  margin-bottom: 16px;
+  margin: 0 auto 16px;
   box-sizing: border-box;
   -webkit-appearance: none;
   
@@ -77,7 +81,7 @@ export const Input = styled.input`
     padding: 1rem 2.4rem 1rem 0.8rem;
     font-size: 1.2rem;
     max-width: 320px;
-    margin-bottom: 0;
+    margin: 0;
   }
   
   @media (min-width: ${breakpoints.desktop}px) {
