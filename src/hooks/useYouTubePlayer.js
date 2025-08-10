@@ -11,7 +11,6 @@ export const useYouTubePlayer = () => {
     const userAgent = navigator.userAgent.toLowerCase();
     const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
     setIsMobile(isMobileDevice);
-    setIsPlaying(!isMobileDevice);
     
     if (window.YT) return;
     
@@ -98,22 +97,20 @@ export const useYouTubePlayer = () => {
     event.target.mute();
     setIsMuted(true);
     
-    if (isMobile) {
-      setTimeout(() => {
-        try {
-          event.target.playVideo();
-          setIsPlaying(true);
-        } catch (e) {
-          console.log('Autoplay blocked on mobile');
-          setIsPlaying(false);
-        }
-      }, 100);
-    }
+    setTimeout(() => {
+      try {
+        event.target.playVideo();
+        setIsPlaying(true);
+      } catch (e) {
+        console.log('Autoplay blocked:', e);
+        setIsPlaying(false);
+      }
+    }, 100);
   };
 
   const resetPlayer = () => {
     setVideoEnded(false);
-    setIsPlaying(!isMobile);
+    setIsPlaying(false);
   };
 
   return {
