@@ -8,9 +8,13 @@ html, body {
   height: 100%;
 }
 
+#root {
+  height: 100%;
+}
+
 .app {
   background-color: #141414;
-  overflow-y: auto;
+  height: 100%;
 }
 
 
