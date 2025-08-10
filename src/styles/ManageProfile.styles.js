@@ -11,6 +11,7 @@ export const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+  height 100%;
   
   @media (min-width: ${breakpoints.tablet}px) {
     padding: 2rem;
