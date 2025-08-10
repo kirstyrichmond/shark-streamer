@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "../axios";
 import { MovieModal } from "./MovieModal";
-import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { 
   Container, 
   PosterLarge, 
   Posters, 
   RowContainer, 
-  Title 
+  Title,
+  ResponsiveSkeleton
 } from "../styles/Row.styles";
 
 export const Row = ({
@@ -57,9 +57,7 @@ export const Row = ({
           {loading ? (
             Array.from({ length: 8 }).map((_, index) => (
               <div key={`skeleton-${index}`}>
-                <Skeleton
-                  height={250}
-                  width={166}
+                <ResponsiveSkeleton
                   baseColor="#202020"
                   highlightColor="#444"
                 />
@@ -72,9 +70,7 @@ export const Row = ({
                   (!isLargeRow && movie.backdrop_path)) && (
                   <div key={movie.id} style={{ marginTop: '10px'}}>
                     {!loadedImages[movie.id] && (
-                      <Skeleton
-                        height={250}
-                        width={166}
+                      <ResponsiveSkeleton
                         baseColor="#202020"
                         highlightColor="#444"
                       />

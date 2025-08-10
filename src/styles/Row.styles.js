@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Skeleton from 'react-loading-skeleton';
 
 export const Container = styled.div`
   color: white;
@@ -62,5 +63,16 @@ export const PosterLarge = styled.img`
 
   @media (max-width: 768px) {
     max-height: 140px;
+  }
+`;
+
+export const ResponsiveSkeleton = styled(Skeleton)`
+  width: 166px;
+  height: 250px;
+  margin-right: 15px;
+  
+  @media (max-width: 768px) {
+    width: 94px;
+    height: 140px;
   }
 `;
