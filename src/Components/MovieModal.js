@@ -270,7 +270,7 @@ export const MovieModal = ({
     
     if (!trailer) return <div>No trailer available</div>;
     
-    if (videoEnded || (isMobile && !isPlaying && playTrailer)) {
+    if (videoEnded) {
       return (
         <PlayerWrapper>
           <MovieCoverImage

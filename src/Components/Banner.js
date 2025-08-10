@@ -163,7 +163,7 @@ export const Banner = () => {
     
     if (!trailer) return null;
 
-    if (videoEnded || (isMobile && !isPlaying && playTrailer)) {
+    if (videoEnded) {
       return (
         <BannerContainer
           style={{
