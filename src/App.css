@@ -1,6 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
 .app {
   background-color: #141414;
-  min-height: 100vh;
+  overflow-y: auto;
 }
 
 
