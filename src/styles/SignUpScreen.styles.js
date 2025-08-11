@@ -10,7 +10,7 @@ export const InnerContainer = styled.div`
   margin: auto;
   background-color: rgba(0, 0, 0, 0.75);
   border-radius: 4px;
-  height: 100%;
+  height: 100vh;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
