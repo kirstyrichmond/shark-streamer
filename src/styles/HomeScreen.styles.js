@@ -7,7 +7,7 @@ export const SearchAllMovieContainer = styled.div`
   width: 100%;
   gap: 1rem;
   background-color: #111;
-  min-height: 100vh;
+  height: 100%;
 
   @media (min-width: 1100px) {
     padding: 100px 30px;

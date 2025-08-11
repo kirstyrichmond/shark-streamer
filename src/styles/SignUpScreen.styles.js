@@ -3,7 +3,7 @@ import { breakpoints } from "../breakpoints";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export const Container = styled.div`
-  height: 100%;
+  min-height: 100vh;
 `;
 
 export const InnerContainer = styled.div`

@@ -6,8 +6,7 @@ export const Container = styled.div`
     center no-repeat;
   background-size: cover;
   background-position: center;
-  overflow: hidden;
-  height: 100%;
+  min-height: 100vh;
   
   @media (max-width: ${breakpoints.mobile}px) {
     background-position: center top;

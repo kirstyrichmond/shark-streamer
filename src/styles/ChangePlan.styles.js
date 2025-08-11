@@ -2,23 +2,30 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
+  overflow: hidden;
   background: #f3f3f3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 `;
 
 export const ScreenContainer = styled.div`
   width: 75%;
-  height: 200px;
   margin: auto;
   max-width: 700px;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  text-align: center;
 `;
 
 export const Title = styled.h1`
   font-size: 2.5rem;
   color: #333;
   font-weight: 500;
-  padding-top: 200px;
-  margin-bottom: 80px;
+  margin-bottom: 2rem;
 `;
 
 export const PlanContainer = styled.div`

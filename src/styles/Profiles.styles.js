@@ -3,7 +3,7 @@ import { breakpoints } from "../breakpoints";
 
 export const ProfileContainer = styled.div`
   margin: auto;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;

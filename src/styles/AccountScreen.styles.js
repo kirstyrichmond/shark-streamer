@@ -1,20 +1,34 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { breakpoints } from "../breakpoints";
 
 export const Container = styled.div`
   width: 100vw;
   background: #f3f3f3;
-  height: 100vh;
-  margin: auto;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 `;
 
 export const AccountContainer = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 600px;
-  width: 75%;
-  margin: auto;
-  padding-top: 16rem;
+  width: 90%;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  @media (min-width: ${breakpoints.mobile}px) {
+    width: 85%;
+    padding: 1.5rem;
+  }
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    width: 75%;
+    padding: 2rem 1rem;
+  }
 `;
 
 export const TopContainer = styled.div`
@@ -28,13 +42,24 @@ export const TopInnerContainer = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: 2.75rem;
+  font-size: 1.8rem;
   font-weight: 400;
   color: #737373;
-  font-weight: 400;
-  margin-bottom: 20px;
-  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-top: 10px;
   padding: 0;
+
+  @media (min-width: ${breakpoints.mobile}px) {
+    font-size: 2.2rem;
+    margin-bottom: 18px;
+    margin-top: 12px;
+  }
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    font-size: 2.75rem;
+    margin-bottom: 20px;
+    margin-top: 15px;
+  }
 `;
 
 export const MemberIcon = styled.img`
@@ -53,6 +78,7 @@ export const MemberSinceText = styled.p`
 
 export const MiddleContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   padding-bottom: 50px;
   border-top: 1px solid #999;
   padding-top: 24px;
