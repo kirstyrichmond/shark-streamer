@@ -15,6 +15,7 @@ import {
   HiddenFileInput,
   AvatarPlaceholder,
   PrimaryButtonGroup,
+  AvatarPlaceholderText,
 } from "../styles/ManageProfile.styles";
 import { AvatarContainer, EditProfileIcon, ProfileAvatar } from "../styles/Profiles.styles";
 import { AvatarPicker } from "./AvatarPicker";
@@ -146,8 +147,7 @@ export const ManageProfile = ({
             />
           ) : (
             <AvatarPlaceholder>
-              <span>Click to</span>
-              <span>Select Avatar</span>
+              <AvatarPlaceholderText>Click to <br/> Select Avatar</AvatarPlaceholderText>
             </AvatarPlaceholder>
           )}
           {avatarLoading && (

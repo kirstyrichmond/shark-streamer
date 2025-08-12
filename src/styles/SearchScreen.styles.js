@@ -89,7 +89,7 @@ export const FilterContainer = styled.div`
 `;
 
 export const FilterButton = styled.button`
-  background-color: ${props => props.isActive ? '#e50914' : '#333'};
+  background-color: ${props => props.$isActive ? '#e50914' : '#333'};
   color: white;
   border: none;
   padding: 6px 12px;
@@ -105,7 +105,7 @@ export const FilterButton = styled.button`
   }
   
   &:hover {
-    background-color: ${props => props.isActive ? '#e50914' : '#444'};
+    background-color: ${props => props.$isActive ? '#e50914' : '#444'};
   }
 `;
 

@@ -102,7 +102,6 @@ export const useYouTubePlayer = () => {
         event.target.playVideo();
         setIsPlaying(true);
       } catch (e) {
-        console.log('Autoplay blocked:', e);
         setIsPlaying(false);
       }
     }, 100);

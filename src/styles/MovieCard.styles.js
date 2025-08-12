@@ -26,7 +26,7 @@ export const Container = styled.div`
     }
   }
   
-  ${props => props.isSelected && `
+  ${props => props.$isSelected && `
     border: 2px solid #e50914;
   `}
 `;

@@ -228,3 +228,7 @@ export const AvatarPlaceholder = styled.div`
     height: 160px;
   }
 `;
+
+export const AvatarPlaceholderText = styled.p`
+  text-align: center;
+`

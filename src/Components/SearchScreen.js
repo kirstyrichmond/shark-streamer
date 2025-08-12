@@ -84,19 +84,19 @@ const SearchScreen = () => {
           {movies.length > 0 && (
             <FilterContainer>
               <FilterButton 
-                isActive={filter === 'all'} 
+                $isActive={filter === 'all'} 
                 onClick={() => setFilter('all')}
               >
                 All ({counts.total})
               </FilterButton>
               <FilterButton 
-                isActive={filter === 'movie'} 
+                $isActive={filter === 'movie'} 
                 onClick={() => setFilter('movie')}
               >
                 Movies ({counts.movies})
               </FilterButton>
               <FilterButton 
-                isActive={filter === 'tv'} 
+                $isActive={filter === 'tv'} 
                 onClick={() => setFilter('tv')}
               >
                 TV Shows ({counts.tv})

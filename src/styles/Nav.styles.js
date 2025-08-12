@@ -193,17 +193,15 @@ export const DropdownMenuUsername = styled.span`
 
 export const DropdownMenuItem = styled.div`
   display: flex;
-  justify-content: center;
   color: white;
   font-size: 13px;
-  padding: 10px 0px;
+  padding: 10px;
   font-weight: 600;
   cursor: pointer;
   background-color: transparent;
   border: none;
   outline: none;
   width: 100%;
-  text-align: center;
 
   &:hover {
     text-decoration: underline;

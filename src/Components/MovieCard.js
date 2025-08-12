@@ -44,7 +44,7 @@ const MovieCard = ({ movie, onClick, isSelected }) => {
   return (
     <Container
       onClick={handleClick}
-      isSelected={isSelected}
+      $isSelected={isSelected}
     >
       {movie.backdrop_path || movie.poster_path ? (
         <>
