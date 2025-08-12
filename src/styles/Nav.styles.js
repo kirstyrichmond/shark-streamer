@@ -229,19 +229,17 @@ export const Input = styled.input`
   height: 100%;
   border-radius: 4px;
   outline: none;
+  font-size: 16px;
   
   &::placeholder {
     color: #aaa;
-    font-size: 0.8rem;
   }
   
   @media (max-width: 480px) {
     width: 100px;
-    font-size: 0.85rem;
     padding: 5px 30px 5px 8px;
     
     &::placeholder {
-      font-size: 0.7rem;
     }
   }
   
@@ -249,7 +247,6 @@ export const Input = styled.input`
     width: 240px;
     
     &::placeholder {
-      font-size: 0.9rem;
     }
   }
 `;
