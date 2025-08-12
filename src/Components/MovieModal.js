@@ -201,11 +201,11 @@ export const MovieModal = ({
 
 
   const handleModalClose = () => {
-    if (youtubePlayerRef.current) {
+    if (youtubePlayerRef.current?.internalPlayer) {
       try {
-        youtubePlayerRef.current.stopVideo();
+        youtubePlayerRef.current.internalPlayer.pauseVideo();
       } catch (e) {
-        console.error('Error stopping video:', e);
+        console.error('Error pausing video:', e);
       }
     }
     
