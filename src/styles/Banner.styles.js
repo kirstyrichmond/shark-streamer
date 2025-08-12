@@ -85,7 +85,7 @@ export const BannerPlayerWrapper = styled.div`
 `;
 
 export const BannerContent = styled.div`
-  max-width: 50%;
+  max-width: 54%;
   padding-left: 3.7%;
   padding-right: 4.7%;
   padding-bottom: 3%;
@@ -200,7 +200,6 @@ export const InfoButton = styled.button`
   font-weight: 600;
   font-size: 0.5rem;
   border-radius: 4px;
-  margin-right: 1rem;
   background-color: rgba(109, 109, 110, 0.7);
   padding: 1.2% 3%;
 
@@ -211,10 +210,7 @@ export const InfoButton = styled.button`
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 0.8rem;
     padding: 0.6rem 1.2rem;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    font-size: 1.2rem;
-    padding: 0.7rem 1.5rem;
+    width: 122px;
   }
 `;
 
@@ -224,11 +220,6 @@ export const InfoIcon = styled.img`
 
   @media (min-width: ${breakpoints.tablet}px) {
     width: 18px;
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    width: 24px;
-    margin-right: 0.7rem;
   }
 `;
 
