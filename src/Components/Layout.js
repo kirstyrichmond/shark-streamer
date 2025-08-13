@@ -1,24 +1,15 @@
-import React, { useEffect } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../features/userSlice';
+import React from 'react';
+import { useRoutes } from 'react-router-dom';
 import { Nav } from './Nav';
+import { routes } from '../router/routes';
 
 const Layout = () => {
-  const user = useSelector(selectUser);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!user.info && location.pathname !== '/') {
-      navigate('/');
-    }
-  }, [user.info, location.pathname, navigate]);
+  const element = useRoutes(routes);
 
   return (
     <>
       <Nav />
-      <Outlet />
+      { element }
     </>
   );
 };

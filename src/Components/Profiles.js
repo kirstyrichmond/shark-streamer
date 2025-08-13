@@ -17,6 +17,7 @@ import {
   SingleProfileName,
 } from "../styles/Profiles.styles";
 import { ManageProfile } from "./ManageProfile";
+import { RoutePaths } from "../router/types";
 
 export const Profiles = () => {
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ export const Profiles = () => {
       }));
 
       dispatch(profiles(updatedProfiles));
-      navigate("/")
+      navigate(RoutePaths.Home)
     }
 
   };
@@ -79,7 +80,7 @@ export const Profiles = () => {
           setEditProfilePage={(value) => {
             setAddProfilePage(value);
             if (!value && isFirstProfile) {
-              navigate('/');
+              navigate(RoutePaths.Home);
             }
           }}
         />

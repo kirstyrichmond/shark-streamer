@@ -16,18 +16,23 @@ export const AccountContainer = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 600px;
-  width: 90%;
+  width: 95%;
   padding: 1rem;
   box-sizing: border-box;
 
   @media (min-width: ${breakpoints.mobile}px) {
-    width: 85%;
+    width: 90%;
     padding: 1.5rem;
   }
 
   @media (min-width: ${breakpoints.tablet}px) {
+    width: 80%;
+    padding: 2rem;
+  }
+
+  @media (min-width: ${breakpoints.desktop}px) {
     width: 75%;
-    padding: 2rem 1rem;
+    max-width: 700px;
   }
 `;
 
@@ -78,16 +83,33 @@ export const MemberSinceText = styled.p`
 
 export const MiddleContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding-bottom: 50px;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 30px;
   border-top: 1px solid #999;
-  padding-top: 24px;
+  padding-top: 20px;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 50px;
+    padding-top: 24px;
+  }
 `;
 
 export const MembershipHeader = styled.div`
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 100%;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    width: 250px;
+  }
+
+  @media (min-width: ${breakpoints.desktop}px) {
+    width: 300px;
+  }
 `;
 
 export const MembershipTitle = styled.div`
@@ -100,10 +122,8 @@ export const MembershipTitle = styled.div`
 
 export const CancelMembershipButton = styled.button`
   display: block;
-  margin: 20px 10px 10px 0;
-  max-width: 200px;
-  position: relative;
-  width: 200px;
+  padding: 1rem 0rem;
+  font-size: 16px;
   border: none;
   padding: 12px 1em;
   background-color: #e6e6e6;
@@ -111,17 +131,37 @@ export const CancelMembershipButton = styled.button`
   box-shadow: 0 1px 0 rgb(0 0 0 / 20%);
   color: #000;
   cursor: pointer;
+  font-size: 0.9rem;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    font-size: 1rem;
+  }
 `;
 
 export const BottomContainer = styled.div`
   display: flex;
-  padding-bottom: 50px;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 30px;
   border-top: 1px solid #999;
-  padding-top: 24px;
+  padding-top: 20px;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    flex-direction: row;
+    gap: 2rem;
+    padding-bottom: 50px;
+    padding-top: 24px;
+  }
 `;
 
 export const PlanHeader = styled.div`
-  width: 150px;
+  width: 100%;
+  margin-bottom: 0.5rem;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    width: 150px;
+    margin-bottom: 0;
+  }
 `;
 
 export const PlanTitle = styled.h2`
@@ -166,10 +206,18 @@ export const SignOutButton = styled.button`
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
+  margin-bottom: 0.8rem;
 `;
 
 export const EmailText = styled.h4`
   font-size: 1rem;
   font-weight: 600;
   color: #333;
+  margin: 0;
+`;
+
+export const EmailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;

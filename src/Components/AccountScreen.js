@@ -10,6 +10,7 @@ import {
   ChangePlanContainer,
   Container,
   EmailText,
+  EmailContainer,
   HdIcon,
   MemberIcon,
   MembershipHeader,
@@ -25,15 +26,20 @@ import {
   TopContainer,
   TopInnerContainer,
 } from "../styles/AccountScreen.styles";
+import { RoutePaths } from "../router/types";
 
 export const AccountScreen = () => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const currentPlan = user.info?.subscription_plan || 'basic';
+  const planDisplayName = currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1);
+  const showHdIcon = currentPlan === 'standard' || currentPlan === 'premium';
+
   const handleSignOut = async () => {
     dispatch(logoutUser());
-    navigate("/");
+    navigate(RoutePaths.Home);
   };
 
   return (
@@ -52,11 +58,10 @@ export const AccountScreen = () => {
         <MiddleContainer>
           <MembershipHeader>
             <MembershipTitle>MEMBERSHIP & BILLING</MembershipTitle>
-            <CancelMembershipButton>Cancel Membership</CancelMembershipButton>
           </MembershipHeader>
-          <div>
+          <EmailContainer>
             <EmailText>{user.info.email}</EmailText>
-          </div>
+          </EmailContainer>
         </MiddleContainer>
         <BottomContainer>
           <PlanHeader>
@@ -64,11 +69,13 @@ export const AccountScreen = () => {
           </PlanHeader>
           <ChangePlanContainer>
             <PlanTypeContainer>
-              <PlanTypeTitle>Standard</PlanTypeTitle>
-              <HdIcon
-                src="https://img.icons8.com/ios/100/000000/hd.png"
-                alt="hd icon"
-              />
+              <PlanTypeTitle>{planDisplayName}</PlanTypeTitle>
+              {showHdIcon && (
+                <HdIcon
+                  src="https://img.icons8.com/ios/100/000000/hd.png"
+                  alt="hd icon"
+                />
+              )}
             </PlanTypeContainer>
             <div>
               <ChangePlanButtonLink to="/change-plan">
@@ -78,6 +85,7 @@ export const AccountScreen = () => {
           </ChangePlanContainer>
         </BottomContainer>
         <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
+        <CancelMembershipButton>Cancel Membership</CancelMembershipButton>
       </AccountContainer>
     </Container>
   );

@@ -4,5 +4,4 @@ export const RoutePaths = {
   ChangePlan: "/change-plan", 
   Profiles: "/profiles",
   ManageProfile: "/manage-profile",
-  AddProfile: "/add-profile"
 };

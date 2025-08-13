@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { selectUser, selectPlans, fetchPlans, updateSubscription } from "../features/userSlice";
 import {
+  BackButton,
+  BackButtonIcon,
   Container,
+  CurrentPlan,
+  HeaderContainer,
+  PlanActions,
   PlanContainer,
   PlanDescription,
   PlanPrice,
@@ -11,12 +17,14 @@ import {
   SubscribeButton,
   Title,
 } from "../styles/ChangePlan.styles";
+import { RoutePaths } from "../router/types";
 
 export const ChangePlanScreen = () => {
   const [loading, setLoading] = useState(false);
   const user = useSelector(selectUser);
   const plans = useSelector(selectPlans);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (plans.items.length === 0 && !plans.loading) {
@@ -33,8 +41,6 @@ export const ChangePlanScreen = () => {
         userId: user.info.id, 
         planId 
       })).unwrap();
-      
-      alert(`Successfully changed to ${planId} plan!`);
     } catch (error) {
       alert('Failed to change plan. Please try again.');
     } finally {
@@ -45,14 +51,19 @@ export const ChangePlanScreen = () => {
   return (
     <Container>
       <ScreenContainer>
-        <Title>Change Streaming Plan</Title>
+        <HeaderContainer>
+          <BackButton onClick={() => navigate(RoutePaths.Account)}>
+            <BackButtonIcon />
+          </BackButton>
+          <Title>Change Streaming Plan</Title>
+        </HeaderContainer>
         {user.info?.subscription_plan && (
-          <p>
+          <CurrentPlan>
             Current Plan: <strong>
               {user.info.subscription_plan.charAt(0).toUpperCase() + 
                user.info.subscription_plan.slice(1)}
             </strong>
-          </p>
+          </CurrentPlan>
         )}
         
         {plans.loading ? (
@@ -67,17 +78,19 @@ export const ChangePlanScreen = () => {
               <PlanContainer key={plan.id}>
                 <PlanTitle>{plan.name}</PlanTitle>
                 <PlanDescription>{plan.description}</PlanDescription>
-                <PlanPrice>{plan.price}</PlanPrice>
-                <SubscribeButton
-                  onClick={() => changePlan(plan.id)}
-                  disabled={isCurrentPlan || loading}
-                  style={{
-                    opacity: isCurrentPlan || loading ? 0.6 : 1,
-                    cursor: isCurrentPlan || loading ? 'not-allowed' : 'pointer'
-                  }}
-                >
-                  {isCurrentPlan ? "Current Plan" : loading ? "Updating..." : "Select Plan"}
-                </SubscribeButton>
+                <PlanActions>
+                  <PlanPrice>{plan.price}</PlanPrice>
+                  <SubscribeButton
+                    onClick={() => changePlan(plan.id)}
+                    disabled={isCurrentPlan || loading}
+                    style={{
+                      opacity: isCurrentPlan || loading ? 0.6 : 1,
+                      cursor: isCurrentPlan || loading ? 'not-allowed' : 'pointer'
+                    }}
+                  >
+                    {isCurrentPlan ? "Current Plan" : loading ? "Updating..." : "Select Plan"}
+                  </SubscribeButton>
+                </PlanActions>
               </PlanContainer>
             );
           })

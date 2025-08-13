@@ -16,6 +16,7 @@ import {
   SpanLink,
   Title,
 } from "../styles/SignUpScreen.styles.js";
+import { RoutePaths } from "../router/types.js";
 
 export const SignInScreen = () => {
   const [error, setError] = useState("");
@@ -39,7 +40,7 @@ export const SignInScreen = () => {
       }));
       
       if (loginUser.fulfilled.match(resultAction)) {
-        navigate("/");
+        navigate(RoutePaths.Home);
       } else {
         setError(resultAction.payload || 'Login failed');
       }

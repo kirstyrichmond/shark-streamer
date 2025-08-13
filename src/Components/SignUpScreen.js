@@ -13,6 +13,7 @@ import {
   SignUpButton,
   Title,
 } from "../styles/SignUpScreen.styles.js";
+import { RoutePaths } from "../router/types.js";
 
 export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
       }));
       
       if (registerUser.fulfilled.match(resultAction)) {
-        navigate("/profiles");
+        navigate(RoutePaths.Profiles);
       } else {
         setError(resultAction.payload || 'Registration failed');
       }

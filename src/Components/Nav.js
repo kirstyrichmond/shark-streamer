@@ -22,6 +22,7 @@ import {
   SignInButton,
 } from "../styles/Nav.styles";
 import NetflixLogo from "../Images/netflix-logo.png";
+import { RoutePaths } from "../router/types";
 
 export const Nav = () => {
   const user = useSelector(selectUser);
@@ -30,7 +31,7 @@ export const Nav = () => {
   const [show, handleShow] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
-  const isHomeScreen = window.location.pathname === "/";
+  const isHomeScreen = window.location.pathname === RoutePaths.Home;
   
   const { 
     searchKey, 
@@ -84,7 +85,7 @@ export const Nav = () => {
         onClick={() => {
           toggleSearchBar(false);
           setShowMenu(false);
-          navigate("/");
+          navigate(RoutePaths.Home);
         }}
       />
       <RightContainer>
@@ -159,7 +160,7 @@ export const Nav = () => {
               <DropdownMenuItem
                 onClick={() => {
                   setShowMenu(!showMenu);
-                  navigate("/profiles");
+                  navigate(RoutePaths.Profiles);
                 }}
               >
                 {user.profiles?.length ? "Switch Profiles" : "Add Profile"}
@@ -167,7 +168,7 @@ export const Nav = () => {
               <DropdownMenuItem
                 onClick={() => {
                   setShowMenu(!showMenu);
-                  navigate("/account");
+                  navigate(RoutePaths.Account);
                 }}
               >
                 Account
@@ -176,7 +177,7 @@ export const Nav = () => {
                 onClick={async () => {
                   setShowMenu(!showMenu);
                   dispatch(logoutUser());
-                  navigate("/");
+                  navigate(RoutePaths.Home);
                 }}
               >
                 Sign Out
