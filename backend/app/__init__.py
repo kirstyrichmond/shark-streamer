@@ -15,7 +15,7 @@ def create_app():
         'http://localhost:3002', 
         'http://localhost:3003',
         'https://kirsty-richmond-netflix.vercel.app',
-        'https://netflix-clone-dm4fykb0z-kirstyrichmonds-projects.vercel.app'
+        'https://netflix-clone-dm4fykb0z-kirstyrichmonds-projects.vercel.app',
     ] + frontend_urls
     allowed_origins = [origin.strip() for origin in allowed_origins if origin.strip()]
     

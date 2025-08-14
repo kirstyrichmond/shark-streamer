@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Formik, Form as FormikForm, Field, ErrorMessage } from "formik";
 import { registerSchema } from "../schemas";
-import { registerUser } from "../features/userSlice.js";
+import { registerUser, showSignIn } from "../features/userSlice.js";
 import { PasswordField } from "./PasswordField";
 import {
   Container,
@@ -12,6 +12,9 @@ import {
   Input,
   SignUpButton,
   Title,
+  SignUpDescription,
+  DescriptionSpan,
+  SpanLink,
 } from "../styles/SignUpScreen.styles.js";
 import { RoutePaths } from "../router/types.js";
 
@@ -48,6 +51,11 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
     }
   };
 
+  const handleSignInClick = (e) => {
+    e.preventDefault();
+    dispatch(showSignIn());
+  };
+
   return (
     <Container>
       <InnerContainer>
@@ -75,6 +83,12 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }) => {
               <SignUpButton type="submit" disabled={loading}>
                 {loading ? "Signing Up..." : "Sign Up"}
               </SignUpButton>
+              <SignUpDescription>
+                <DescriptionSpan>Already have an account?</DescriptionSpan>{" "}
+                <SpanLink onClick={handleSignInClick}>
+                  Sign In Now.
+                </SpanLink>
+              </SignUpDescription>
             </Form>
           )}
         </Formik>

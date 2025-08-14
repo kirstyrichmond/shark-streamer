@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
-import { authAPI, profileAPI, subscriptionAPI } from "../services/api";
+import { authAPI, profileAPI, subscriptionAPI, watchlistAPI } from "../services/api";
 
 export const loginUser = createAsyncThunk(
   'user/login',
@@ -145,12 +145,53 @@ export const fetchPredefinedAvatars = createAsyncThunk(
   }
 );
 
+export const fetchWatchlist = createAsyncThunk(
+  'user/fetchWatchlist',
+  async (profileId, { rejectWithValue }) => {
+    try {
+      const watchlist = await watchlistAPI.getWatchlist(profileId);
+      return { profileId, watchlist };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const addToWatchlist = createAsyncThunk(
+  'user/addToWatchlist',
+  async ({ profileId, movieId, movieData }, { rejectWithValue }) => {
+    try {
+      const result = await watchlistAPI.addToWatchlist(profileId, movieId, movieData);
+      return { profileId, movieId, movieData: result.item };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const removeFromWatchlist = createAsyncThunk(
+  'user/removeFromWatchlist',
+  async ({ profileId, movieId }, { rejectWithValue }) => {
+    try {
+      await watchlistAPI.removeFromWatchlist(profileId, movieId);
+      return { profileId, movieId };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState: {
     user: {
       info: null,
       profiles: [],
+      watchlist: {
+        items: [],
+        loading: false,
+        error: null,
+      },
     },
     selectedProfile: null,
     plans: {
@@ -334,6 +375,47 @@ export const userSlice = createSlice({
         }
         state.avatars.loading = false;
         state.avatars.error = action.payload;
+      })
+      .addCase(fetchWatchlist.pending, (state) => {
+        if (!state.user.watchlist) {
+          state.user.watchlist = { items: [], loading: false, error: null };
+        }
+        state.user.watchlist.loading = true;
+        state.user.watchlist.error = null;
+      })
+      .addCase(fetchWatchlist.fulfilled, (state, action) => {
+        if (!state.user.watchlist) {
+          state.user.watchlist = { items: [], loading: false, error: null };
+        }
+        state.user.watchlist.loading = false;
+        state.user.watchlist.items = action.payload.watchlist;
+        state.user.watchlist.error = null;
+      })
+      .addCase(fetchWatchlist.rejected, (state, action) => {
+        if (!state.user.watchlist) {
+          state.user.watchlist = { items: [], loading: false, error: null };
+        }
+        state.user.watchlist.loading = false;
+        state.user.watchlist.error = action.payload;
+      })
+      .addCase(addToWatchlist.fulfilled, (state, action) => {
+        if (!state.user.watchlist) {
+          state.user.watchlist = { items: [], loading: false, error: null };
+        }
+        const existingIndex = state.user.watchlist.items.findIndex(
+          item => item.movie_id === action.payload.movieId
+        );
+        if (existingIndex === -1) {
+          state.user.watchlist.items.push(action.payload.movieData);
+        }
+      })
+      .addCase(removeFromWatchlist.fulfilled, (state, action) => {
+        if (!state.user.watchlist) {
+          state.user.watchlist = { items: [], loading: false, error: null };
+        }
+        state.user.watchlist.items = state.user.watchlist.items.filter(
+          item => item.movie_id !== action.payload.movieId
+        );
       });
   },
 });
@@ -343,6 +425,7 @@ export const { profiles, editProfile, showSignUp, showSignIn, setSelectedProfile
 export const selectUser = (state) => state.user.user;
 export const selectPlans = (state) => state.user.plans;
 export const selectSelectedProfile = (state) => state.user.selectedProfile;
+export const selectWatchlist = (state) => state.user.user?.watchlist || { items: [], loading: false, error: null };
 
 export const selectAvatars = createSelector(
   [(state) => state.user],

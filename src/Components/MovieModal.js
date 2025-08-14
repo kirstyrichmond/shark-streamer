@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Modal from "react-modal";
 import YouTube from "react-youtube";
 import { useYouTubePlayer } from "../hooks/useYouTubePlayer";
+import { WatchlistButton } from "./WatchlistButton";
 import {
   CloseButton,
   CloseButtonContainer,
@@ -298,6 +299,9 @@ export const MovieModal = ({
                 {videoEnded || !isPlaying ? <PlayIcon /> : <PauseIcon />}
                 {videoEnded || !isPlaying ? "Play" : "Pause"}
               </ModalPlayButton>
+              <WatchlistButton 
+                movie={selectedMovie} 
+              />
             </ModalButtonsContainer>
           </ModalContent>
         </PlayerWrapper>
@@ -337,6 +341,9 @@ export const MovieModal = ({
               {videoEnded || !isPlaying ? <PlayIcon /> : <PauseIcon />}
               {videoEnded || !isPlaying ? "Play" : "Pause"}
             </ModalPlayButton>
+            <WatchlistButton 
+              movie={selectedMovie} 
+            />
           </ModalButtonsContainer>
         </ModalContent>
         <CustomMuteButton onClick={toggleMute}>

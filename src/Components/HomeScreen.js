@@ -17,6 +17,10 @@ export const HomeScreen = () => {
     <>
       <Banner />
       <Row
+        title="My List"
+        isWatchlist
+      />
+      <Row
         title="NETFLIX ORIGINALS"
         fetchUrl={requests.fetchNetflixOriginals}
         isLargeRow

@@ -4,7 +4,6 @@ import "./App.css";
 import { useDispatch } from "react-redux";
 import { getCurrentUser } from "./features/userSlice";
 import Layout from "./Components/Layout";
-import AuthGuard from "./Components/AuthGuard";
 import { SearchProvider } from "./context/SearchContext";
 
 function App() {
@@ -25,9 +24,7 @@ function App() {
     <div className="app" id="root">
       <SearchProvider>
         <BrowserRouter>
-          <AuthGuard>
-            <Layout />
-          </AuthGuard>
+          <Layout />
         </BrowserRouter>
       </SearchProvider>
     </div>
