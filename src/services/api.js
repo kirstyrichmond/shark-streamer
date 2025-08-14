@@ -157,4 +157,105 @@ export const subscriptionAPI = {
   )
 };
 
+const TMDB_API_KEY = process.env.REACT_APP_MOVIE_API_KEY;
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+
+const tmdbApi = axios.create({
+  baseURL: TMDB_BASE_URL,
+});
+
+export const movieAPI = {
+  fetchTrending: () => tmdbApi.get(`/trending/all/week?api_key=${TMDB_API_KEY}&language=en-US`),
+  fetchNetflixOriginals: () => tmdbApi.get(`/discover/tv?api_key=${TMDB_API_KEY}&with_networks=213`),
+  fetchTopRated: () => tmdbApi.get(`/movie/top_rated?api_key=${TMDB_API_KEY}&language=en-US`),
+  fetchActionMovies: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=28`),
+  fetchComedyMovies: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=35`),
+  fetchHorrorMovies: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=27`),
+  fetchRomanceMovies: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=10749`),
+  fetchDocumentaries: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=99`),
+  fetchMovieDetails: (movieType, movieId) => tmdbApi.get(`/${movieType}/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`),
+  fetchVideos: (movieType, movieId) => tmdbApi.get(`/${movieType}/${movieId}/videos?api_key=${TMDB_API_KEY}`),
+  fetchImages: (movieType, movieId) => tmdbApi.get(`/${movieType}/${movieId}/images?api_key=${TMDB_API_KEY}`),
+  fetchReleaseDates: (movieId) => tmdbApi.get(`/movie/${movieId}/release_dates?api_key=${TMDB_API_KEY}`),
+  fetchContentRatings: (tvId) => tmdbApi.get(`/tv/${tvId}/content_ratings?api_key=${TMDB_API_KEY}`),
+  fetchCredits: (movieType, movieId) => tmdbApi.get(`/${movieType}/${movieId}/credits?api_key=${TMDB_API_KEY}`),
+  fetchSimilar: (movieType, movieId) => tmdbApi.get(`/${movieType}/${movieId}/similar?api_key=${TMDB_API_KEY}`),
+
+  searchMovies: (searchTerm) => {
+    const params = {
+      api_key: TMDB_API_KEY,
+      sort_by: 'popularity.desc',
+      include_adult: false,
+      query: searchTerm
+    };
+    return tmdbApi.get('/search/movie', { params });
+  },
+
+  searchTV: (searchTerm) => {
+    const params = {
+      api_key: TMDB_API_KEY,
+      sort_by: 'popularity.desc',
+      include_adult: false,
+      query: searchTerm
+    };
+    return tmdbApi.get('/search/tv', { params });
+  },
+
+  searchMoviesAndTV: async (searchTerm) => {
+    if (!searchTerm || searchTerm.trim() === '') {
+      return [];
+    }
+    
+    try {
+      const [movieResponse, tvResponse] = await Promise.all([
+        movieAPI.searchMovies(searchTerm),
+        movieAPI.searchTV(searchTerm)
+      ]);
+      
+      const movieResults = movieResponse.data.results.map(item => ({
+        ...item,
+        media_type: 'movie'
+      }));
+      
+      const tvResults = tvResponse.data.results.map(item => ({
+        ...item,
+        media_type: 'tv'
+      }));
+      
+      return [...movieResults, ...tvResults].sort((a, b) => b.popularity - a.popularity);
+    } catch (error) {
+      console.error("Error searching movies and TV:", error);
+      return [];
+    }
+  },
+
+  fetchFullMovieDetails: async (movieType, movieId) => {
+    try {
+      const [detailsResponse, creditsResponse, similarResponse] = await Promise.all([
+        movieAPI.fetchMovieDetails(movieType, movieId),
+        movieAPI.fetchCredits(movieType, movieId),
+        movieAPI.fetchSimilar(movieType, movieId)
+      ]);
+
+      let ratingsResponse;
+      if (movieType === 'movie') {
+        ratingsResponse = await movieAPI.fetchReleaseDates(movieId);
+        detailsResponse.data.release_dates = ratingsResponse.data;
+      } else {
+        ratingsResponse = await movieAPI.fetchContentRatings(movieId);
+        detailsResponse.data.content_ratings = ratingsResponse.data;
+      }
+
+      return {
+        details: detailsResponse.data,
+        credits: creditsResponse.data,
+        similar: similarResponse.data.results || []
+      };
+    } catch (error) {
+      console.error("Error fetching full movie details:", error);
+      throw error;
+    }
+  }
+};
+
 export default api;

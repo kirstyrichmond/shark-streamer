@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import YouTube from "react-youtube";
-import requests, { API_KEY } from "../Requests";
-import axios from "../axios";
+import { movieAPI } from "../services/api";
 import { MovieModal } from "./MovieModal";
 import { useYouTubePlayer } from "../hooks/useYouTubePlayer";
 import {
@@ -49,7 +48,7 @@ export const Banner = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const request = await axios.get(requests.fetchTrending);
+        const request = await movieAPI.fetchTrending();
         const randomIndex = Math.floor(Math.random() * request.data.results.length);
         setMovie(request.data.results[randomIndex]);
         return request;
@@ -67,9 +66,7 @@ export const Banner = () => {
       
       try {
         const type = movie?.media_type === "tv" ? "tv" : "movie";
-        const request = await axios.get(
-          `https://api.themoviedb.org/3/${type}/${movie?.id}/videos?api_key=${API_KEY}`
-        );
+        const request = await movieAPI.fetchVideos(type, movie?.id);
         
         if (request.data.results && request.data.results.length > 0) {
           setVideos(request.data.results);
@@ -86,9 +83,7 @@ export const Banner = () => {
       
       try {
         const type = movie?.media_type === "tv" ? "tv" : "movie";
-        const request = await axios.get(
-          `https://api.themoviedb.org/3/${type}/${movie?.id}/images?api_key=${API_KEY}`
-        );
+        const request = await movieAPI.fetchImages(type, movie?.id);
         
         if (request.data.logos && request.data.logos.length > 0) {
           const englishLogo = request.data.logos.find(logo => 

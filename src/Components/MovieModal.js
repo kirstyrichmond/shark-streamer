@@ -47,8 +47,7 @@ import {
   MovieInfo,
   DescriptionHeader
 } from "../styles/MovieModal.styles";
-import { API_KEY } from "../Requests";
-import axios from "axios";
+import { movieAPI } from "../services/api";
 
 const customStyles = {
   content: {
@@ -126,9 +125,7 @@ export const MovieModal = ({
 
     const fetchVideos = async () => {
       try {
-        const request = await axios.get(
-          `https://api.themoviedb.org/3/${type2}/${selectedMovie.id}/videos?api_key=${API_KEY}`
-        );
+        const request = await movieAPI.fetchVideos(type2, selectedMovie.id);
         if (request.data.results && request.data.results.length > 0) {
           setVideos(request.data.results);
           setPlayTrailer(true);
@@ -141,9 +138,7 @@ export const MovieModal = ({
     const fetchLogo = async () => {
       try {
         const type = selectedMovie?.media_type === 'tv' || selectedMovie?.first_air_date ? "tv" : "movie";
-        const request = await axios.get(
-          `https://api.themoviedb.org/3/${type}/${selectedMovie.id}/images?api_key=${API_KEY}`
-        );
+        const request = await movieAPI.fetchImages(type, selectedMovie.id);
         if (request.data.logos && request.data.logos.length > 0) {
           const englishLogo = request.data.logos.find(logo => 
             logo.iso_639_1 === 'en' || logo.iso_639_1 === null
@@ -161,33 +156,23 @@ export const MovieModal = ({
       try {
         const type = selectedMovie?.media_type === 'tv' || selectedMovie?.first_air_date ? "tv" : "movie";
         
-        const detailsRequest = await axios.get(
-          `https://api.themoviedb.org/3/${type}/${selectedMovie.id}?api_key=${API_KEY}`
-        );
+        const detailsRequest = await movieAPI.fetchMovieDetails(type, selectedMovie.id);
         
         let ratingsRequest;
         if (type === 'movie') {
-          ratingsRequest = await axios.get(
-            `https://api.themoviedb.org/3/movie/${selectedMovie.id}/release_dates?api_key=${API_KEY}`
-          );
+          ratingsRequest = await movieAPI.fetchReleaseDates(selectedMovie.id);
           detailsRequest.data.release_dates = ratingsRequest.data;
         } else {
-          ratingsRequest = await axios.get(
-            `https://api.themoviedb.org/3/tv/${selectedMovie.id}/content_ratings?api_key=${API_KEY}`
-          );
+          ratingsRequest = await movieAPI.fetchContentRatings(selectedMovie.id);
           detailsRequest.data.content_ratings = ratingsRequest.data;
         }
         
         setMovieDetails(detailsRequest.data);
 
-        const creditsRequest = await axios.get(
-          `https://api.themoviedb.org/3/${type}/${selectedMovie.id}/credits?api_key=${API_KEY}`
-        );
+        const creditsRequest = await movieAPI.fetchCredits(type, selectedMovie.id);
         setCastAndCrew(creditsRequest.data);
 
-        const similarRequest = await axios.get(
-          `https://api.themoviedb.org/3/${type}/${selectedMovie.id}/similar?api_key=${API_KEY}`
-        );
+        const similarRequest = await movieAPI.fetchSimilar(type, selectedMovie.id);
         setSimilarMovies(similarRequest.data.results || []);
       } catch (error) {
         console.error("Error fetching movie details:", error);

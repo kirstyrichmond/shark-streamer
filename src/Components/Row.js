@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "../axios";
 import { MovieModal } from "./MovieModal";
 import { fetchWatchlist, selectWatchlist, selectSelectedProfile } from "../features/userSlice";
-import requests from "../Requests";
+import { movieAPI } from "../services/api";
+import { getMovieType } from "../utils/movieUtils";
 import 'react-loading-skeleton/dist/skeleton.css';
 import { 
   Container, 
@@ -16,7 +16,7 @@ import {
 
 export const Row = ({
   title,
-  fetchUrl,
+  fetchRequest,
   isLargeRow = false,
   isWatchlist = false,
 }) => {
@@ -37,7 +37,7 @@ export const Row = ({
     } else {
       async function fetchData() {
         try {
-          const request = await axios.get(fetchUrl);
+          const request = await fetchRequest();
           setMovies(request.data.results);
           setLoading(false);
           return request;
@@ -48,7 +48,7 @@ export const Row = ({
       }
       fetchData();
     }
-  }, [fetchUrl, isWatchlist, dispatch, selectedProfile?.id]);
+  }, [fetchRequest, isWatchlist, dispatch, selectedProfile?.id]);
 
   useEffect(() => {
     if (isWatchlist) {
@@ -62,9 +62,7 @@ export const Row = ({
     if (isWatchlist) {
       try {
         const movieType = item.movie_type === 'tv' ? 'tv' : 'movie';
-        const response = await axios.get(
-          requests.fetchMovieDetails(movieType, item.movie_id)
-        );
+        const response = await movieAPI.fetchMovieDetails(movieType, item.movie_id);
         
         const movieData = {
           ...response.data,
@@ -162,7 +160,7 @@ export const Row = ({
           selectedMovie={selectedMovie}
           fetchUrl={isWatchlist ? 
             (selectedMovie.media_type === 'tv' ? 'tv' : 'movie') : 
-            fetchUrl
+            getMovieType(selectedMovie)
           }
           onMovieChange={(newMovie) => {
             setSelectedMovie(newMovie);

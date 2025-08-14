@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
-import axios from 'axios';
-import { API_KEY } from '../Requests';
+import { movieAPI } from '../services/api';
 import { debounce } from 'lodash';
 
 const SearchContext = createContext();
@@ -22,42 +21,9 @@ export const SearchProvider = ({ children }) => {
     }
     
     setIsLoading(true);
-    const type = searchTerm ? 'search' : 'discover';
     
     try {      
-      const params = {
-        api_key: API_KEY,
-        sort_by: 'popularity.desc',
-        include_adult: false
-      };
-      
-      if (searchTerm) {
-        params.query = searchTerm;
-      }
-      
-      const requestMovies = await axios.get(
-        `https://api.themoviedb.org/3/${type}/movie`,
-        { params }
-      );
-      
-      const requestTv = await axios.get(
-        `https://api.themoviedb.org/3/${type}/tv`,
-        { params }
-      );
-      
-      const movieResults = requestMovies.data.results.map(item => ({
-        ...item,
-        media_type: 'movie'
-      }));
-      
-      const tvResults = requestTv.data.results.map(item => ({
-        ...item,
-        media_type: 'tv'
-      }));
-      
-      const combinedResults = [...movieResults, ...tvResults].sort((a, b) => {
-        return b.popularity - a.popularity;
-      });
+      const combinedResults = await movieAPI.searchMoviesAndTV(searchTerm);
             
       setMovies(combinedResults);
       

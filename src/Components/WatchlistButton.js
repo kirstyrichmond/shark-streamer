@@ -4,6 +4,7 @@ import { FaPlus, FaMinus } from 'react-icons/fa';
 import { TiTick } from "react-icons/ti";
 import { addToWatchlist, removeFromWatchlist, selectWatchlist, selectSelectedProfile } from '../features/userSlice';
 import { WatchlistButtonContainer, WatchlistIcon } from '../styles/WatchlistButton.styles';
+import { getMovieType } from '../utils/movieUtils';
 
 export const WatchlistButton = ({ movie }) => {
   const dispatch = useDispatch();
@@ -24,22 +25,6 @@ export const WatchlistButton = ({ movie }) => {
     
     setLoading(true);
     try {      
-      const getMovieType = (movie) => {
-        if (movie.media_type) {
-          return movie.media_type;
-        }
-        
-        if (movie.first_air_date || movie.name && !movie.title) {
-          return 'tv';
-        }
-        
-        if (movie.release_date || movie.title && !movie.name) {
-          return 'movie';
-        }
-        
-        return movie.name ? 'tv' : 'movie';
-      };
-
       const movieData = {
         movie_title: movie.title || movie.name,
         movie_poster: movie.poster_path,

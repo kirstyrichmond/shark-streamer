@@ -80,9 +80,6 @@ export const ManageProfile = ({
         }
       }
       
-      if (!isCreating) {
-        dispatch(clearSelectedProfile());
-      }
       setEditProfilePage(false);
     } catch (error) {
       alert('Error saving profile. Please try again.');

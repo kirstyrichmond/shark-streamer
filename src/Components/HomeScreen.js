@@ -1,5 +1,5 @@
 import React from "react";
-import requests from "../Requests";
+import { movieAPI } from "../services/api";
 
 import { Banner } from "./Banner";
 import { Row } from "./Row";
@@ -22,36 +22,36 @@ export const HomeScreen = () => {
       />
       <Row
         title="NETFLIX ORIGINALS"
-        fetchUrl={requests.fetchNetflixOriginals}
+        fetchRequest={movieAPI.fetchNetflixOriginals}
         isLargeRow
       />
       <Row
         title="Trending Now"
-        fetchUrl={requests.fetchTrending}
+        fetchRequest={movieAPI.fetchTrending}
       />
       <Row
         title="Top Rated"
-        fetchUrl={requests.fetchTopRated}
+        fetchRequest={movieAPI.fetchTopRated}
       />
       <Row
         title="Action Movies"
-        fetchUrl={requests.fetchActionMovies}
+        fetchRequest={movieAPI.fetchActionMovies}
       />
       <Row
         title="Comedy Movies"
-        fetchUrl={requests.fetchComedyMovies}
+        fetchRequest={movieAPI.fetchComedyMovies}
       />
       <Row
         title="Horror Movies"
-        fetchUrl={requests.fetchHorrorMovies}
+        fetchRequest={movieAPI.fetchHorrorMovies}
       />
       <Row
         title="Romance Movies"
-        fetchUrl={requests.fetchRomanceMovies}
+        fetchRequest={movieAPI.fetchRomanceMovies}
       />
       <Row
         title="Documentaries"
-        fetchUrl={requests.fetchDocumentaries}
+        fetchRequest={movieAPI.fetchDocumentaries}
       />
     </>
   );
