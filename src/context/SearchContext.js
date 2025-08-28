@@ -13,7 +13,7 @@ export const SearchProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchMovies = async (searchTerm) => {
+  const fetchMovies = useCallback(async (searchTerm) => {
     if (!searchTerm || searchTerm.trim() === '') {
       setMovies([]);
       setIsSearching(false);
@@ -38,13 +38,16 @@ export const SearchProvider = ({ children }) => {
       setIsLoading(false);
       return [];
     }
-  };
+  }, []);
 
   const debouncedFetchMovies = useCallback(
-    debounce((searchTerm) => {
-      fetchMovies(searchTerm);
-    }, 300),
-    []
+    (searchTerm) => {
+      const debouncedFn = debounce(() => {
+        fetchMovies(searchTerm);
+      }, 300);
+      debouncedFn();
+    },
+    [fetchMovies]
   );
 
   useEffect(() => {

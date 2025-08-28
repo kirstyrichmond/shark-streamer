@@ -24,7 +24,6 @@ import {
   MovieLogo,
   ModalButtonsContainer,
   ModalPlayButton,
-  ModalPlayIcon,
   MovieDetails,
   SimilarSection,
   SimilarTitle,
@@ -97,7 +96,6 @@ export const MovieModal = ({
     isPlaying,
     videoEnded,
     isMuted,
-    isMobile,
     youtubePlayerRef,
     handleVideoEnd,
     handleVideoStateChange,
@@ -117,7 +115,7 @@ export const MovieModal = ({
       resetPlayer();
       youtubePlayerRef.current = null;
     }
-  }, [isOpen, resetPlayer]);
+  }, [isOpen, resetPlayer, youtubePlayerRef]);
 
   useEffect(() => {
     if (!selectedMovie?.id || !isOpen) return;
@@ -182,7 +180,7 @@ export const MovieModal = ({
     fetchVideos();
     fetchLogo();
     fetchDetails();
-  }, [selectedMovie?.id, type2, isOpen]);
+  }, [selectedMovie?.id, selectedMovie?.media_type, selectedMovie?.first_air_date, type2, isOpen]);
 
 
 

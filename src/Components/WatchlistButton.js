@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FaPlus, FaMinus } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import { TiTick } from "react-icons/ti";
 import { addToWatchlist, removeFromWatchlist, selectWatchlist, selectSelectedProfile } from '../features/userSlice';
 import { WatchlistButtonContainer, WatchlistIcon } from '../styles/WatchlistButton.styles';

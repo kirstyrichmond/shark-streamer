@@ -15,7 +15,7 @@ const AuthGuard = ({ children }) => {
       navigate(RoutePaths.Profiles);
       return;
     }
-  }, [user.info, Boolean(user.profiles?.length), location.pathname, navigate]);
+  }, [user.info, user.profiles, location.pathname, navigate]);
 
   if (!user.info) {
     return <LoginScreen />;

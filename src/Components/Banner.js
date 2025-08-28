@@ -38,7 +38,6 @@ export const Banner = () => {
     isPlaying,
     videoEnded,
     isMuted,
-    isMobile,
     youtubePlayerRef,
     handleVideoEnd,
     handleVideoStateChange,
@@ -136,7 +135,7 @@ export const Banner = () => {
         }
       }
     }
-  }, [isAnyModalOpen, playTrailer, videoEnded, isPlaying, youtubePlayerRef]);
+  }, [isAnyModalOpen, playTrailer, videoEnded, isPlaying, youtubePlayerRef, trailerWasPlaying]);
 
   const truncateAmount = screenWidth < 1280 ? 82 : 158;
 

@@ -6,7 +6,6 @@ import {
   Container,
   DescOne,
   DescTwo,
-  Form,
   GetStartedButton,
   Input,
   InputContainer,
