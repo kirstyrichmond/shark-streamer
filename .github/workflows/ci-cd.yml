@@ -58,12 +58,15 @@ jobs:
         path: build/
         
     - name: 🚀 Deploy to Vercel
-      uses: vercel/action@v1
+      uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
         working-directory: ./
+        
+    - name: ✅ Frontend deployment complete
+      run: echo "🎉 Frontend deployed to Vercel successfully!"
         
   deploy-backend:
     needs: test-and-build
@@ -82,6 +85,3 @@ jobs:
         
     - name: ✅ Backend deployment complete
       run: echo "🎉 Backend deployed to Render successfully!"
-      
-    - name: ✅ Frontend deployment complete  
-      run: echo "🎉 Frontend deployed to Vercel successfully!"
