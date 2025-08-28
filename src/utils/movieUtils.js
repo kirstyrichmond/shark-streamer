@@ -3,11 +3,11 @@ export const getMovieType = (movie) => {
     return movie.media_type;
   }
   
-  if (movie.first_air_date || movie.name && !movie.title) {
+  if ((movie.first_air_date || movie.name) && !movie.title) {
     return 'tv';
   }
   
-  if (movie.release_date || movie.title && !movie.name) {
+  if ((movie.release_date || movie.title) && !movie.name) {
     return 'movie';
   }
   

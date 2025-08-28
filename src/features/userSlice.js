@@ -205,9 +205,10 @@ export const userSlice = createSlice({
       loading: false,
       error: null,
     },
-    ui: {
+    interface: {
       showSignIn: false,
       showSignUp: false,
+      isAnyModalOpen: false,
     },
   },
   reducers: {
@@ -233,24 +234,30 @@ export const userSlice = createSlice({
       }
     },
     showSignUp: (state) => {
-      if (!state.ui) {
-        state.ui = { showSignUp: false, showSignIn: false };
+      if (!state.interface) {
+        state.interface = { showSignUp: false, showSignIn: false };
       }
-      state.ui.showSignUp = true;
-      state.ui.showSignIn = false;
+      state.interface.showSignUp = true;
+      state.interface.showSignIn = false;
     },
     showSignIn: (state) => {
-      if (!state.ui) {
-        state.ui = { showSignUp: false, showSignIn: false };
+      if (!state.interface) {
+        state.interface = { showSignUp: false, showSignIn: false };
       }
-      state.ui.showSignIn = true;
-      state.ui.showSignUp = false;
+      state.interface.showSignIn = true;
+      state.interface.showSignUp = false;
     },
     setSelectedProfile: (state, action) => {
       state.selectedProfile = action.payload;
     },
     clearSelectedProfile: (state) => {
       state.selectedProfile = null;
+    },
+    openModal: (state) => {
+      state.interface.isAnyModalOpen = true;
+    },
+    closeModal: (state) => {
+      state.interface.isAnyModalOpen = false;
     },
   },
   extraReducers: (builder) => {
@@ -260,11 +267,11 @@ export const userSlice = createSlice({
         if (action.payload.user.profiles) {
           state.user.profiles = action.payload.user.profiles;
         }
-        if (!state.ui) {
-          state.ui = { showSignUp: false, showSignIn: false };
+        if (!state.interface) {
+          state.interface = { showSignUp: false, showSignIn: false };
         }
-        state.ui.showSignIn = false;
-        state.ui.showSignUp = false;
+        state.interface.showSignIn = false;
+        state.interface.showSignUp = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
         console.error('Login failed:', action.payload);
@@ -275,11 +282,11 @@ export const userSlice = createSlice({
           state.user.profiles = action.payload.user.profiles;
         }
         state.selectedProfile = null;
-        if (!state.ui) {
-          state.ui = { showSignUp: false, showSignIn: false };
+        if (!state.interface) {
+          state.interface = { showSignUp: false, showSignIn: false };
         }
-        state.ui.showSignIn = false;
-        state.ui.showSignUp = false;
+        state.interface.showSignIn = false;
+        state.interface.showSignUp = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
         console.error('Registration failed:', action.payload);
@@ -287,11 +294,11 @@ export const userSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.user.info = null;
         state.user.profiles = [];
-        if (!state.ui) {
-          state.ui = { showSignUp: false, showSignIn: false };
+        if (!state.interface) {
+          state.interface = { showSignUp: false, showSignIn: false };
         }
-        state.ui.showSignIn = false;
-        state.ui.showSignUp = false;
+        state.interface.showSignIn = false;
+        state.interface.showSignUp = false;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.user.info = action.payload.user;
@@ -302,11 +309,11 @@ export const userSlice = createSlice({
       .addCase(getCurrentUser.rejected, (state) => {
         state.user.info = null;
         state.user.profiles = [];
-        if (!state.ui) {
-          state.ui = { showSignUp: false, showSignIn: false };
+        if (!state.interface) {
+          state.interface = { showSignUp: false, showSignIn: false };
         }
-        state.ui.showSignIn = false;
-        state.ui.showSignUp = false;
+        state.interface.showSignIn = false;
+        state.interface.showSignUp = false;
       })
       .addCase(fetchUserProfiles.fulfilled, (state, action) => {
         state.user.profiles = action.payload;
@@ -420,12 +427,13 @@ export const userSlice = createSlice({
   },
 });
 
-export const { profiles, editProfile, showSignUp, showSignIn, setSelectedProfile, clearSelectedProfile } = userSlice.actions;
+export const { profiles, editProfile, showSignUp, showSignIn, setSelectedProfile, clearSelectedProfile, openModal, closeModal } = userSlice.actions;
 
 export const selectUser = (state) => state.user.user;
 export const selectPlans = (state) => state.user.plans;
 export const selectSelectedProfile = (state) => state.user.selectedProfile;
 export const selectWatchlist = (state) => state.user.user?.watchlist || { items: [], loading: false, error: null };
+export const selectIsAnyModalOpen = (state) => state.user.interface?.isAnyModalOpen || false;
 
 export const selectAvatars = createSelector(
   [(state) => state.user],

@@ -17,8 +17,8 @@ const persistConfig = {
   storage,
   blacklist: ['avatars'],
   migrate: (state) => {
-    if (state && state.user && !state.user.ui) {
-      state.user.ui = {
+    if (state && state.user && !state.user.interface) {
+      state.user.interface = {
         showSignUp: false,
         showSignIn: false,
       };

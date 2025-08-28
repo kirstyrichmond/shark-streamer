@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import YouTube from "react-youtube";
 import { movieAPI } from "../services/api";
+import { useSelector, useDispatch } from "react-redux";
+import { selectIsAnyModalOpen, openModal, closeModal } from "../features/userSlice";
 import { MovieModal } from "./MovieModal";
 import { useYouTubePlayer } from "../hooks/useYouTubePlayer";
 import {
@@ -23,11 +25,14 @@ import {
 
 export const Banner = () => {
   const { innerWidth: screenWidth } = window;
+  const dispatch = useDispatch();
   const [movie, setMovie] = useState([]);
   const [logo, setLogo] = useState(null);
   const [videos, setVideos] = useState([]);
   const [playTrailer, setPlayTrailer] = useState(false);
   const [openMovieModal, setOpenMovieModal] = useState(false);
+  const [trailerWasPlaying, setTrailerWasPlaying] = useState(false);
+  const isAnyModalOpen = useSelector(selectIsAnyModalOpen);
   
   const {
     isPlaying,
@@ -105,6 +110,33 @@ export const Banner = () => {
     }
   }, [movie]);
 
+  useEffect(() => {
+    if (isAnyModalOpen) {
+      if (playTrailer && !videoEnded && isPlaying) {
+        const player = youtubePlayerRef.current?.internalPlayer;
+        if (player) {
+          try {
+            player.pauseVideo();
+            setTrailerWasPlaying(true);
+          } catch (e) {
+            console.error('Failed to pause banner video:', e);
+          }
+        }
+      }
+    } else {
+      if (trailerWasPlaying) {
+        const player = youtubePlayerRef.current?.internalPlayer;
+        if (player) {
+          try {
+            player.playVideo();
+            setTrailerWasPlaying(false);
+          } catch (e) {
+            console.error('Failed to resume banner video:', e);
+          }
+        }
+      }
+    }
+  }, [isAnyModalOpen, playTrailer, videoEnded, isPlaying, youtubePlayerRef]);
 
   const truncateAmount = screenWidth < 1280 ? 82 : 158;
 
@@ -142,7 +174,10 @@ export const Banner = () => {
             {videoEnded || !isPlaying ? "Play" : "Pause"}
           </PlayButton>
         )}
-        <InfoButton onClick={() => setOpenMovieModal(true)}>
+        <InfoButton onClick={() => {
+          setOpenMovieModal(true);
+          dispatch(openModal());
+        }}>
           <InfoIcon
             src="https://img.icons8.com/pastel-glyph/64/FFFFFF/info--v1.png"
             alt="more movie info"
@@ -197,7 +232,12 @@ export const Banner = () => {
       <MovieModal
         selectedMovie={movie}
         isOpen={openMovieModal}
-        handleClose={setOpenMovieModal}
+        handleClose={(value) => {
+          setOpenMovieModal(value);
+          if (!value) {
+            dispatch(closeModal());
+          }
+        }}
         onMovieChange={(newMovie) => {
           setMovie(newMovie);
         }}

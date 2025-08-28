@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MovieModal } from "./MovieModal";
-import { fetchWatchlist, selectWatchlist, selectSelectedProfile } from "../features/userSlice";
+import { fetchWatchlist, selectWatchlist, selectSelectedProfile, openModal, closeModal } from "../features/userSlice";
 import { movieAPI } from "../services/api";
 import { getMovieType } from "../utils/movieUtils";
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -56,9 +56,13 @@ export const Row = ({
     }
   }, [isWatchlist, watchlist?.loading]);
 
-  const handleClick = async (item) => {
-    console.log({ item });
-    
+  const showMovieModal = (movieData) => {
+    setSelectedMovie(movieData);
+    setOpenMovieModal(true);
+    dispatch(openModal());
+  };
+
+  const handleClick = async (item) => {    
     if (isWatchlist) {
       try {
         const movieType = item.movie_type === 'tv' ? 'tv' : 'movie';
@@ -69,20 +73,19 @@ export const Row = ({
           media_type: item.movie_type
         };
         
-        setSelectedMovie(movieData);
-        setOpenMovieModal(true);
+        showMovieModal(movieData);
       } catch (error) {
         console.error('Error fetching movie details:', error);
         alert('Error loading movie details. Please try again.');
       }
     } else {
-      setSelectedMovie(item);
-      setOpenMovieModal(true);
+      showMovieModal(item);
     }
   };
 
   const handleCloseModal = () => {
     setOpenMovieModal(false);
+    dispatch(closeModal());
     setTimeout(() => {
       setSelectedMovie(null);
     }, 300);
