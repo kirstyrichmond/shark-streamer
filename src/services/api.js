@@ -212,12 +212,22 @@ export const movieAPI = {
         movieAPI.searchTV(searchTerm)
       ]);
       
-      const movieResults = movieResponse.data.results.map(item => ({
+      const filterValidItems = (items) => items.filter(item => {
+        const hasImage = item.poster_path || item.backdrop_path;
+        const hasTitle = item.title || item.name;
+        const hasOverview = item.overview && item.overview.length > 0;
+        const hasValidId = item.id && item.id > 0;
+        const hasPopularity = item.popularity && item.popularity > 0;
+        
+        return hasImage && hasTitle && hasOverview && hasValidId && hasPopularity;
+      });
+
+      const movieResults = filterValidItems(movieResponse.data.results).map(item => ({
         ...item,
         media_type: 'movie'
       }));
       
-      const tvResults = tvResponse.data.results.map(item => ({
+      const tvResults = filterValidItems(tvResponse.data.results).map(item => ({
         ...item,
         media_type: 'tv'
       }));
