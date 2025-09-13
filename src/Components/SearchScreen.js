@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useSearch } from "../context/SearchContext";
+import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
+import { getApiUrl } from "../utils/movieUtils";
 import MovieCard from "./MovieCard";
 import { MovieModal } from "./MovieModal";
 import {
@@ -15,24 +17,12 @@ const SearchScreen = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [openMovieModal, setOpenMovieModal] = useState(false);
   
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isLoadingMore || !hasNextPage) {
-        return;
-      }
-      
-      const scrolledNearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1000;
-      
-      if (scrolledNearBottom) {
-        loadMoreMovies();
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [hasNextPage, isLoadingMore, loadMoreMovies]);
+  useInfiniteScroll(loadMoreMovies, {
+    hasNextPage,
+    isLoading: isLoadingMore,
+    threshold: 1000
+  });
   
-
   const handleMovieClick = useCallback((movie) => {
     setSelectedMovie(movie);
     setOpenMovieModal(true);
@@ -44,15 +34,6 @@ const SearchScreen = () => {
       setSelectedMovie(null);
     }, 300);
   }, []);
-
-  const getFetchUrl = () => {
-    if (!selectedMovie) return "";
-    
-    if (selectedMovie.media_type === 'tv' || (!selectedMovie.title && selectedMovie.name)) {
-      return `https://api.themoviedb.org/3/tv/${selectedMovie.id}`;
-    }
-    return `https://api.themoviedb.org/3/movie/${selectedMovie.id}`;
-  };
 
   return (
     <>
@@ -82,7 +63,7 @@ const SearchScreen = () => {
           isOpen={openMovieModal}
           handleClose={handleCloseModal}
           selectedMovie={selectedMovie}
-          fetchUrl={getFetchUrl()}
+          fetchUrl={getApiUrl(selectedMovie)}
         />
       )}
     </>
