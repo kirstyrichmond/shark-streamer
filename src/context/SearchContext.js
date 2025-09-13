@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
+import { createContext, useState, useContext, useCallback, useEffect, useMemo } from 'react';
 import { movieAPI } from '../services/api';
 import { debounce } from 'lodash';
 
@@ -12,42 +12,46 @@ export const SearchProvider = ({ children }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const fetchMovies = useCallback(async (searchTerm) => {
-    if (!searchTerm || searchTerm.trim() === '') {
-      setMovies([]);
-      setIsSearching(false);
-      return [];
-    }
-    
-    setIsLoading(true);
-    
-    try {      
-      const combinedResults = await movieAPI.searchMoviesAndTV(searchTerm);
-            
-      setMovies(combinedResults);
-      
-      if (searchTerm) {
-        setIsSearching(true);
+  const debouncedFetchMovies = useMemo(
+    () => debounce(async (searchTerm) => {
+      if (!searchTerm || searchTerm.trim() === '') {
+        setMovies([]);
+        setIsSearching(false);
+        setIsLoading(false);
+        setHasNextPage(false);
+        setCurrentPage(1);
+        return;
       }
       
-      setIsLoading(false);
-      return combinedResults;
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-      setIsLoading(false);
-      return [];
-    }
-  }, []);
+      setIsLoading(true);
+      setCurrentPage(1);
 
-  const debouncedFetchMovies = useCallback(
-    (searchTerm) => {
-      const debouncedFn = debounce(() => {
-        fetchMovies(searchTerm);
-      }, 300);
-      debouncedFn();
-    },
-    [fetchMovies]
+      try {
+        const response = await movieAPI.searchMoviesAndTV(searchTerm, 1);
+        
+        if (response && Array.isArray(response.results)) {
+          setMovies(response.results);
+          setHasNextPage(response.hasNextPage || false);
+          setIsSearching(true);
+        } else {
+          setMovies([]);
+          setHasNextPage(false);
+          setIsSearching(false);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+        setIsLoading(false);
+        setMovies([]);
+        setIsSearching(false);
+        setHasNextPage(false);
+      }
+    }, 300),
+    []
   );
 
   useEffect(() => {
@@ -59,32 +63,63 @@ export const SearchProvider = ({ children }) => {
     }
   }, [searchKey, debouncedFetchMovies]);
 
-  const handleSearchKeyChange = (e) => {
+  const handleSearchKeyChange = useCallback((e) => {
     const value = e.target.value;
     setSearchKey(value);
     
     if (value === '') {
+      debouncedFetchMovies.cancel();
       setIsSearching(false);
-    } else {
-      setIsSearching(true);
+      setIsLoading(false);
     }
-  };
+  }, [debouncedFetchMovies]);
 
-  const toggleSearchBar = (show) => {
+  const toggleSearchBar = useCallback((show) => {
     setShowSearchBar(show);
     
     if (!show) {
+      debouncedFetchMovies.cancel();
       setIsSearching(false);
       setSearchKey('');
       setMovies([]);
+      setIsLoading(false);
+      setHasNextPage(false);
+      setCurrentPage(1);
+      setIsLoadingMore(false);
     }
-  };
+  }, [debouncedFetchMovies]);
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = useCallback((e) => {
     if (e) e.preventDefault();
-  };
+  }, []);
 
-  const value = {
+  const loadMoreMovies = useCallback(async () => {
+    if (!hasNextPage || isLoadingMore || !searchKey.trim()) return;
+
+    setIsLoadingMore(true);
+    const nextPage = currentPage + 1;
+
+    try {
+      const response = await movieAPI.searchMoviesAndTV(searchKey, nextPage);
+      
+      if (response && response.results) {
+        setMovies(prevMovies => {
+          const newMovies = response.results.filter(movie => 
+            !prevMovies.find(existing => existing.id === movie.id)
+          );
+          return [...prevMovies, ...newMovies];
+        });
+        setHasNextPage(response.hasNextPage || false);
+        setCurrentPage(nextPage);
+      }
+    } catch (error) {
+      console.error("Error loading more movies:", error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [hasNextPage, isLoadingMore, searchKey, currentPage]);
+
+  const value = useMemo(() => ({
     searchKey,
     setSearchKey,
     handleSearchKeyChange,
@@ -94,8 +129,23 @@ export const SearchProvider = ({ children }) => {
     setIsSearching,
     movies,
     isLoading,
-    handleSearchSubmit
-  };
+    handleSearchSubmit,
+    hasNextPage,
+    isLoadingMore,
+    loadMoreMovies
+  }), [
+    searchKey,
+    handleSearchKeyChange,
+    showSearchBar,
+    toggleSearchBar,
+    isSearching,
+    movies,
+    isLoading,
+    handleSearchSubmit,
+    hasNextPage,
+    isLoadingMore,
+    loadMoreMovies
+  ]);
 
   return (
     <SearchContext.Provider value={value}>

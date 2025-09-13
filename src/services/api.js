@@ -181,61 +181,77 @@ export const movieAPI = {
   fetchCredits: (movieType, movieId) => tmdbApi.get(`/${movieType}/${movieId}/credits?api_key=${TMDB_API_KEY}`),
   fetchSimilar: (movieType, movieId) => tmdbApi.get(`/${movieType}/${movieId}/similar?api_key=${TMDB_API_KEY}`),
 
-  searchMovies: (searchTerm) => {
+  searchMovies: (searchTerm, page = 1) => {
     const params = {
       api_key: TMDB_API_KEY,
       sort_by: 'popularity.desc',
       include_adult: false,
-      query: searchTerm
+      query: searchTerm,
+      page: page
     };
     return tmdbApi.get('/search/movie', { params });
   },
 
-  searchTV: (searchTerm) => {
+  searchTV: (searchTerm, page = 1) => {
     const params = {
       api_key: TMDB_API_KEY,
       sort_by: 'popularity.desc',
       include_adult: false,
-      query: searchTerm
+      query: searchTerm,
+      page: page
     };
     return tmdbApi.get('/search/tv', { params });
   },
 
-  searchMoviesAndTV: async (searchTerm) => {
+  searchMoviesAndTV: async (searchTerm, page = 1) => {
     if (!searchTerm || searchTerm.trim() === '') {
-      return [];
+      return { results: [], hasNextPage: false, totalPages: 0 };
     }
     
     try {
       const [movieResponse, tvResponse] = await Promise.all([
-        movieAPI.searchMovies(searchTerm),
-        movieAPI.searchTV(searchTerm)
+        movieAPI.searchMovies(searchTerm, page),
+        movieAPI.searchTV(searchTerm, page)
       ]);
       
-      const filterValidItems = (items) => items.filter(item => {
-        const hasImage = item.poster_path || item.backdrop_path;
-        const hasTitle = item.title || item.name;
-        const hasOverview = item.overview && item.overview.length > 0;
-        const hasValidId = item.id && item.id > 0;
-        const hasPopularity = item.popularity && item.popularity > 0;
-        
-        return hasImage && hasTitle && hasOverview && hasValidId && hasPopularity;
-      });
+      const filterValidItems = (items) => {
+        if (!items || !Array.isArray(items)) return [];
+        return items.filter(item => {
+          const hasImage = item.poster_path || item.backdrop_path;
+          const hasTitle = item.title || item.name;
+          const hasOverview = item.overview && item.overview.trim() !== '';
+          const hasValidId = item.id && item.id > 0;
+          const hasPopularity = item.popularity && item.popularity > 0;
 
-      const movieResults = filterValidItems(movieResponse.data.results).map(item => ({
+          return hasTitle && hasValidId && hasImage && hasOverview && hasPopularity;
+        });
+      };
+
+      const movieResults = filterValidItems(movieResponse?.data?.results).map(item => ({
         ...item,
         media_type: 'movie'
       }));
       
-      const tvResults = filterValidItems(tvResponse.data.results).map(item => ({
+      const tvResults = filterValidItems(tvResponse?.data?.results).map(item => ({
         ...item,
         media_type: 'tv'
       }));
       
-      return [...movieResults, ...tvResults].sort((a, b) => b.popularity - a.popularity);
+      const combinedResults = [...movieResults, ...tvResults].sort((a, b) => b.popularity - a.popularity);
+      
+      const movieHasMore = page < (movieResponse?.data?.total_pages || 0);
+      const tvHasMore = page < (tvResponse?.data?.total_pages || 0);
+      const hasNextPage = movieHasMore || tvHasMore;
+      
+      return {
+        results: combinedResults,
+        hasNextPage,
+        totalPages: Math.max(movieResponse?.data?.total_pages || 0, tvResponse?.data?.total_pages || 0),
+        currentPage: page
+      };
     } catch (error) {
       console.error("Error searching movies and TV:", error);
-      return [];
+      return { results: [], hasNextPage: false, totalPages: 0 };
     }
   },
 
