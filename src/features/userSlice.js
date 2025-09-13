@@ -434,10 +434,24 @@ export const selectPlans = (state) => state.user.plans;
 export const selectSelectedProfile = (state) => state.user.selectedProfile;
 export const selectWatchlist = (state) => state.user.user?.watchlist || { items: [], loading: false, error: null };
 export const selectIsAnyModalOpen = (state) => state.user.interface?.isAnyModalOpen || false;
+export const selectWatchlistItems = (state) => state.user.user?.watchlist?.items || [];
+export const selectWatchlistLoading = (state) => state.user.user?.watchlist?.loading ?? true;
+export const selectWatchlistError = (state) => state.user.user?.watchlist?.error || null;
 
 export const selectAvatars = createSelector(
   [(state) => state.user],
   (userState) => userState?.avatars || { default: [], kids: [], loading: false, error: null }
+);
+
+export const selectSortedWatchlistItems = createSelector(
+  [selectWatchlistItems],
+  (items) => {
+    if (!items.length) return [];
+    return [...items].sort((a, b) => {
+      const dateComparison = new Date(b.added_at) - new Date(a.added_at);
+      return dateComparison !== 0 ? dateComparison : b.id - a.id;
+    });
+  }
 );
 
 export default userSlice.reducer;

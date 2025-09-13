@@ -2,9 +2,9 @@ import React from "react";
 import { movieAPI } from "../services/api";
 
 import { Banner } from "./Banner";
-import { Row } from "./Row";
 import { useSearch } from "../context/SearchContext";
 import SearchScreen from "./SearchScreen";
+import Row from "./Row";
 
 export const HomeScreen = () => {
   const { isSearching } = useSearch();
@@ -17,10 +17,6 @@ export const HomeScreen = () => {
     <>
       <Banner />
       <Row
-        title="My List"
-        isWatchlist
-      />
-      <Row
         title="NETFLIX ORIGINALS"
         fetchRequest={movieAPI.fetchNetflixOriginals}
         isLargeRow
@@ -32,6 +28,10 @@ export const HomeScreen = () => {
       <Row
         title="Top Rated"
         fetchRequest={movieAPI.fetchTopRated}
+      />
+      <Row
+        title="My List"
+        isWatchlist
       />
       <Row
         title="Action Movies"
