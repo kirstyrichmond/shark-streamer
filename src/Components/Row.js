@@ -1,7 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MovieModal } from "./MovieModal";
-import { fetchWatchlist, selectWatchlist, selectSelectedProfile, openModal, closeModal } from "../features/userSlice";
+import { RowErrorBoundary, MovieModalErrorBoundary, ImageErrorBoundary } from "./ErrorBoundary";
+import { 
+  fetchWatchlist, 
+  selectWatchlistLoading, 
+  selectSortedWatchlistItems,
+  selectSelectedProfile, 
+  openModal, 
+  closeModal 
+} from "../features/userSlice";
 import { movieAPI } from "../services/api";
 import { getMovieType } from "../utils/movieUtils";
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -14,14 +22,15 @@ import {
   ResponsiveSkeleton
 } from "../styles/Row.styles";
 
-export const Row = ({
+const Row = ({
   title,
   fetchRequest,
   isLargeRow = false,
   isWatchlist = false,
 }) => {
   const dispatch = useDispatch();
-  const watchlist = useSelector(selectWatchlist);
+  const watchlistItems = useSelector(selectSortedWatchlistItems);
+  const watchlistLoading = useSelector(selectWatchlistLoading);
   const selectedProfile = useSelector(selectSelectedProfile);
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -52,17 +61,17 @@ export const Row = ({
 
   useEffect(() => {
     if (isWatchlist) {
-      setLoading(watchlist?.loading ?? true);
+      setLoading(watchlistLoading);
     }
-  }, [isWatchlist, watchlist?.loading]);
+  }, [isWatchlist, watchlistLoading]);
 
-  const showMovieModal = (movieData) => {
+  const showMovieModal = useCallback((movieData) => {
     setSelectedMovie(movieData);
     setOpenMovieModal(true);
     dispatch(openModal());
-  };
+  }, [dispatch]);
 
-  const handleClick = async (item) => {    
+  const handleClick = useCallback(async (item) => {
     if (isWatchlist) {
       try {
         const movieType = item.movie_type === 'tv' ? 'tv' : 'movie';
@@ -81,95 +90,98 @@ export const Row = ({
     } else {
       showMovieModal(item);
     }
-  };
+  }, [isWatchlist, showMovieModal]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setOpenMovieModal(false);
     dispatch(closeModal());
     setTimeout(() => {
       setSelectedMovie(null);
     }, 300);
-  };
+  }, [dispatch]);
 
-  const sortWatchlistByDate = (items) => {
-    return [...items].sort((a, b) => {
-      const dateComparison = new Date(b.added_at) - new Date(a.added_at);
-      return dateComparison !== 0 ? dateComparison : b.id - a.id;
-    });
-  };
-
-  const getDisplayData = () => {
+  const displayData = useMemo(() => {
     if (isWatchlist) {
-      const items = watchlist?.items || [];
-      return sortWatchlistByDate(items);
+      return watchlistItems;
     }
-    
-    return movies?.filter(movie => 
+
+    return movies?.filter(movie =>
       (isLargeRow && movie.poster_path) || (!isLargeRow && movie.backdrop_path)
     ) || [];
-  };
-
-  const displayData = getDisplayData();
+  }, [isWatchlist, watchlistItems, movies, isLargeRow]);
   
   if (isWatchlist && !loading && displayData.length === 0) {
     return null;
   }
 
   return (
-    <Container>
-      <Title>{title}</Title>
-      <RowContainer>
-        <Posters>
-          {loading ? (
-            Array.from({ length: isWatchlist ? 5 : 8 }).map((_, index) => (
-              <div key={`skeleton-${index}`}>
-                <ResponsiveSkeleton
-                  baseColor="#202020"
-                  highlightColor="#444"
-                />
-              </div>
-            ))
-          ) : (
-            displayData.map((item) => {
-              const itemId = isWatchlist ? item.id : item.id;
-              const posterPath = isWatchlist ? item.movie_poster : item.poster_path;
-              const altText = isWatchlist ? item.movie_title : (item.name || item.title);
-              
-              return (
-                <div key={itemId} style={{ marginTop: '10px'}}>
-                  {!loadedImages[itemId] && (
-                    <ResponsiveSkeleton
-                      baseColor="#202020"
-                      highlightColor="#444"
-                    />
-                  )}
-                  <PosterLarge
-                    onClick={() => handleClick(item)}
-                    src={`https://image.tmdb.org/t/p/original${isWatchlist ? '' : '/'}${posterPath}`}
-                    alt={altText}
-                    onLoad={() => setLoadedImages(prev => ({...prev, [itemId]: true}))}
-                    style={{ display: loadedImages[itemId] ? 'block' : 'none' }}
+    <RowErrorBoundary>
+      <Container>
+        <Title>{title}</Title>
+        <RowContainer>
+          <Posters>
+            {loading ? (
+              Array.from({ length: isWatchlist ? 5 : 8 }).map((_, index) => (
+                <div key={`skeleton-${index}`}>
+                  <ResponsiveSkeleton
+                    baseColor="#202020"
+                    highlightColor="#444"
                   />
                 </div>
-              );
-            })
-          )}
-        </Posters>
-      </RowContainer>
-      {selectedMovie && (
-        <MovieModal
-          isOpen={openMovieModal}
-          handleClose={handleCloseModal}
-          selectedMovie={selectedMovie}
-          fetchUrl={isWatchlist ? 
-            (selectedMovie.media_type === 'tv' ? 'tv' : 'movie') : 
-            getMovieType(selectedMovie)
-          }
-          onMovieChange={(newMovie) => {
-            setSelectedMovie(newMovie);
-          }}
-        />
-      )}
-    </Container>
+              ))
+            ) : (
+              displayData.map((item) => {
+                const itemId = isWatchlist ? item.id : item.id;
+                const posterPath = isWatchlist ? item.movie_poster : item.poster_path;
+                const altText = isWatchlist ? item.movie_title : (item.name || item.title);
+                
+                return (
+                  <ImageErrorBoundary key={itemId}>
+                    <div style={{ marginTop: '10px'}}>
+                      {!loadedImages[itemId] && (
+                        <ResponsiveSkeleton
+                          baseColor="#202020"
+                          highlightColor="#444"
+                        />
+                      )}
+                      <PosterLarge
+                        onClick={() => handleClick(item)}
+                        src={`https://image.tmdb.org/t/p/original${isWatchlist ? '' : '/'}${posterPath}`}
+                        alt={altText}
+                        onLoad={() => setLoadedImages(prev => ({...prev, [itemId]: true}))}
+                        onError={(e) => {
+                          console.error('Image failed to load:', e.target.src);
+                          // Optionally set a fallback image
+                          // e.target.src = '/path/to/fallback-image.jpg';
+                        }}
+                        style={{ display: loadedImages[itemId] ? 'block' : 'none' }}
+                      />
+                    </div>
+                  </ImageErrorBoundary>
+                );
+              })
+            )}
+          </Posters>
+        </RowContainer>
+        {selectedMovie && (
+          <MovieModalErrorBoundary>
+            <MovieModal
+              isOpen={openMovieModal}
+              handleClose={handleCloseModal}
+              selectedMovie={selectedMovie}
+              fetchUrl={isWatchlist ? 
+                (selectedMovie.media_type === 'tv' ? 'tv' : 'movie') : 
+                getMovieType(selectedMovie)
+              }
+              onMovieChange={(newMovie) => {
+                setSelectedMovie(newMovie);
+              }}
+            />
+          </MovieModalErrorBoundary>
+        )}
+      </Container>
+    </RowErrorBoundary>
   );
 };
+
+export default React.memo(Row);

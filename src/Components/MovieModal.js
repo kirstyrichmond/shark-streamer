@@ -388,7 +388,7 @@ export const MovieModal = ({
                     <AgeRating>{getAgeRating()}</AgeRating>
                   )}
                   
-                  {movieDetails && (movieDetails.runtime || movieDetails.episode_run_time.length > 0) && (
+                  {movieDetails && (movieDetails.runtime || (movieDetails.episode_run_time && movieDetails.episode_run_time.length > 0)) && (
                     <Duration>
                       {movieDetails.runtime 
                         ? formatDuration(movieDetails.runtime)
