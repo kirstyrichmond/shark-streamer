@@ -1,4 +1,4 @@
-# Netflix Clone
+# Shark Streamer
 
 Created by Kirsty Richmond.
 
@@ -18,7 +18,7 @@ Created by Kirsty Richmond.
 1. **Clone the repository**
    ```bash
    $ git clone <repository-url>
-   $ cd netflix-clone
+   $ cd shark-streamer
    ```
 
 2. **Install frontend dependencies**
@@ -41,8 +41,8 @@ Created by Kirsty Richmond.
 
 2. **Create and activate virtual environment**
    ```bash
-   $ python -m venv netflix-clone
-   $ source netflix-clone/bin/activate  # On Windows: netflix-clone\Scripts\activate
+   $ python -m venv shark-streamer
+   $ source shark-streamer/bin/activate  # On Windows: shark-streamer\Scripts\activate
    ```
 
 3. **Install Python dependencies**
@@ -89,9 +89,9 @@ Currently in the project you can:
 - View movie/show details and trailers
 - Change subscription plans
 - Responsive design for mobile and desktop
+- Add/remove content from watchlist
 
 Future implementations:
-- Add/remove content from watchlist
 - Personalized recommendations
 - Download for offline viewing
 

@@ -12,6 +12,8 @@ def create_app():
     
     frontend_urls = os.getenv('FRONTEND_URL', '').split(',') if os.getenv('FRONTEND_URL') else []
     allowed_origins = [
+        'http://localhost:3000',
+        'http://localhost:3001', 
         'http://localhost:3002', 
         'http://localhost:3003',
         'https://kirsty-richmond-netflix.vercel.app',

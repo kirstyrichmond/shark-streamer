@@ -1,5 +1,5 @@
 {
-  "name": "netflix-clone",
+  "name": "shark-streamer",
   "version": "0.2.0",
   "private": true,
   "dependencies": {
@@ -25,23 +25,30 @@
     "yup": "^1.7.0"
   },
   "devDependencies": {
-    "react-scripts": "5.0.1"
+    "@testing-library/jest-dom": "^6.9.1",
+    "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.20",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@types/react-modal": "^3.16.3",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/yup": "^0.29.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "jsdom": "^27.0.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.10",
+    "vitest": "^3.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:all": "react-scripts test --watchAll=false",
-    "test:coverage": "react-scripts test --coverage --watchAll=false",
-    "test:performance": "react-scripts test --testPathPattern=performance --watchAll=false",
-    "test:pre-push": "npm run test:all",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "dev": "vite",
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:all": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:performance": "vitest run --testPathPattern=performance",
+    "test:pre-push": "npm run test:all"
   },
   "browserslist": {
     "production": [

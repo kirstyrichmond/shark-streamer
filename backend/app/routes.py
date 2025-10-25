@@ -68,7 +68,7 @@ def register():
         
         return jsonify({
             'message': 'Registration successful',
-            'access_token': f'netflix_token_{new_user.id}',
+            'access_token': f'shark_streamer_token_{new_user.id}',
             'user': {
                 'id': new_user.id, 
                 'email': new_user.email,
@@ -110,7 +110,7 @@ def login():
             
             return jsonify({
                 'message': 'Login successful',
-                'access_token': f'netflix_token_{user.id}',
+                'access_token': f'shark_streamer_token_{user.id}',
                 'user': {
                     'id': user.id,
                     'email': user.email,
@@ -134,7 +134,7 @@ def get_current_user():
             return jsonify({'error': 'No valid token provided'}), 401
         
         token = auth_header.split(' ')[1]
-        if not token.startswith('netflix_token_'):
+        if not token.startswith('shark_streamer_token_'):
             return jsonify({'error': 'Invalid token format'}), 401
         
         try:

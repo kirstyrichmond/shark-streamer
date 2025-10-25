@@ -4,7 +4,7 @@ import userReducer, {
   addToWatchlist,
   removeFromWatchlist,
   fetchWatchlist,
-} from '../../features/userSlice';
+} from '../../store/slices/userSlice';
 
 // We "mock" the API so tests run fast and don't depend on internet
 jest.mock('../../services/api', () => ({
