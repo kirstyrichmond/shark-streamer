@@ -100,9 +100,17 @@ export const Nav = () => {
           setShowMenu(false);
           navigate(RoutePaths.Home);
         }}
+        style={{
+            fontFamily: 'Boogaloo',
+            fontSize: '28px',
+            color: '#00acee',
+            fontWeight: 400,
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            cursor: 'pointer',
+        }}
       >
-        <SharkflixLogo />
-        {/* <SharkStreamerIcon /> */}
+        Shark Streamer
       </div>
       <RightContainer>
         {!user ? (

@@ -50,7 +50,7 @@ export const SignInScreen = () => {
       if (loginUser.fulfilled.match(resultAction)) {
         navigate(RoutePaths.Home);
       } else {
-        setError(typeof resultAction.payload === 'string' ? resultAction.payload : "Login failed");
+        setError(typeof resultAction.payload === 'string' ? resultAction.payload : "Your email or password is incorrect. Please try again.");
       }
     } catch (err: any) {
       setError(err.message || "Failed to sign in");

@@ -166,7 +166,7 @@ export const PlanDescription = styled.p`
 
 export const PlanPrice = styled.p`
   font-size: 1.1rem;
-  color: #1a237e;
+  color: #00acee;
   font-weight: 600;
   margin: 0 0 1rem 0;
 
@@ -189,7 +189,7 @@ export const PlanActions = styled.div`
 export const SubscribeButton = styled.button`
   width: 100%;
   height: 48px;
-  background: #1a237e;
+  background: #00acee;
   border: none;
   color: #fff;
   padding: 12px 16px;

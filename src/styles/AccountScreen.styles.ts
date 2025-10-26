@@ -199,7 +199,7 @@ export const ChangePlanButtonLink = styled(Link)`
 `;
 
 export const SignOutButton = styled.button`
-  background-color: #1a237e;
+  background-color: #00acee;
   border: none;
   color: #fff;
   padding: 1rem 0rem;

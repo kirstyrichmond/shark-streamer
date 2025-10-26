@@ -8,9 +8,10 @@ const SharkStreamer = () => {
             color: '#00acee',
             fontWeight: 400,
             textTransform: 'uppercase',
-            letterSpacing: '1px'
+            letterSpacing: '1px',
+            cursor: 'pointer',
         }}>
-            SHARK STREAMER
+            Shark Streamer
         </div>
 
     )

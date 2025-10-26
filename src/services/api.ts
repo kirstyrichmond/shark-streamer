@@ -68,7 +68,7 @@ export const authAPI = {
   login: async (email: string, password: string) => {
     const data = await handleRequest(
       () => api.post('/auth/login', { email, password }),
-      'Login failed'
+      'Login failed....'
     );
     if (data.access_token) {
       localStorage.setItem('shark_streamer_token', data.access_token);

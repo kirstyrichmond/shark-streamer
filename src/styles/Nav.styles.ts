@@ -87,7 +87,7 @@ export const SignInButton = styled.button`
   padding: 6px 14px;
   font-size: 0.9rem;
   color: white;
-  background-color: #1a237e;
+  background-color: #00acee;
   border: none;
   cursor: pointer;
   border-radius: 3px;

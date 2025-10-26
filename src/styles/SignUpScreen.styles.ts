@@ -112,7 +112,7 @@ export const SignUpButton = styled.button`
   font-size: 18px;
   font-weight: 700;
   margin: 24px 0 28px;
-  background: #1a237e;
+  background: #00acee;
   line-height: 1rem;
   padding: 20px;
   cursor: pointer;

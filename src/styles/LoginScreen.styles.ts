@@ -99,7 +99,7 @@ export const GetStartedButton = styled.button`
   margin-bottom: 10px;
   border: none;
   color: #fff;
-  background-color: #1a237e;
+  background-color: #00acee;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s ease;
