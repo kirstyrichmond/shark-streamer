@@ -3,8 +3,8 @@
 Created by Kirsty Richmond.
 
 ## Visit Site
-- **Frontend**: https://kirsty-richmond-netflix-clone.vercel.app
-- **Backend API**: https://netflix-clone-dcjp.onrender.com/api
+- **Frontend**: https://shark-streamer.vercel.app/
+- **Backend API**: https://shark-streamer.onrender.com/api
 
 ## Setup Instructions
 
