@@ -1,4 +1,5 @@
 // Testing Redux state changes (the "brain" of our app)
+import { vi } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer, {
   addToWatchlist,
@@ -7,11 +8,11 @@ import userReducer, {
 } from '../../store/slices/userSlice';
 
 // We "mock" the API so tests run fast and don't depend on internet
-jest.mock('../../services/api', () => ({
+vi.mock('../../services/api', () => ({
   watchlistAPI: {
-    getWatchlist: jest.fn(),
-    addToWatchlist: jest.fn(),
-    removeFromWatchlist: jest.fn(),
+    getWatchlist: vi.fn(),
+    addToWatchlist: vi.fn(),
+    removeFromWatchlist: vi.fn(),
   }
 }));
 
@@ -44,7 +45,7 @@ describe('Watchlist Redux Logic', () => {
         user: userReducer,
       },
     });
-    jest.clearAllMocks(); // Reset all mocks
+    vi.clearAllMocks(); // Reset all mocks
   });
 
   describe('Adding to Watchlist', () => {
