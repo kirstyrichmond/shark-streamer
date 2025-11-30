@@ -75,7 +75,7 @@ export const SignInScreen = () => {
           {() => (
             <Form as={FormikForm}>
               <Title>Sign In</Title>
-              {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
+              {error && <p style={{ color: "#FF3131", marginBottom: "20px" }}>{error}</p>}
               <Field
                 as={Input}
                 name="email"

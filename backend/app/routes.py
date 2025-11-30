@@ -95,7 +95,7 @@ def login():
     print(f"User ID: {user.id if user else None}")
     
     if not user:
-        return jsonify({'error': 'Invalid credentials'}), 400
+        return jsonify({'error': 'You have entered an invalid email or password'}), 400
     
     try:
         if check_password_hash(user.password, password):

@@ -77,7 +77,7 @@ export const SignUpScreen = ({ emailRef: propsEmailRef }: SignUpScreenProps) => 
           {() => (
             <Form as={FormikForm}>
               <Title>Sign Up</Title>
-              {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
+              {error && <p style={{ color: "#FF3131", marginBottom: "10px" }}>{error}</p>}
               <Field
                 as={Input}
                 name="email"

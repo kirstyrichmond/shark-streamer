@@ -81,17 +81,25 @@ export interface UserState {
 
 export const loginUser = createAsyncThunk(
   'user/login',
-  async ({ email, password }: { email: string; password: string }) => {
-    const result = await authAPI.login(email, password);
-    return result;
+  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      const result = await authAPI.login(email, password);
+      return result;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message || 'Login failed');
+    }
   }
 );
 
 export const registerUser = createAsyncThunk(
   'user/register',
-  async ({ email, password }: { email: string; password: string }) => {
-    const result = await authAPI.register(email, password);
-    return result;
+  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      const result = await authAPI.register(email, password);
+      return result;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || error.message || 'Registration failed');
+    }
   }
 );
 
