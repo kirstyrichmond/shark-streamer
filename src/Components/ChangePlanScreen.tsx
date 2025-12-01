@@ -40,64 +40,66 @@ export const ChangePlanScreen = () => {
 
   const changePlan = async (planId: string): Promise<void> => {
     if (planId === user?.subscription_plan) return;
-    
+
     setLoading(true);
-      if (user) {
-        await dispatch(updateSubscription({ 
-          userId: user.id, 
-          planId 
-        } as ChangePlanParams)).unwrap();
-        setLoading(false);
-      }
+    if (user) {
+      await dispatch(
+        updateSubscription({
+          userId: user.id,
+          planId,
+        } as ChangePlanParams)
+      ).unwrap();
+      setLoading(false);
+    }
   };
 
   return (
     <Container>
       <ScreenContainer>
         <HeaderContainer>
-          <BackButton onClick={() => navigate(RoutePaths.Account)}>
+          <BackButton onClick={ () => navigate(RoutePaths.Account) }>
             <BackButtonIcon />
           </BackButton>
           <Title>Change Streaming Plan</Title>
         </HeaderContainer>
-        {user?.subscription_plan && (
+        { user?.subscription_plan && (
           <CurrentPlan>
-            Current Plan: <strong>
-              {user.subscription_plan.charAt(0).toUpperCase() + 
-               user.subscription_plan.slice(1)}
+            Current Plan:{ " " }
+            <strong>
+              { user.subscription_plan.charAt(0).toUpperCase() + user.subscription_plan.slice(1) }
             </strong>
           </CurrentPlan>
-        )}
-        
-        {plans.loading ? (
+        ) }
+
+        { plans.loading ? (
           <p>Loading plans...</p>
         ) : plans.error ? (
-          <p>Error loading plans: {plans.error}</p>
+          <p>Error loading plans: { plans.error }</p>
         ) : (
           plans.items.map((plan) => {
             const isCurrentPlan = plan.id === user?.subscription_plan;
 
             return (
-              <PlanContainer key={plan.id}>
-                <PlanTitle>{plan.name}</PlanTitle>
-                <PlanDescription>{plan.description}</PlanDescription>
+              <PlanContainer key={ plan.id }>
+                <PlanTitle>{ plan.name }</PlanTitle>
+                <PlanDescription>{ plan.description }</PlanDescription>
                 <PlanActions>
-                  <PlanPrice>{plan.price}</PlanPrice>
+                  <PlanPrice>{ plan.price }</PlanPrice>
                   <SubscribeButton
-                    onClick={() => changePlan(plan.id)}
-                    disabled={isCurrentPlan || loading}
-                    style={{
+                    onClick={ () => changePlan(plan.id) }
+                    disabled={ isCurrentPlan || loading }
+                    style={ {
                       opacity: isCurrentPlan || loading ? 0.6 : 1,
-                      cursor: isCurrentPlan || loading ? 'not-allowed' : 'pointer'
-                    }}
+                      cursor: isCurrentPlan || loading ? "not-allowed" : "pointer",
+                    } }
                   >
-                    {isCurrentPlan ? "Current Plan" : loading ? "Updating..." : "Select Plan"}
+                    { isCurrentPlan ? "Current Plan" : loading ? "Updating..." : "Select Plan" }
                   </SubscribeButton>
                 </PlanActions>
               </PlanContainer>
             );
           })
-        )}
+        ) }
       </ScreenContainer>
     </Container>
   );

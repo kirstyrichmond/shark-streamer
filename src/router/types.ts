@@ -1,7 +1,7 @@
 export const RoutePaths = {
   Home: "/",
   Account: "/account",
-  ChangePlan: "/change-plan", 
+  ChangePlan: "/change-plan",
   Profiles: "/profiles",
   ManageProfile: "/manage-profile",
 };

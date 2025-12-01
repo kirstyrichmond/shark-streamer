@@ -33,14 +33,14 @@ export const BannerPlayerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     height: 44vw;
   }
   @media (min-width: ${breakpoints.desktop}px) {
     height: 36vw;
   }
-  
+
   /* Main wrapper that clips everything */
   .youtube-wrapper {
     position: absolute;
@@ -52,7 +52,7 @@ export const BannerPlayerWrapper = styled.div`
     background-color: black;
     z-index: 1;
   }
-  
+
   /* Style the iframe to fill the container properly */
   iframe {
     position: absolute;
@@ -65,10 +65,10 @@ export const BannerPlayerWrapper = styled.div`
     min-height: 100%;
     pointer-events: none;
   }
-  
+
   /* Add a gradient overlay to ensure content is visible */
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 0;
@@ -249,7 +249,7 @@ export const MovieIcon = styled.img`
     max-height: 140px;
     margin-bottom: 0.8rem;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     max-width: 35%;
     max-height: 150px;
@@ -272,7 +272,9 @@ export const CustomMuteButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
   padding: 0;
   overflow: hidden;
 
@@ -307,9 +309,9 @@ export const VolumeIcon = styled.div<{ isMuted: boolean }>`
   position: relative;
   width: 24px;
   height: 24px;
-  
+
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 10px;
@@ -319,21 +321,23 @@ export const VolumeIcon = styled.div<{ isMuted: boolean }>`
     border-width: 5px 0 5px 8px;
     border-color: transparent transparent transparent white;
   }
-  
+
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     left: 10px;
     top: 6px;
-    width: ${props => props.isMuted ? '0' : '10px'};
-    height: ${props => props.isMuted ? '0' : '14px'};
-    border-style: ${props => props.isMuted ? 'none' : 'solid'};
+    width: ${(props) => (props.isMuted ? "0" : "10px")};
+    height: ${(props) => (props.isMuted ? "0" : "14px")};
+    border-style: ${(props) => (props.isMuted ? "none" : "solid")};
     border-radius: 0 10px 10px 0;
-    border-width: ${props => props.isMuted ? '0' : '2px'};
+    border-width: ${(props) => (props.isMuted ? "0" : "2px")};
     border-color: white;
   }
-  
-  ${props => props.isMuted && `
+
+  ${(props) =>
+    props.isMuted &&
+    `
     &:before {
       width: 20px;
       height: 2px;

@@ -12,12 +12,12 @@ function App() {
 
   useEffect(() => {
     const checkAuthToken = async () => {
-      const token = localStorage.getItem('shark_streamer_token');
+      const token = localStorage.getItem("shark_streamer_token");
       if (token) {
         dispatch(getCurrentUser());
       }
     };
-    
+
     checkAuthToken();
   }, [dispatch]);
 

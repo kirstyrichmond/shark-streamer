@@ -10,22 +10,22 @@ export const routes: RouteObject[] = [
   {
     path: RoutePaths.Home,
     element: <HomeScreen />,
-    index: true
+    index: true,
   },
   {
     path: RoutePaths.Account,
-    element: <AccountScreen />
+    element: <AccountScreen />,
   },
   {
     path: RoutePaths.ChangePlan,
-    element: <ChangePlanScreen />
+    element: <ChangePlanScreen />,
   },
   {
     path: RoutePaths.Profiles,
-    element: <Profiles />
+    element: <Profiles />,
   },
   {
     path: RoutePaths.ManageProfile,
-    element: <ManageProfile setEditProfilePage={() => {}} />
-  }
+    element: <ManageProfile setEditProfilePage={ () => {} } />,
+  },
 ];

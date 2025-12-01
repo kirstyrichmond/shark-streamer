@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUser, logoutUser, showSignIn, selectSelectedProfile, setSelectedProfile } from "../store/slices/userSlice";
-import { useSearch } from "../context/SearchContext";
+import {
+  selectUser,
+  logoutUser,
+  showSignIn,
+  selectSelectedProfile,
+  setSelectedProfile,
+} from "../store/slices/userSlice";
+import { useSearch } from "../hooks/useSearch";
 import {
   CancelButton,
   Container,
@@ -15,38 +21,31 @@ import {
   Input,
   InputContainer,
   NavAvatar,
-  NavLogo,
   ProfileName,
   RightContainer,
   SearchIcon,
   SignInButton,
 } from "../styles/Nav.styles";
-import SharkflixLogo from "../Images/SharkStreamer.tsx";
 import { RoutePaths } from "../router/types";
 import { useAppDispatch } from "../app/store";
 
 export const Nav = () => {
-  const dispatch = useAppDispatch ();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const selectedProfile = useSelector(selectSelectedProfile);
-  
+
   const [show, handleShow] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [scrollOpacity, setScrollOpacity] = useState<number>(0);
   const isHomeScreen = window.location.pathname === RoutePaths.Home;
-  
-  const { 
-    searchKey, 
-    setSearchKey, 
-    showSearchBar, 
-    toggleSearchBar,
-    handleSearchSubmit 
-  } = useSearch();
+
+  const { searchKey, setSearchKey, showSearchBar, toggleSearchBar, handleSearchSubmit } =
+    useSearch();
 
   const transitionNavBar = () => {
     const scrollY = window.scrollY;
-    
+
     if (scrollY > 100) {
       handleShow(true);
       setScrollOpacity(1);
@@ -68,7 +67,7 @@ export const Nav = () => {
       const currentProfile = user.profiles.find((profile) => {
         return profile.activeProfile === true;
       });
-      
+
       if (!currentProfile && user.profiles.length === 1) {
         dispatch(setSelectedProfile(user.profiles[0]));
       } else if (currentProfile) {
@@ -88,57 +87,52 @@ export const Nav = () => {
   const getBackgroundStyle = () => {
     if (!isHomeScreen || show) return { backgroundColor: "#111" };
     return {
-      background: `linear-gradient(to bottom, rgba(0, 0, 0, ${0.8 + scrollOpacity * 0.9}) 0%, rgba(0, 0, 0, ${scrollOpacity * 0.1}) 100%)`
+      background: `linear-gradient(to bottom, rgba(0, 0, 0, ${0.8 + scrollOpacity * 0.9}) 0%, rgba(0, 0, 0, ${scrollOpacity * 0.1}) 100%)`,
     };
   };
 
   return (
-    <Container style={getBackgroundStyle()}>
+    <Container style={ getBackgroundStyle() }>
       <div
-        onClick={() => {
+        onClick={ () => {
           toggleSearchBar(false);
           setShowMenu(false);
           navigate(RoutePaths.Home);
-        }}
-        style={{
-            fontFamily: 'Boogaloo',
-            fontSize: '28px',
-            color: '#00acee',
-            fontWeight: 400,
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            cursor: 'pointer',
-        }}
+        } }
+        style={ {
+          fontFamily: "Boogaloo",
+          fontSize: "28px",
+          color: "#00acee",
+          fontWeight: 400,
+          textTransform: "uppercase",
+          letterSpacing: "1px",
+          cursor: "pointer",
+        } }
       >
         Shark Streamer
       </div>
       <RightContainer>
-        {!user ? (
-          <SignInButton onClick={() => dispatch(showSignIn())}>
-            Sign In
-          </SignInButton>
+        { !user ? (
+          <SignInButton onClick={ () => dispatch(showSignIn()) }>Sign In</SignInButton>
         ) : (
           <>
             <div>
-              {showSearchBar ? (
-                <Form onSubmit={handleSearchSubmit}>
+              { showSearchBar ? (
+                <Form onSubmit={ handleSearchSubmit }>
                   <InputContainer>
                     <Input
                       autoFocus
                       type="text"
-                      value={searchKey}
+                      value={ searchKey }
                       placeholder="Titles, people, genres"
-                      onChange={(e) => setSearchKey(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
+                      onChange={ (e) => setSearchKey(e.target.value) }
+                      onKeyDown={ (e) => {
+                        if (e.key === "Enter") {
                           handleSearchSubmit(e);
                         }
-                      }}
+                      } }
                     />
-                    <CancelButton
-                      onClick={handleSearchCancel}
-                      type="button"
-                    >
+                    <CancelButton onClick={ handleSearchCancel } type="button">
                       X
                     </CancelButton>
                   </InputContainer>
@@ -147,68 +141,66 @@ export const Nav = () => {
                 <SearchIcon
                   src="https://img.icons8.com/sf-regular/48/FFFFFF/search.png"
                   alt="search icon"
-                  onClick={handleSearchIconClick}
+                  onClick={ handleSearchIconClick }
                 />
-              )}
+              ) }
             </div>
-            {selectedProfile && (
+            { selectedProfile && (
               <>
                 <NavAvatar
-                  src={selectedProfile.avatar_url || "https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"}
+                  src={
+                    selectedProfile.avatar_url ||
+                    "https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"
+                  }
                   alt="profile avatar"
-                  onClick={() => setShowMenu(!showMenu)}
+                  onClick={ () => setShowMenu(!showMenu) }
                 />
-                <ProfileName>{selectedProfile.name}</ProfileName>
+                <ProfileName>{ selectedProfile.name }</ProfileName>
               </>
-            )}
-            <DropdownMenu 
-              isclosed={showMenu ? "false" : "true"}
-            >
-              {user.profiles?.map((profile, index) => {
+            ) }
+            <DropdownMenu isclosed={ showMenu ? "false" : "true" }>
+              { user.profiles?.map((profile, index) => {
                 return (
                   <DropdownMenuUser
-                    key={index}
-                    onClick={() => {
+                    key={ index }
+                    onClick={ () => {
                       setShowMenu(!showMenu);
-                      dispatch(setSelectedProfile(profile))
-                    }}
+                      dispatch(setSelectedProfile(profile));
+                    } }
                   >
-                    <DropdownMenuAvatar
-                      src={profile.avatar_url}
-                      alt="profile"
-                    />
-                    <DropdownMenuUsername>{profile.name}</DropdownMenuUsername>
+                    <DropdownMenuAvatar src={ profile.avatar_url } alt="profile" />
+                    <DropdownMenuUsername>{ profile.name }</DropdownMenuUsername>
                   </DropdownMenuUser>
                 );
-              })}
+              }) }
               <DropdownMenuItem
-                onClick={() => {
+                onClick={ () => {
                   setShowMenu(!showMenu);
                   navigate(RoutePaths.Profiles);
-                }}
+                } }
               >
-                {user.profiles?.length ? "Switch Profiles" : "Add Profile"}
+                { user.profiles?.length ? "Switch Profiles" : "Add Profile" }
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => {
+                onClick={ () => {
                   setShowMenu(!showMenu);
                   navigate(RoutePaths.Account);
-                }}
+                } }
               >
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={async () => {
+                onClick={ async () => {
                   setShowMenu(!showMenu);
                   dispatch(logoutUser());
                   navigate(RoutePaths.Home);
-                }}
+                } }
               >
                 Sign Out
               </DropdownMenuItem>
             </DropdownMenu>
           </>
-        )}
+        ) }
       </RightContainer>
     </Container>
   );

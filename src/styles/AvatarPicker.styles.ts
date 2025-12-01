@@ -86,9 +86,9 @@ export const CategoryTabs = styled.div`
 `;
 
 export const CategoryTab = styled.button<CategoryTabProps>`
-  background: ${(props) => props.$active ? '#00acee' : 'transparent'};
-  color: ${(props) => props.$active ? '#fff' : '#ccc'};
-  border: 2px solid ${(props) => props.$active ? '#00acee' : '#666'};
+  background: ${(props) => (props.$active ? "#00acee" : "transparent")};
+  color: ${(props) => (props.$active ? "#fff" : "#ccc")};
+  border: 2px solid ${(props) => (props.$active ? "#00acee" : "#666")};
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
@@ -97,8 +97,8 @@ export const CategoryTab = styled.button<CategoryTabProps>`
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: ${(props) => props.$active ? '#00acee' : '#999'};
-    color: ${(props) => props.$active ? '#fff' : '#fff'};
+    border-color: ${(props) => (props.$active ? "#00acee" : "#999")};
+    color: ${(props) => (props.$active ? "#fff" : "#fff")};
   }
 
   @media (min-width: ${breakpoints.tablet}px) {
@@ -124,11 +124,11 @@ export const AvatarOption = styled.div<AvatarOptionProps>`
   cursor: pointer;
   border-radius: 8px;
   overflow: hidden;
-  border: 3px solid ${(props) => props.$selected ? '#00acee' : 'transparent'};
+  border: 3px solid ${(props) => (props.$selected ? "#00acee" : "transparent")};
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: ${(props) => props.$selected ? '#00acee' : '#fff'};
+    border-color: ${(props) => (props.$selected ? "#00acee" : "#fff")};
     transform: scale(1.05);
   }
 `;
@@ -160,7 +160,7 @@ export const UploadButton = styled.button`
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.3s ease;
-  opacity: ${(props) => props.disabled ? 0.6 : 1};
+  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
 
   &:hover:not(:disabled) {
     border-color: #00acee;

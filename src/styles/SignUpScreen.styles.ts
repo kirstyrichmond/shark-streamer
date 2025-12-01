@@ -93,7 +93,7 @@ export const PasswordToggleButton = styled.button`
   align-items: center;
   padding: 0;
   z-index: 1;
-  
+
   &:hover {
     color: #fff;
   }

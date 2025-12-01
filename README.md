@@ -3,12 +3,14 @@
 Created by Kirsty Richmond.
 
 ## Visit Site
+
 - **Frontend**: https://shark-streamer.vercel.app/
 - **Backend API**: https://shark-streamer.onrender.com/api
 
 ## Setup Instructions
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - Python 3.9 or higher
 - Git
@@ -16,12 +18,14 @@ Created by Kirsty Richmond.
 ### Frontend Setup
 
 1. **Clone the repository**
+
    ```bash
    $ git clone <repository-url>
    $ cd shark-streamer
    ```
 
 2. **Install frontend dependencies**
+
    ```bash
    $ npm install
    ```
@@ -35,27 +39,32 @@ Created by Kirsty Richmond.
 ### Backend Setup
 
 1. **Navigate to backend directory**
+
    ```bash
    $ cd backend
    ```
 
 2. **Create and activate virtual environment**
+
    ```bash
    $ python -m venv shark-streamer
    $ source shark-streamer/bin/activate  # On Windows: shark-streamer\Scripts\activate
    ```
 
 3. **Install Python dependencies**
+
    ```bash
    $ pip install -r requirements.txt
    ```
 
 4. **Initialize the database**
+
    ```bash
    $ python -c "from app import create_app, db; app = create_app(); app.app_context().push(); db.create_all(); print('Database created!')"
    ```
 
 5. **Seed avatar data (optional)**
+
    ```bash
    $ python seed_avatars.py
    ```
@@ -69,18 +78,19 @@ Created by Kirsty Richmond.
 ### Environment Variables
 
 Create a `.env` file in the root directory for any environment-specific configurations:
+
 ```bash
 REACT_APP_API_BASE_URL=http://localhost:5001/api
 ```
 
-
 ## Description:
 
-** **Built for learning purposes only** **
+\*\* **Built for learning purposes only** \*\*
 
 This project is a Netflix clone that replicates the core functionality and user interface of the popular streaming platform.
 
 Currently in the project you can:
+
 - Create an account using email and password
 - Sign in and out of your account
 - Create and manage multiple user profiles
@@ -92,10 +102,12 @@ Currently in the project you can:
 - Add/remove content from watchlist
 
 Future implementations:
+
 - Personalized recommendations
 - Download for offline viewing
 
 Design choices:
+
 - Built a custom Python Flask backend for authentication and data storage to handle user accounts and profile management
 - Implemented Redux for state management to maintain user authentication state and profile data across components
 - Used styled-components for styling to keep component styles modular and maintainable
@@ -151,7 +163,7 @@ Axios configuration for API requests.
 
 ### Backend Files
 
-/backend/app/__init__.py
+/backend/app/**init**.py
 Flask application factory and configuration.
 
 /backend/app/models.py

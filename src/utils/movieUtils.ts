@@ -1,9 +1,8 @@
-
 export interface Movie {
   id?: number | string;
   movie_id?: string;
   media_type?: string;
-  movie_type?: 'movie' | 'tv';
+  movie_type?: "movie" | "tv";
   first_air_date?: string;
   name?: string;
   title?: string;
@@ -18,10 +17,10 @@ export interface Movie {
   added_at?: string;
 }
 
-export const getMovieType = (movie: Movie): 'movie' | 'tv' => {
-  if (movie.media_type === 'tv' || movie.media_type === 'movie') return movie.media_type;
-  if (movie.first_air_date || (movie.name && !movie.title)) return 'tv';
-  return 'movie';
+export const getMovieType = (movie: Movie): "movie" | "tv" => {
+  if (movie.media_type === "tv" || movie.media_type === "movie") return movie.media_type;
+  if (movie.first_air_date || (movie.name && !movie.title)) return "tv";
+  return "movie";
 };
 
 export const getApiUrl = (movie: Movie) => {
@@ -31,7 +30,9 @@ export const getApiUrl = (movie: Movie) => {
 };
 
 export const getMovieTitle = (movie: Movie) => {
-  return movie.title || movie.name || movie.original_title || movie.original_name || 'Unknown Title';
+  return (
+    movie.title || movie.name || movie.original_title || movie.original_name || "Unknown Title"
+  );
 };
 
 export const getMovieYear = (movie: Movie) => {
@@ -39,7 +40,7 @@ export const getMovieYear = (movie: Movie) => {
   return date ? new Date(date).getFullYear() : null;
 };
 
-export const getImageUrl = (path: string, size = 'w500') => {
+export const getImageUrl = (path: string, size = "w500") => {
   if (!path) return null;
   return `https://image.tmdb.org/t/p/${size}${path}`;
 };

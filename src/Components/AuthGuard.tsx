@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../store/slices/userSlice';
-import { LoginScreen } from './LoginScreen';
-import { RoutePaths } from '../router/types';
+import React, { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../store/slices/userSlice";
+import { LoginScreen } from "./LoginScreen";
+import { RoutePaths } from "../router/types";
 
 interface AuthGuardProps {
-  children: React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | null;
+  children: React.ReactElement | null;
 }
 
 const AuthGuard = ({ children }: AuthGuardProps) => {

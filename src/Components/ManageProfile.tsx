@@ -1,6 +1,15 @@
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { updateProfile, deleteProfile, updateProfileAvatar, createProfile, selectUser, selectSelectedProfile, clearSelectedProfile, fetchUserProfiles } from "../store/slices/userSlice";
+import {
+  updateProfile,
+  deleteProfile,
+  updateProfileAvatar,
+  createProfile,
+  selectUser,
+  selectSelectedProfile,
+  clearSelectedProfile,
+  fetchUserProfiles,
+} from "../store/slices/userSlice";
 import {
   ButtonsContainer,
   Container,
@@ -41,9 +50,10 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
   const [avatarLoading, setAvatarLoading] = useState<boolean>(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState<boolean>(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    isCreating ? null :
-    selectedProfile?.avatar_url ||
-    "https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"
+    isCreating
+      ? null
+      : selectedProfile?.avatar_url ||
+          "https://occ-0-300-1167.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABY5cwIbM7shRfcXmfQg98cqMqiZZ8sReZnj4y_keCAHeXmG_SoqLD8SXYistPtesdqIjcsGE-tHO8RR92n7NyxZpqcFS80YfbRFz.png?r=229"
   );
 
   interface SaveProfileProps {
@@ -71,19 +81,19 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
 
     const profileName = newUsername.current?.value?.trim();
     if (!profileName) {
-      alert('Profile name is required');
+      alert("Profile name is required");
       return;
     }
 
     if (isCreating && !avatarPreview) {
-      alert('Please select an avatar');
+      alert("Please select an avatar");
       return;
     }
 
     try {
       if (isCreating) {
         const newProfile: SaveProfileProps = {
-          userId: user?.id || '',
+          userId: user?.id || "",
           name: profileName,
           avatarUrl: avatarPreview || undefined,
           isKids: isKids,
@@ -95,7 +105,7 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
         }
       } else {
         const profileUpdates: UpdateProfileProps = {
-          profileId: selectedProfile?.id || '',
+          profileId: selectedProfile?.id || "",
           updates: {
             name: profileName,
             is_kids: isKids,
@@ -105,7 +115,7 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
 
         if (avatarPreview && avatarPreview !== selectedProfile?.avatar_url) {
           const avatarUpdate: UpdateProfileAvatarProps = {
-            profileId: selectedProfile?.id || '',
+            profileId: selectedProfile?.id || "",
             avatarData: avatarPreview,
           };
           await dispatch(updateProfileAvatar(avatarUpdate)).unwrap();
@@ -113,8 +123,8 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
       }
 
       setEditProfilePage(false);
-    } catch (error) {
-      alert('Error saving profile. Please try again.');
+    } catch {
+      alert("Error saving profile. Please try again.");
     }
   };
 
@@ -128,13 +138,13 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file');
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert('Image must be less than 5MB');
+      alert("Image must be less than 5MB");
       return;
     }
 
@@ -147,8 +157,8 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
         setAvatarPreview(base64Data);
       };
       reader.readAsDataURL(file);
-    } catch (error) {
-      alert('Error processing image');
+    } catch {
+      alert("Error processing image");
     } finally {
       setAvatarLoading(false);
     }
@@ -168,81 +178,63 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
 
   return (
     <Container>
-      <div style={{ width: '100%'}}>
-        <PageTitle>{isCreating ? 'Add' : 'Edit'} Profile</PageTitle>
+      <div style={ { width: "100%" } }>
+        <PageTitle>{ isCreating ? "Add" : "Edit" } Profile</PageTitle>
       </div>
       <MiddleContainer>
-        <AvatarContainer 
-          onClick={() => setShowAvatarPicker(true)}
-          $isedit="true"
-        >
-          {avatarPreview ? (
-            <ProfileAvatar
-              src={avatarPreview}
-              alt="profile"
-            />
+        <AvatarContainer onClick={ () => setShowAvatarPicker(true) } $isedit="true">
+          { avatarPreview ? (
+            <ProfileAvatar src={ avatarPreview } alt="profile" />
           ) : (
             <AvatarPlaceholder>
-              <AvatarPlaceholderText>Click to <br/> Select Avatar</AvatarPlaceholderText>
+              <AvatarPlaceholderText>
+                Click to <br /> Select Avatar
+              </AvatarPlaceholderText>
             </AvatarPlaceholder>
-          )}
-          {avatarLoading && (
-            <AvatarLoadingOverlay>
-              Uploading...
-            </AvatarLoadingOverlay>
-          )}
+          ) }
+          { avatarLoading && <AvatarLoadingOverlay>Uploading...</AvatarLoadingOverlay> }
           <HiddenFileInput
-            ref={fileInputRef}
+            ref={ fileInputRef }
             type="file"
             accept="image/*"
-            onChange={handleAvatarChange}
+            onChange={ handleAvatarChange }
           />
-          {avatarPreview && (
+          { avatarPreview && (
             <EditProfileIcon
-            src="https://img.icons8.com/sf-regular/48/FFFFFF/edit.png"
-            alt="Edit profile icon"
+              src="https://img.icons8.com/sf-regular/48/FFFFFF/edit.png"
+              alt="Edit profile icon"
             />
-          )}
+          ) }
         </AvatarContainer>
-        <NameInput 
-          type="text" 
-          ref={newUsername} 
-          defaultValue={isCreating ? '' : selectedProfile?.name || ''}
+        <NameInput
+          type="text"
+          ref={ newUsername }
+          defaultValue={ isCreating ? "" : selectedProfile?.name || "" }
           placeholder="Profile name"
         />
       </MiddleContainer>
       <CheckboxContainer>
         <CheckboxLabel>
-          <input
-            type="checkbox"
-            checked={isKids}
-            onChange={(e) => setIsKids(e.target.checked)}
-          />
+          <input type="checkbox" checked={ isKids } onChange={ (e) => setIsKids(e.target.checked) } />
           Kids Profile
         </CheckboxLabel>
       </CheckboxContainer>
       <ButtonsContainer>
         <PrimaryButtonGroup>
-          <SaveButton onClick={handleSaveProfile}>
-            {isCreating ? 'Create' : 'Save'}
-          </SaveButton>
-          {(!isCreating || (isCreating && !isFirstProfile)) && (
-            <TransparentButton onClick={() => setEditProfilePage(false)}>
-              Cancel
-            </TransparentButton>
-          )}
+          <SaveButton onClick={ handleSaveProfile }>{ isCreating ? "Create" : "Save" }</SaveButton>
+          { (!isCreating || (isCreating && !isFirstProfile)) && (
+            <TransparentButton onClick={ () => setEditProfilePage(false) }>Cancel</TransparentButton>
+          ) }
         </PrimaryButtonGroup>
-        {!isCreating && user?.profiles?.length > 1 && (
-          <TransparentButton onClick={handleDeleteProfile}>
-            Delete profile
-          </TransparentButton>
-        )}
+        { !isCreating && user?.profiles?.length > 1 && (
+          <TransparentButton onClick={ handleDeleteProfile }>Delete profile</TransparentButton>
+        ) }
       </ButtonsContainer>
       <AvatarPicker
-        isOpen={showAvatarPicker}
-        onClose={() => setShowAvatarPicker(false)}
-        currentAvatar={avatarPreview || undefined}
-        onAvatarUpdate={(newAvatar) => setAvatarPreview(newAvatar)}
+        isOpen={ showAvatarPicker }
+        onClose={ () => setShowAvatarPicker(false) }
+        currentAvatar={ avatarPreview || undefined }
+        onAvatarUpdate={ (newAvatar) => setAvatarPreview(newAvatar) }
       />
     </Container>
   );

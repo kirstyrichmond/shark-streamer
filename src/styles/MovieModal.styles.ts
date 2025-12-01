@@ -5,14 +5,14 @@ import { FaPlay, FaPause } from "react-icons/fa";
 
 export const MovieInfo = styled.div`
   display: flex;
-`
+`;
 
 interface ModalContainerProps {
   showExpanded?: boolean;
 }
 
 export const ModalContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'showExpanded',
+  shouldForwardProp: (prop) => prop !== "showExpanded",
 })<ModalContainerProps>`
   width: 90vw;
   background: #141414;
@@ -61,7 +61,7 @@ export const PlayerWrapper = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
-  
+
   /* Main wrapper that clips everything */
   .youtube-wrapper {
     position: relative;
@@ -71,7 +71,7 @@ export const PlayerWrapper = styled.div`
     overflow: hidden;
     background-color: black;
   }
-  
+
   /* Scale the iframe bigger to hide controls */
   iframe {
     position: absolute;
@@ -82,10 +82,10 @@ export const PlayerWrapper = styled.div`
     border: none;
     pointer-events: none;
   }
-  
+
   /* Add a gradient overlay to ensure content is visible */
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 0;
@@ -151,19 +151,20 @@ export const CloseButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  &:before, &:after {
-    content: '';
+
+  &:before,
+  &:after {
+    content: "";
     position: absolute;
     width: 16px;
     height: 2px;
     background-color: white;
   }
-  
+
   &:before {
     transform: rotate(45deg);
   }
-  
+
   &:after {
     transform: rotate(-45deg);
   }
@@ -236,12 +237,12 @@ export const MovieInfoContainer = styled.div`
   height: 100%;
   overflow-y: auto;
   max-height: calc(70vh - 30px);
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     max-height: calc(70vh - 190px);
     padding: 16px 36px 60px 36px;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     padding: 16px 36px 60px 36px;
   }
@@ -268,17 +269,17 @@ export const MovieDescription = styled.p`
   }
 `;
 
- export const DescriptionHeader = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-    
-    @media (min-width: ${breakpoints.tablet}px) {
-      margin-bottom: 24px;
-      gap: 12px;
-    }
- `;
+export const DescriptionHeader = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    margin-bottom: 24px;
+    gap: 12px;
+  }
+`;
 
 export const CustomMuteButton = styled.button`
   position: absolute;
@@ -295,7 +296,9 @@ export const CustomMuteButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
   padding: 0;
   overflow: hidden;
 
@@ -336,7 +339,7 @@ export const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     padding-bottom: 5%;
   }
@@ -358,7 +361,7 @@ export const MovieLogo = styled.img`
     max-height: 140px;
     margin-bottom: 2rem;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     max-width: 24%;
     max-height: 120px;
@@ -401,7 +404,6 @@ export const ModalPlayButton = styled.button`
     width: 130px;
   }
 `;
-
 
 export const ModalPlayIcon = styled.img`
   width: 12px;
@@ -473,7 +475,7 @@ export const MovieDetails = styled.div`
 
 export const MovieMeta = styled.div`
   margin-bottom: 32px;
-  
+
   h3 {
     color: #fff;
     font-size: 1.5rem;
@@ -502,7 +504,7 @@ export const SimilarTitle = styled.h3`
   font-size: 1.1rem;
   margin-bottom: 12px;
   font-weight: 700;
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 1.3rem;
     margin-bottom: 16px;
@@ -513,12 +515,12 @@ export const SimilarGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     gap: 24px;
   }
@@ -531,7 +533,7 @@ export const SimilarCard = styled.div`
   cursor: pointer;
   transition: transform 0.2s;
   padding-bottom: 8px;
-  
+
   &:hover {
     transform: scale(1.05);
   }
@@ -541,7 +543,7 @@ export const SimilarImage = styled.img`
   width: 100%;
   height: 100px;
   object-fit: cover;
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     height: 120px;
   }
@@ -569,12 +571,12 @@ export const TrailerGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     gap: 24px;
   }
@@ -587,7 +589,7 @@ export const TrailerCard = styled.div`
   cursor: pointer;
   transition: transform 0.2s;
   padding-bottom: 8px;
-  
+
   &:hover {
     transform: scale(1.02);
   }
@@ -618,12 +620,12 @@ export const MovieMetaRow = styled.div`
   flex-direction: column;
   gap: 8px;
   margin-bottom: 16px;
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     flex-direction: row;
     gap: 12px;
   }
-  
+
   & > span {
     color: #fff;
     font-size: 0.9rem;
@@ -668,7 +670,7 @@ export const MoreDetailsButton = styled.button`
   font-size: 0.85rem;
   font-style: italic;
   margin-left: 8px;
-  
+
   &:hover {
     color: #fff;
     text-decoration: underline;

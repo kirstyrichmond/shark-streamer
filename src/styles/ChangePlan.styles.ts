@@ -38,7 +38,7 @@ export const ScreenContainer = styled.div`
 
 export const CurrentPlan = styled.p`
   margin-bottom: 1.5rem;
-`
+`;
 
 export const HeaderContainer = styled.div`
   display: flex;
@@ -53,14 +53,14 @@ export const HeaderContainer = styled.div`
 `;
 
 export const BackButtonIcon = styled(IoArrowBack)`
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 
   @media (min-width: ${breakpoints.tablet}px) {
     width: 24px;
     height: 24px;
   }
-`
+`;
 
 export const BackButton = styled.button`
   background: none;

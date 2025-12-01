@@ -33,3 +33,6 @@ backend/migrations/versions/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Virtual Environment
+shark-streamer/

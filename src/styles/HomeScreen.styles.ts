@@ -21,7 +21,7 @@ export const SearchMovieContainer = styled.div`
   cursor: pointer;
   width: 30%;
   transition: transform 0.3s ease;
-  
+
   &:hover {
     transform: scale(1.05);
   }
@@ -39,7 +39,7 @@ export const SearchMovieImage = styled.img`
   height: 150px;
   object-fit: cover;
   border-radius: 4px;
-  
+
   @media (min-width: 800px) {
     height: 170px;
   }
@@ -59,7 +59,7 @@ export const SearchResultsHeading = styled.h2`
   color: white;
   margin: 84px 0 0 24px;
   font-size: 1.6rem;
-  
+
   @media (min-width: 1100px) {
     margin-left: 30px;
   }
@@ -74,12 +74,12 @@ export const NoResultsContainer = styled.div`
   color: white;
   text-align: center;
   padding: 0 20px;
-  
+
   h2 {
     font-size: 1.8rem;
     margin-bottom: 1rem;
   }
-  
+
   p {
     font-size: 1.1rem;
     color: #aaa;

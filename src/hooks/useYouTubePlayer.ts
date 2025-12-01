@@ -1,9 +1,50 @@
-import { useState, useRef, useEffect } from 'react';
-import YouTube, { YouTubeEvent } from 'react-youtube';
+import { useState, useRef, useEffect } from "react";
+import YouTube, { YouTubeEvent } from "react-youtube";
+
+interface YouTubePlayerConfig {
+  height?: string | number;
+  width?: string | number;
+  videoId?: string;
+  playerVars?: Record<string, string | number>;
+  events?: {
+    onReady?: (event: YouTubeEvent) => void;
+    onStateChange?: (event: YouTubeEvent) => void;
+    onError?: (event: YouTubeEvent) => void;
+  };
+}
+
+interface YouTubePlayer {
+  playVideo(): void;
+  pauseVideo(): void;
+  stopVideo(): void;
+  mute(): void;
+  unMute(): void;
+  isMuted(): boolean;
+  setVolume(volume: number): void;
+  getVolume(): number;
+  seekTo(seconds: number, allowSeekAhead?: boolean): void;
+  getPlayerState(): number;
+  getCurrentTime(): number;
+  getDuration(): number;
+  destroy(): void;
+}
+
+interface YouTubeAPI {
+  Player: new (elementId: string, config: YouTubePlayerConfig) => YouTubePlayer;
+  PlayerState: {
+    UNSTARTED: number;
+    ENDED: number;
+    PLAYING: number;
+    PAUSED: number;
+    BUFFERING: number;
+    CUED: number;
+  };
+  loaded: boolean;
+}
 
 declare global {
   interface Window {
-    YT: any;
+    YT: YouTubeAPI;
     onYouTubeIframeAPIReady: () => void;
   }
 }
@@ -17,22 +58,24 @@ export const useYouTubePlayer = () => {
 
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
-    const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
-    setIsMobile(isMobileDevice);
-    
+    const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+      userAgent
+    );
+    setTimeout(() => setIsMobile(isMobileDevice), 0);
+
     if (window.YT) return;
-    
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    const firstScriptTag = document.getElementsByTagName('script')[0];
+
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName("script")[0];
     if (firstScriptTag.parentNode) {
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
-    
-    window.onYouTubeIframeAPIReady = function() {
-      console.log('YouTube API is ready');
+
+    window.onYouTubeIframeAPIReady = function () {
+      console.log("YouTube API is ready");
     };
-    
+
     return () => {
       window.onYouTubeIframeAPIReady = () => {};
     };
@@ -51,7 +94,7 @@ export const useYouTubePlayer = () => {
         setVideoEnded(true);
       }
     } catch (error) {
-      console.error('Failed to get player state:', error);
+      console.error("Failed to get player state:", error);
     }
   };
 
@@ -59,7 +102,7 @@ export const useYouTubePlayer = () => {
     if (videoEnded) {
       setVideoEnded(false);
       setIsPlaying(true);
-      return 'restart';
+      return "restart";
     } else {
       const player = youtubePlayerRef.current?.internalPlayer;
       if (player) {
@@ -69,13 +112,13 @@ export const useYouTubePlayer = () => {
           player.playVideo();
         }
       }
-      return isPlaying ? 'pause' : 'play';
+      return isPlaying ? "pause" : "play";
     }
   };
 
   const toggleMute = () => {
     const player = youtubePlayerRef.current?.internalPlayer;
-    
+
     if (player) {
       try {
         if (isMuted) {
@@ -85,20 +128,20 @@ export const useYouTubePlayer = () => {
         }
         setIsMuted(!isMuted);
       } catch (e) {
-        console.error('Failed to control YouTube player:', e);
+        console.error("Failed to control YouTube player:", e);
       }
     }
   };
 
   const getYouTubeOptions = () => ({
-    height: '100%',
-    width: '100%',
+    height: "100%",
+    width: "100%",
     playerVars: {
       autoplay: 1 as 0 | 1,
       mute: 1,
       controls: 0 as 0 | 1,
       showinfo: 0,
-      modestbranding: 1 as 1,
+      modestbranding: 1 as const,
       rel: 0 as 0 | 1 | undefined,
       iv_load_policy: 3 as 1 | 3 | undefined,
       fs: 0 as 0 | 1 | undefined,
@@ -120,12 +163,12 @@ export const useYouTubePlayer = () => {
   const handleVideoReady = (event: YouTubePlayerReadyEvent) => {
     event.target.mute();
     setIsMuted(true);
-    
+
     setTimeout(() => {
       try {
         event.target.playVideo();
         setIsPlaying(true);
-      } catch (e) {
+      } catch {
         setIsPlaying(false);
       }
     }, 100);
@@ -148,6 +191,6 @@ export const useYouTubePlayer = () => {
     handlePlayPause,
     toggleMute,
     getYouTubeOptions,
-    resetPlayer
+    resetPlayer,
   };
 };

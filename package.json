@@ -25,6 +25,7 @@
     "yup": "^1.7.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.20",
@@ -33,22 +34,32 @@
     "@types/react-modal": "^3.16.3",
     "@types/react-router-dom": "^5.3.3",
     "@types/yup": "^0.29.14",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
     "jsdom": "^27.0.1",
+    "prettier": "^3.7.3",
     "typescript": "^5.9.3",
     "vite": "^7.1.10",
     "vitest": "^3.2.4"
   },
   "scripts": {
     "dev": "vite",
-    "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:all": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:performance": "vitest run --testPathPattern=performance",
-    "test:pre-push": "npm run test:all"
+    "lint": "eslint . --ext ts,tsx",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "format:jsx": "prettier --write . && eslint . --ext ts,tsx --fix --quiet"
   },
   "browserslist": {
     "production": [

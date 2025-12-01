@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect } from "react";
 
 interface InfiniteScrollOptions {
   hasNextPage: boolean;
@@ -13,14 +13,16 @@ export const useInfiniteScroll = (
   { hasNextPage, isLoading, threshold = 1000 }: InfiniteScrollOptions
 ): void => {
   const loadMoreRef = useRef<LoadMoreFunction>(loadMore);
-  loadMoreRef.current = loadMore;
+
+  useEffect(() => {
+    loadMoreRef.current = loadMore;
+  }, [loadMore]);
 
   const handleScroll = useCallback((): void => {
     if (isLoading || !hasNextPage) return;
 
     const scrolledNearBottom =
-      window.innerHeight + window.scrollY >=
-      document.documentElement.scrollHeight - threshold;
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - threshold;
 
     if (scrolledNearBottom) {
       loadMoreRef.current();
@@ -28,20 +30,20 @@ export const useInfiniteScroll = (
   }, [isLoading, hasNextPage, threshold]);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout | null = null;
+    let timeoutId: number | null = null;
 
     const throttledScroll = (): void => {
       if (timeoutId) return;
-      timeoutId = setTimeout(() => {
+      timeoutId = window.setTimeout(() => {
         handleScroll();
         timeoutId = null;
       }, 100);
     };
 
-    window.addEventListener('scroll', throttledScroll, { passive: true });
+    window.addEventListener("scroll", throttledScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', throttledScroll);
+      window.removeEventListener("scroll", throttledScroll);
       if (timeoutId) clearTimeout(timeoutId);
     };
   }, [handleScroll]);

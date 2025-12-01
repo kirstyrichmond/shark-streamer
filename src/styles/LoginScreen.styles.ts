@@ -7,7 +7,7 @@ export const Container = styled.div`
   background-size: cover;
   background-position: center;
   min-height: 100vh;
-  
+
   @media (max-width: ${breakpoints.mobile}px) {
     background-position: center top;
   }
@@ -30,13 +30,13 @@ export const BodyContainer = styled.div`
   @media (min-width: ${breakpoints.mobile}px) {
     padding: 20px;
   }
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: flex-start;
     padding-top: 300px;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     padding-top: 340px;
   }
@@ -64,7 +64,7 @@ export const Input = styled.input`
   margin: 0 auto 16px;
   box-sizing: border-box;
   -webkit-appearance: none;
-  
+
   &::placeholder {
     color: #757575;
   }
@@ -81,7 +81,7 @@ export const Input = styled.input`
     max-width: 320px;
     margin: 0;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 1.2rem;
     max-width: 360px;
@@ -103,11 +103,11 @@ export const GetStartedButton = styled.button`
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s ease;
-  
+
   &:hover {
     background-color: #303f9f;
   }
-  
+
   &:active {
     transform: translateY(1px);
   }
@@ -167,7 +167,7 @@ export const Title = styled.h1`
     font-size: 3.2rem;
     max-width: 900px;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 4.2rem;
   }
@@ -190,7 +190,7 @@ export const DescOne = styled.h2`
     margin-bottom: 18px;
     max-width: none;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 2rem;
   }
@@ -213,7 +213,7 @@ export const DescTwo = styled.h3`
     margin-bottom: 32px;
     max-width: none;
   }
-  
+
   @media (min-width: ${breakpoints.desktop}px) {
     font-size: 1.4rem;
     margin-bottom: 32px;

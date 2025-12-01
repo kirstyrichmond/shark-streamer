@@ -10,16 +10,14 @@ import {
   PURGE,
   REGISTER,
   persistStore,
+  PersistedState,
 } from "redux-persist";
 import userSliceReducer from "../store/slices/userSlice";
 import { useDispatch } from "react-redux";
 
-interface PersistConfig {
-  key: string;
-  storage: typeof storage;
-  blacklist: string[];
-  migrate: (state: any) => Promise<any>;
-}
+const reducers = combineReducers({ user: userSliceReducer });
+
+type AppRootState = ReturnType<typeof reducers>;
 
 interface UserInterface {
   showSignUp: boolean;
@@ -27,13 +25,12 @@ interface UserInterface {
   isAnyModalOpen: boolean;
 }
 
-const persistConfig: PersistConfig = {
+const persistConfig = {
   key: "user-v4",
   storage,
-  blacklist: ['avatars'],
-  migrate: (state: any): Promise<any> => {
+  blacklist: ["avatars"],
+  migrate: (state: AppRootState & PersistedState): Promise<AppRootState & PersistedState> => {
     if (state && state.user) {
-      // Ensure interface is properly initialized
       if (!state.user.interface) {
         state.user.interface = {
           showSignUp: false,
@@ -41,8 +38,7 @@ const persistConfig: PersistConfig = {
           isAnyModalOpen: false,
         } as UserInterface;
       }
-      
-      // Ensure user object is properly initialized
+
       if (!state.user.user) {
         state.user.user = {
           info: null,
@@ -51,10 +47,9 @@ const persistConfig: PersistConfig = {
             items: [],
             loading: false,
             error: null,
-          }
+          },
         };
       } else {
-        // Ensure watchlist is properly initialized within user object
         if (!state.user.user.watchlist) {
           state.user.user.watchlist = {
             items: [],
@@ -65,10 +60,8 @@ const persistConfig: PersistConfig = {
       }
     }
     return Promise.resolve(state);
-  }
+  },
 };
-
-const reducers = combineReducers({ user: userSliceReducer });
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 

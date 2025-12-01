@@ -9,24 +9,26 @@ export const Container = styled.div<{ $isSelected: boolean }>`
   transition: transform 0.3s ease;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   }
-  
+
   &:hover {
     transform: scale(1.03);
     z-index: 10;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    
+
     @media (min-width: ${breakpoints.tablet}px) {
       transform: scale(1.05);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
   }
-  
-  ${props => props.$isSelected && `
+
+  ${(props) =>
+    props.$isSelected &&
+    `
     border: 2px solid #00acee;
   `}
 `;
@@ -41,7 +43,7 @@ export const Image = styled.img`
   &:hover {
     transform: scale(1.05);
     opacity: 1;
-    
+
     @media (min-width: ${breakpoints.tablet}px) {
       transform: scale(1.08);
     }
@@ -62,7 +64,7 @@ export const NoImageText = styled.p`
   font-size: 12px;
   text-align: center;
   padding: 0 8px;
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 14px;
   }

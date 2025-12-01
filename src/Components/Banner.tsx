@@ -21,7 +21,7 @@ import {
   CustomMuteButton,
   MuteIcon,
   UnmuteIcon,
-  MovieIcon
+  MovieIcon,
 } from "../styles/Banner.styles";
 import { Movie } from "../utils/movieUtils";
 import { AppDispatch } from "../app/store";
@@ -36,7 +36,7 @@ export const Banner = () => {
   const [openMovieModal, setOpenMovieModal] = useState<boolean>(false);
   const [trailerWasPlaying, setTrailerWasPlaying] = useState<boolean>(false);
   const isAnyModalOpen = useSelector(selectIsAnyModalOpen);
-  
+
   const {
     isPlaying,
     videoEnded,
@@ -48,7 +48,7 @@ export const Banner = () => {
     handlePlayPause,
     toggleMute,
     getYouTubeOptions,
-    resetPlayer
+    resetPlayer,
   } = useYouTubePlayer();
 
   useEffect(() => {
@@ -69,11 +69,11 @@ export const Banner = () => {
   useEffect(() => {
     async function fetchVideos() {
       if (!movie?.id) return;
-      
+
       try {
         const type = movie?.media_type === "tv" ? "tv" : "movie";
         const request = await movieAPI.fetchVideos(type, String(movie?.id));
-        
+
         if (request.data.results && request.data.results.length > 0) {
           setVideos(request.data.results);
           setPlayTrailer(true);
@@ -86,16 +86,17 @@ export const Banner = () => {
 
     async function fetchLogo() {
       if (!movie?.id) return;
-      
+
       try {
         const type = movie?.media_type === "tv" ? "tv" : "movie";
         const request = await movieAPI.fetchImages(type, String(movie?.id));
-        
+
         if (request.data.logos && request.data.logos.length > 0) {
-            const englishLogo = request.data.logos.find((logo: { iso_639_1: string | null }) => 
-            logo.iso_639_1 === 'en' || logo.iso_639_1 === null
-            );
-          
+          const englishLogo = request.data.logos.find(
+            (logo: { iso_639_1: string | null }) =>
+              logo.iso_639_1 === "en" || logo.iso_639_1 === null
+          );
+
           const selectedLogo = englishLogo || request.data.logos[0];
           setLogo(selectedLogo.file_path);
         }
@@ -104,7 +105,7 @@ export const Banner = () => {
         console.error("Error fetching logo:", error);
       }
     }
-    
+
     if (movie?.id) {
       fetchVideos();
       fetchLogo();
@@ -118,9 +119,9 @@ export const Banner = () => {
         if (player) {
           try {
             player.pauseVideo();
-            setTrailerWasPlaying(true);
+            setTimeout(() => setTrailerWasPlaying(true), 0);
           } catch (e) {
-            console.error('Failed to pause banner video:', e);
+            console.error("Failed to pause banner video:", e);
           }
         }
       }
@@ -130,9 +131,9 @@ export const Banner = () => {
         if (player) {
           try {
             player.playVideo();
-            setTrailerWasPlaying(false);
+            setTimeout(() => setTrailerWasPlaying(false), 0);
           } catch (e) {
-            console.error('Failed to resume banner video:', e);
+            console.error("Failed to resume banner video:", e);
           }
         }
       }
@@ -146,44 +147,44 @@ export const Banner = () => {
   }
 
   const truncate: TruncateFunction = (string, n) => {
-    if (!string) return '';
+    if (!string) return "";
     return string.length > n ? string.substring(0, n - 1) + " ..." : string;
   };
 
   const handlePlayPauseAction = () => {
     const action = handlePlayPause();
-    if (action === 'restart') {
+    if (action === "restart") {
       setPlayTrailer(true);
     }
   };
 
-
-  const renderBannerContent = (showPlayButton = true, onPlayClick: (() => void) | null | undefined = undefined) => (
+  const renderBannerContent = (
+    showPlayButton = true,
+    onPlayClick: (() => void) | null | undefined = undefined
+  ) => (
     <BannerContent>
-      {logo ? (
-        <MovieIcon 
-          src={`https://image.tmdb.org/t/p/original/${logo}`} 
-          alt={movie?.title || movie?.name || movie?.original_name}
+      { logo ? (
+        <MovieIcon
+          src={ `https://image.tmdb.org/t/p/original/${logo}` }
+          alt={ movie?.title || movie?.name || movie?.original_name }
         />
       ) : (
-        <BannerTitle>
-          {movie?.title || movie?.name || movie?.original_name}
-        </BannerTitle>
-      )}
-      <BannerDescription>
-        {truncate(movie?.overview, truncateAmount)}
-      </BannerDescription>
+        <BannerTitle>{ movie?.title || movie?.name || movie?.original_name }</BannerTitle>
+      ) }
+      <BannerDescription>{ truncate(movie?.overview, truncateAmount) }</BannerDescription>
       <ButtonsContainer>
-        {showPlayButton && (
-          <PlayButton onClick={onPlayClick || handlePlayPauseAction}>
-            {videoEnded || !isPlaying ? <PlayIcon /> : <PauseIcon />}
-            {videoEnded || !isPlaying ? "Play" : "Pause"}
+        { showPlayButton && (
+          <PlayButton onClick={ onPlayClick || handlePlayPauseAction }>
+            { videoEnded || !isPlaying ? <PlayIcon /> : <PauseIcon /> }
+            { videoEnded || !isPlaying ? "Play" : "Pause" }
           </PlayButton>
-        )}
-        <InfoButton onClick={() => {
-          setOpenMovieModal(true);
-          dispatch(openModal());
-        }}>
+        ) }
+        <InfoButton
+          onClick={ () => {
+            setOpenMovieModal(true);
+            dispatch(openModal());
+          } }
+        >
           <InfoIcon
             src="https://img.icons8.com/pastel-glyph/64/FFFFFF/info--v1.png"
             alt="more movie info"
@@ -195,20 +196,21 @@ export const Banner = () => {
   );
 
   const renderTrailer = () => {
-    const trailer = videos?.find((vid: { key: string; type: string }) => vid.type === "Trailer") || videos[0];
-    
+    const trailer =
+      videos?.find((vid: { key: string; type: string }) => vid.type === "Trailer") || videos[0];
+
     if (!trailer || !trailer.key) return null;
 
     if (videoEnded) {
       return (
         <BannerContainer
-          style={{
+          style={ {
             backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie?.backdrop_path}")`,
             backgroundSize: "cover",
             backgroundPosition: "center center",
-          }}
+          } }
         >
-          {renderBannerContent()}
+          { renderBannerContent() }
         </BannerContainer>
       );
     }
@@ -217,21 +219,21 @@ export const Banner = () => {
       <BannerPlayerWrapper>
         <div className="youtube-wrapper">
           <YouTube
-            videoId={trailer.key}
-            opts={getYouTubeOptions()}
-            onReady={handleVideoReady}
-            onEnd={handleVideoEnd}
-            onStateChange={handleVideoStateChange}
-            onError={(error) => {
-              console.error('YouTube player error:', error);
+            videoId={ trailer.key }
+            opts={ getYouTubeOptions() }
+            onReady={ handleVideoReady }
+            onEnd={ handleVideoEnd }
+            onStateChange={ handleVideoStateChange }
+            onError={ (error) => {
+              console.error("YouTube player error:", error);
               setPlayTrailer(false);
-            }}
-            ref={youtubePlayerRef}
+            } }
+            ref={ youtubePlayerRef }
           />
         </div>
-        {renderBannerContent()}
-        <CustomMuteButton onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
-          {isMuted ? <MuteIcon /> : <UnmuteIcon />}
+        { renderBannerContent() }
+        <CustomMuteButton onClick={ toggleMute } aria-label={ isMuted ? "Unmute" : "Mute" }>
+          { isMuted ? <MuteIcon /> : <UnmuteIcon /> }
         </CustomMuteButton>
       </BannerPlayerWrapper>
     );
@@ -239,38 +241,38 @@ export const Banner = () => {
 
   return (
     <>
-      {movie && (
+      { movie && (
         <MovieModal
-        selectedMovie={movie}
-        isOpen={openMovieModal}
-        fetchUrl={getMovieType(movie)}
-      handleClose={(value: boolean) => {
-        setOpenMovieModal(value);
-        if (!value) {
-        dispatch(closeModal());
-        }
-      }}
-      onMovieChange={(newMovie: Movie) => {
-        setMovie(newMovie);
-      }}
-      />
-      )}
-      {playTrailer && videos?.length > 0 ? (
-      renderTrailer()
+          selectedMovie={ movie }
+          isOpen={ openMovieModal }
+          fetchUrl={ getMovieType(movie) }
+          handleClose={ (value: boolean) => {
+            setOpenMovieModal(value);
+            if (!value) {
+              dispatch(closeModal());
+            }
+          } }
+          onMovieChange={ (newMovie: Movie) => {
+            setMovie(newMovie);
+          } }
+        />
+      ) }
+      { playTrailer && videos?.length > 0 ? (
+        renderTrailer()
       ) : (
-      <BannerContainer
-        style={{
-        backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie?.backdrop_path}")`,
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        }}
-      >
-        {renderBannerContent(true, () => {
-        setPlayTrailer(true);
-        resetPlayer();
-        })}
-      </BannerContainer>
-      )}
+        <BannerContainer
+          style={ {
+            backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie?.backdrop_path}")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          } }
+        >
+          { renderBannerContent(true, () => {
+            setPlayTrailer(true);
+            resetPlayer();
+          }) }
+        </BannerContainer>
+      ) }
     </>
   );
 };

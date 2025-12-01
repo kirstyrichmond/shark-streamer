@@ -135,9 +135,9 @@ export const AvatarContainer = styled.div<{ $isedit: string }>`
   position: relative;
   height: auto;
   cursor: pointer;
-  
+
   &::after {
-    content: ${(props) => props.$isedit === "true" ? "''" : "none"};
+    content: ${(props) => (props.$isedit === "true" ? "''" : "none")};
     position: absolute;
     top: 0;
     left: 0;
@@ -146,12 +146,12 @@ export const AvatarContainer = styled.div<{ $isedit: string }>`
     background: rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     z-index: 5;
-    opacity: ${(props) => props.$isedit === "true" ? "0.7" : "0"};
+    opacity: ${(props) => (props.$isedit === "true" ? "0.7" : "0")};
   }
 `;
 
 export const IconContainer = styled.div<{ $isedit: string }>`
-  background: ${(props) => props.$isedit === "true" ? "#fff" : "transparent"};
+  background: ${(props) => (props.$isedit === "true" ? "#fff" : "transparent")};
 `;
 
 export const EditProfileIcon = styled.img`

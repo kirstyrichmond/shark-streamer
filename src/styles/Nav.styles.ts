@@ -24,7 +24,7 @@ export const Container = styled.div`
     padding: 0 12px;
     height: 52px;
   }
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     height: 60px;
     padding: 0 20px;
@@ -36,7 +36,7 @@ export const RightContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
-  
+
   @media (max-width: 450px) {
     gap: 8px;
   }
@@ -47,11 +47,11 @@ export const NavLogo = styled.img`
   cursor: pointer;
   width: 80px;
   flex-shrink: 0;
-  
+
   @media (max-width: 450px) {
     width: 70px;
   }
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     width: 100px;
     max-width: 120px;
@@ -77,7 +77,7 @@ export const ProfileName = styled.p`
   font-size: 13px;
   font-weight: 600;
   color: white;
-  
+
   @media (max-width: 450px) {
     display: none;
   }
@@ -96,11 +96,11 @@ export const SignInButton = styled.button`
   min-height: 36px;
   flex-shrink: 0;
   white-space: nowrap;
-  
+
   &:hover {
     background-color: #303f9f;
   }
-  
+
   &:active {
     transform: translateY(1px);
   }
@@ -110,7 +110,7 @@ export const SignInButton = styled.button`
     font-size: 0.8rem;
     min-height: 32px;
   }
-  
+
   @media (min-width: ${breakpoints.tablet}px) {
     padding: 7px 17px;
     font-size: 1rem;
@@ -218,7 +218,7 @@ export const InputContainer = styled.div`
   margin-right: 20px;
   display: flex;
   align-items: center;
-  
+
   @media (max-width: 480px) {
     margin-right: 8px;
   }
@@ -234,22 +234,22 @@ export const Input = styled.input`
   border-radius: 4px;
   outline: none;
   font-size: 16px;
-  
+
   &::placeholder {
     color: #aaa;
   }
-  
+
   @media (max-width: 480px) {
     width: 100px;
     padding: 5px 30px 5px 8px;
-    
+
     &::placeholder {
     }
   }
-  
+
   @media (min-width: 768px) {
     width: 240px;
-    
+
     &::placeholder {
     }
   }
@@ -268,7 +268,7 @@ export const CancelButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   @media (max-width: 480px) {
     right: 5px;
     font-size: 0.9rem;
@@ -280,11 +280,11 @@ export const SearchIcon = styled.img`
   height: 24px;
   margin-right: 15px;
   cursor: pointer;
-  
+
   &:hover {
     transform: scale(1.1);
   }
-  
+
   @media (max-width: 480px) {
     width: 20px;
     height: 20px;

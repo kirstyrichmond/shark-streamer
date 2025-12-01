@@ -37,9 +37,9 @@ export const AccountScreen = () => {
     return null;
   }
 
-  const currentPlan = user?.subscription_plan || 'basic';
+  const currentPlan = user?.subscription_plan || "basic";
   const planDisplayName = currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1);
-  const showHdIcon = currentPlan === 'standard' || currentPlan === 'premium';
+  const showHdIcon = currentPlan === "standard" || currentPlan === "premium";
 
   const handleSignOut = async () => {
     dispatch(logoutUser());
@@ -64,7 +64,7 @@ export const AccountScreen = () => {
             <MembershipTitle>MEMBERSHIP & BILLING</MembershipTitle>
           </MembershipHeader>
           <EmailContainer>
-            <EmailText>{user.email}</EmailText>
+            <EmailText>{ user.email }</EmailText>
           </EmailContainer>
         </MiddleContainer>
         <BottomContainer>
@@ -73,22 +73,17 @@ export const AccountScreen = () => {
           </PlanHeader>
           <ChangePlanContainer>
             <PlanTypeContainer>
-              <PlanTypeTitle>{planDisplayName}</PlanTypeTitle>
-              {showHdIcon && (
-                <HdIcon
-                  src="https://img.icons8.com/ios/100/000000/hd.png"
-                  alt="hd icon"
-                />
-              )}
+              <PlanTypeTitle>{ planDisplayName }</PlanTypeTitle>
+              { showHdIcon && (
+                <HdIcon src="https://img.icons8.com/ios/100/000000/hd.png" alt="hd icon" />
+              ) }
             </PlanTypeContainer>
             <div>
-              <ChangePlanButtonLink to="/change-plan">
-                Change Plan
-              </ChangePlanButtonLink>
+              <ChangePlanButtonLink to="/change-plan">Change Plan</ChangePlanButtonLink>
             </div>
           </ChangePlanContainer>
         </BottomContainer>
-        <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
+        <SignOutButton onClick={ handleSignOut }>Sign Out</SignOutButton>
         <CancelMembershipButton>Cancel Membership</CancelMembershipButton>
       </AccountContainer>
     </Container>

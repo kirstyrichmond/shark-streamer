@@ -52,7 +52,7 @@ export const AvatarUploadContainer = styled.div`
 export const AvatarImage = styled.img<{ $loading: boolean }>`
   width: 88px;
   border-radius: 10px;
-  opacity: ${(props) => props.$loading ? 0.6 : 1};
+  opacity: ${(props) => (props.$loading ? 0.6 : 1)};
   transition: opacity 0.3s ease;
 
   @media (min-width: ${breakpoints.tablet}px) {
@@ -90,7 +90,7 @@ export const NameInput = styled.input`
   margin: 0 20px;
 
   &::placeholder {
-    color:rgb(190, 190, 190);
+    color: rgb(190, 190, 190);
   }
 
   @media (min-width: ${breakpoints.tablet}px) {
@@ -231,4 +231,4 @@ export const AvatarPlaceholder = styled.div`
 
 export const AvatarPlaceholderText = styled.p`
   text-align: center;
-`
+`;
