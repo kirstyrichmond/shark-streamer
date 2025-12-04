@@ -39,7 +39,7 @@ const Row: React.FC<RowProps> = ({ title, fetchRequest, isLargeRow = false, isWa
   const [openMovieModal, setOpenMovieModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-  
+
   const { filterMovies, isFiltering } = useMovieFiltering();
 
   useEffect(() => {

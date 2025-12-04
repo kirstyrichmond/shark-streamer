@@ -244,7 +244,10 @@ export const MovieModal = ({
         ) }
         { videoEnded && <MovieCover movie={ selectedMovie } baseUrl={ base_url } /> }
         <ModalContent>
-          <MovieLogo src={ `${base_url}${getEnglishLogo()?.file_path}` } alt={ selectedMovie?.title || selectedMovie?.name } />
+          <MovieLogo
+            src={ `${base_url}${getEnglishLogo()?.file_path}` }
+            alt={ selectedMovie?.title || selectedMovie?.name }
+          />
           <MovieActionButtons
             movie={ selectedMovie }
             onPlayPause={ handlePlayPauseAction }
@@ -275,24 +278,25 @@ export const MovieModal = ({
           </CloseButtonContainer>
           { isLoading ? (
             <ModalHeaderSkeleton />
+          ) : !!playTrailer && videos?.length > 0 ? (
+            renderTrailer()
           ) : (
-            !!playTrailer && videos?.length > 0 ? (
-              renderTrailer()
-            ) : (
-              <>
-                <MovieCover movie={ selectedMovie } baseUrl={ base_url } />
-                <MovieLogo src={ `${base_url}${getEnglishLogo()?.file_path}` } alt={ selectedMovie?.title || selectedMovie?.name } />
-                <PlayButton
-                  onClick={ (e) => {
-                    setPlayTrailer(true);
-                    e.preventDefault();
-                  } }
-                >
-                  <PlayIcon />
-                  Play
-                </PlayButton>
-              </>
-            )
+            <>
+              <MovieCover movie={ selectedMovie } baseUrl={ base_url } />
+              <MovieLogo
+                src={ `${base_url}${getEnglishLogo()?.file_path}` }
+                alt={ selectedMovie?.title || selectedMovie?.name }
+              />
+              <PlayButton
+                onClick={ (e) => {
+                  setPlayTrailer(true);
+                  e.preventDefault();
+                } }
+              >
+                <PlayIcon />
+                Play
+              </PlayButton>
+            </>
           ) }
         </HeaderContainer>
         { isLoading ? (
@@ -324,7 +328,7 @@ export const MovieModal = ({
                   <MovieDescription>{ selectedMovie?.overview || "No description available" }</MovieDescription>
                 </div>
                 <div>
-                    { castAndCrew?.cast && (
+                  { castAndCrew?.cast && (
                     <MovieDetails>
                       <MetaLabel>Cast:</MetaLabel>
                       <MetaValue>

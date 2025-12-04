@@ -88,7 +88,7 @@ export const useMovieModal = ({ movieId, movieType, isEnabled = true }: UseMovie
   const [similarMovies, setSimilarMovies] = useState<SimilarMovie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const { filterMovies } = useMovieFiltering();
 
   useEffect(() => {

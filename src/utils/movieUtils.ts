@@ -69,14 +69,18 @@ export const getAgeRating = (movie: MovieWithRatings | null): string => {
   if (!movie) return "";
 
   if (movie.release_dates?.results) {
-    const filteredMovies = movie.release_dates.results.find((item) => item.iso_3166_1 === "US" || item.iso_3166_1 === "GB");
+    const filteredMovies = movie.release_dates.results.find(
+      (item) => item.iso_3166_1 === "US" || item.iso_3166_1 === "GB"
+    );
     if (filteredMovies?.release_dates?.length > 0) {
       return filteredMovies.release_dates[0].certification || "";
     }
   }
 
   if (movie.content_ratings?.results) {
-    const filteredMovies = movie.content_ratings.results.find((item) => item.iso_3166_1 === "GB" || item.iso_3166_1 === "GB");
+    const filteredMovies = movie.content_ratings.results.find(
+      (item) => item.iso_3166_1 === "GB" || item.iso_3166_1 === "GB"
+    );
     return filteredMovies?.rating || "";
   }
 
