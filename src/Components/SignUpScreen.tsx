@@ -23,9 +23,7 @@ interface SignUpScreenProps {
   emailRef?: React.RefObject<HTMLInputElement | null>;
 }
 
-export const SignUpScreen = ({
-  emailRef: propsEmailRef,
-}: SignUpScreenProps) => {
+export const SignUpScreen = ({ emailRef: propsEmailRef }: SignUpScreenProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -56,11 +54,7 @@ export const SignUpScreen = ({
       if (registerUser.fulfilled.match(resultAction)) {
         navigate(RoutePaths.Profiles);
       } else {
-        setError(
-          typeof resultAction.payload === "string"
-            ? resultAction.payload
-            : "Registration failed"
-        );
+        setError(typeof resultAction.payload === "string" ? resultAction.payload : "Registration failed");
       }
     } catch (error: unknown) {
       setError((error as Error).message);
@@ -69,9 +63,7 @@ export const SignUpScreen = ({
     }
   };
 
-  const handleSignInClick = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
+  const handleSignInClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     dispatch(showSignIn());
   };
@@ -79,19 +71,11 @@ export const SignUpScreen = ({
   return (
     <Container>
       <InnerContainer>
-        <Formik
-          initialValues={ initialValues }
-          validationSchema={ registerSchema }
-          onSubmit={ handleSubmit }
-        >
+        <Formik initialValues={ initialValues } validationSchema={ registerSchema } onSubmit={ handleSubmit }>
           { () => (
             <Form as={ FormikForm }>
               <Title>Sign Up</Title>
-              { error && (
-                <p style={ { color: "#FF3131", marginBottom: "10px" } }>
-                  { error }
-                </p>
-              ) }
+              { error && <p style={ { color: "#FF3131", marginBottom: "10px" } }>{ error }</p> }
               <Field as={ Input } name="email" type="email" placeholder="Email" />
               <ErrorMessage name="email" component={ ErrorText } />
               <PasswordField name="password" placeholder="Password" />

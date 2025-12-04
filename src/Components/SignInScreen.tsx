@@ -71,11 +71,7 @@ export const SignInScreen = () => {
   return (
     <Container>
       <InnerContainer>
-        <Formik
-          initialValues={ initialValues }
-          validationSchema={ loginSchema }
-          onSubmit={ handleSubmit }
-        >
+        <Formik initialValues={ initialValues } validationSchema={ loginSchema } onSubmit={ handleSubmit }>
           { () => (
             <Form as={ FormikForm }>
               <Title>Sign In</Title>

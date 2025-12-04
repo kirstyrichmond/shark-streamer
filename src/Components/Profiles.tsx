@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import {
   profiles,
   setSelectedProfile,
+  setEditingProfile,
+  clearEditingProfile,
   fetchUserProfiles,
   selectUser,
   Profile,
@@ -49,8 +51,15 @@ export const Profiles = () => {
   }, [isFirstProfile, user?.id]);
 
   const handlePage = (profile: Profile) => {
-    dispatch(setSelectedProfile(profile));
+    dispatch(setEditingProfile(profile));
     setEditProfilePage(true);
+  };
+
+  const handleCloseEditPage = (value: boolean) => {
+    if (!value) {
+      dispatch(clearEditingProfile());
+    }
+    setEditProfilePage(value);
   };
 
   const setActiveUser = (e: React.MouseEvent, profile: Profile) => {
@@ -73,7 +82,7 @@ export const Profiles = () => {
       { editProfilePage ? (
         <ManageProfile
           setEditProfilePage={ (value) => {
-            setEditProfilePage(value);
+            handleCloseEditPage(value);
             if (!value) {
               setManageProfiles(false);
             }
@@ -126,10 +135,7 @@ export const Profiles = () => {
           </ProfilesRow>
           { !manageProfiles && (
             <AddProfileContainer onClick={ () => setAddProfilePage(true) }>
-              <AddProfileImage
-                src="https://img.icons8.com/ios-glyphs/240/FFFFFF/plus--v1.png"
-                alt="add profile"
-              />
+              <AddProfileImage src="https://img.icons8.com/ios-glyphs/240/FFFFFF/plus--v1.png" alt="add profile" />
               <AddProfileText>Add Profile</AddProfileText>
             </AddProfileContainer>
           ) }

@@ -40,8 +40,7 @@ export const Nav = () => {
   const [scrollOpacity, setScrollOpacity] = useState<number>(0);
   const isHomeScreen = window.location.pathname === RoutePaths.Home;
 
-  const { searchKey, setSearchKey, showSearchBar, toggleSearchBar, handleSearchSubmit } =
-    useSearch();
+  const { searchKey, setSearchKey, showSearchBar, toggleSearchBar, handleSearchSubmit } = useSearch();
 
   const transitionNavBar = () => {
     const scrollY = window.scrollY;

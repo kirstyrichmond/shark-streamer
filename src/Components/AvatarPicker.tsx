@@ -27,12 +27,7 @@ interface AvatarPickerProps {
   onAvatarUpdate?: (avatarUrl: string) => void;
 }
 
-export const AvatarPicker = ({
-  isOpen,
-  onClose,
-  currentAvatar,
-  onAvatarUpdate,
-}: AvatarPickerProps) => {
+export const AvatarPicker = ({ isOpen, onClose, currentAvatar, onAvatarUpdate }: AvatarPickerProps) => {
   const [selectedCategory, setSelectedCategory] = useState<"default" | "kids">("default");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -96,16 +91,10 @@ export const AvatarPicker = ({
         </AvatarPickerHeader>
         <AvatarPickerContent>
           <CategoryTabs>
-            <CategoryTab
-              $active={ selectedCategory === "default" }
-              onClick={ () => setSelectedCategory("default") }
-            >
+            <CategoryTab $active={ selectedCategory === "default" } onClick={ () => setSelectedCategory("default") }>
               Default
             </CategoryTab>
-            <CategoryTab
-              $active={ selectedCategory === "kids" }
-              onClick={ () => setSelectedCategory("kids") }
-            >
+            <CategoryTab $active={ selectedCategory === "kids" } onClick={ () => setSelectedCategory("kids") }>
               Kids
             </CategoryTab>
           </CategoryTabs>
@@ -113,35 +102,28 @@ export const AvatarPicker = ({
             <LoadingText>Loading avatars...</LoadingText>
           ) : (
             <AvatarGrid>
-              { (avatarsState[selectedCategory as "default" | "kids"] || []).map(
-                (avatar: Avatar) => (
-                  <AvatarOption
-                    key={ avatar.id }
-                    onClick={ () => handleAvatarSelect(avatar.image_url) }
-                    $selected={ currentAvatar === avatar.image_url }
-                  >
-                    <AvatarImage
-                      src={ avatar.image_url }
-                      alt={ avatar.name }
-                      onError={ (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                        e.currentTarget.style.display = "none";
-                      } }
-                    />
-                  </AvatarOption>
-                )
-              ) }
+              { (avatarsState[selectedCategory as "default" | "kids"] || []).map((avatar: Avatar) => (
+                <AvatarOption
+                  key={ avatar.id }
+                  onClick={ () => handleAvatarSelect(avatar.image_url) }
+                  $selected={ currentAvatar === avatar.image_url }
+                >
+                  <AvatarImage
+                    src={ avatar.image_url }
+                    alt={ avatar.name }
+                    onError={ (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                      e.currentTarget.style.display = "none";
+                    } }
+                  />
+                </AvatarOption>
+              )) }
             </AvatarGrid>
           ) }
           <UploadSection>
             <UploadButton onClick={ () => fileInputRef.current?.click() } disabled={ uploading }>
               { uploading ? "Uploading..." : "Upload Custom Image" }
             </UploadButton>
-            <HiddenFileInput
-              ref={ fileInputRef }
-              type="file"
-              accept="image/*"
-              onChange={ handleCustomUpload }
-            />
+            <HiddenFileInput ref={ fileInputRef } type="file" accept="image/*" onChange={ handleCustomUpload } />
           </UploadSection>
         </AvatarPickerContent>
       </AvatarPickerModal>

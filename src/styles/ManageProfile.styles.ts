@@ -80,6 +80,10 @@ export const HiddenFileInput = styled.input`
   display: none;
 `;
 
+export const NameContainer = styled.div`
+  margin: 0 20px;
+`;
+
 export const NameInput = styled.input`
   height: 42px;
   width: 100%;
@@ -87,7 +91,6 @@ export const NameInput = styled.input`
   color: #fff;
   font-size: 1.2rem;
   padding-left: 16px;
-  margin: 0 20px;
 
   &::placeholder {
     color: rgb(190, 190, 190);
@@ -204,11 +207,11 @@ export const CheckboxLabel = styled.label`
   }
 `;
 
-export const AvatarPlaceholder = styled.div`
+export const AvatarPlaceholder = styled.div<{ hasError: boolean }>`
   width: 90px;
   height: 90px;
   border-radius: 8px;
-  border: 2px dashed #666;
+  border: 2px dashed ${(props) => (props.hasError ? "#FF3131" : "#666")};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,6 +232,7 @@ export const AvatarPlaceholder = styled.div`
   }
 `;
 
-export const AvatarPlaceholderText = styled.p`
+export const AvatarPlaceholderText = styled.p<{ hasError: boolean }>`
   text-align: center;
+  color: ${(props) => (props.hasError ? "#FF3131" : "#666")};
 `;

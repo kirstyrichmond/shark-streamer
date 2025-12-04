@@ -58,9 +58,7 @@ export const useYouTubePlayer = () => {
 
   useEffect(() => {
     const userAgent = navigator.userAgent.toLowerCase();
-    const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
-      userAgent
-    );
+    const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
     setTimeout(() => setIsMobile(isMobileDevice), 0);
 
     if (window.YT) return;

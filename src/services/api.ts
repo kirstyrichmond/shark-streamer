@@ -23,9 +23,6 @@ interface WatchlistItemResponse {
 }
 
 export const getApiUrl = () => {
-  console.log("Environment variables:", import.meta.env);
-  console.log("VITE_API_BASE_URL:", import.meta.env.VITE_API_BASE_URL);
-
   if (import.meta.env.VITE_API_BASE_URL) {
     const envUrl = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
     return envUrl;
@@ -62,10 +59,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-const handleRequest = async <T>(
-  requestFn: () => Promise<{ data: T }>,
-  errorMessage: string
-): Promise<T> => {
+const handleRequest = async <T>(requestFn: () => Promise<{ data: T }>, errorMessage: string): Promise<T> => {
   try {
     const response = await requestFn();
     return response.data;
@@ -117,23 +111,14 @@ export const profileAPI = {
   getUserProfiles: (userId: string): Promise<Profile[]> =>
     handleRequest<Profile[]>(() => api.get(`/profiles/user/${userId}`), "Failed to get profiles"),
 
-  createProfile: (
-    userId: string,
-    name: string,
-    avatarUrl: string | undefined,
-    isKids: boolean
-  ): Promise<Profile> =>
+  createProfile: (userId: string, name: string, avatarUrl: string | undefined, isKids: boolean): Promise<Profile> =>
     handleRequest<Profile>(
-      () =>
-        api.post("/profiles", { user_id: userId, name, avatar_url: avatarUrl, is_kids: isKids }),
+      () => api.post("/profiles", { user_id: userId, name, avatar_url: avatarUrl, is_kids: isKids }),
       "Failed to create profile"
     ),
 
   updateProfile: (profileId: string, updates: Partial<Profile>): Promise<ProfileResponse> =>
-    handleRequest<ProfileResponse>(
-      () => api.put(`/profiles/${profileId}`, updates),
-      "Failed to update profile"
-    ),
+    handleRequest<ProfileResponse>(() => api.put(`/profiles/${profileId}`, updates), "Failed to update profile"),
 
   deleteProfile: (profileId: string) =>
     handleRequest(() => api.delete(`/profiles/${profileId}`), "Failed to delete profile"),
@@ -145,18 +130,12 @@ export const profileAPI = {
     ),
 
   getPredefinedAvatars: (category = "default"): Promise<AvatarsResponse> =>
-    handleRequest<AvatarsResponse>(
-      () => api.get(`/avatars?category=${category}`),
-      "Failed to get predefined avatars"
-    ),
+    handleRequest<AvatarsResponse>(() => api.get(`/avatars?category=${category}`), "Failed to get predefined avatars"),
 };
 
 export const watchlistAPI = {
   getWatchlist: (profileId: string): Promise<WatchlistItem[]> =>
-    handleRequest<WatchlistItem[]>(
-      () => api.get(`/watchlist/${profileId}`),
-      "Failed to get watchlist"
-    ),
+    handleRequest<WatchlistItem[]>(() => api.get(`/watchlist/${profileId}`), "Failed to get watchlist"),
 
   addToWatchlist: (
     profileId: string,
@@ -169,10 +148,7 @@ export const watchlistAPI = {
     ),
 
   removeFromWatchlist: (profileId: string, movieId: string) =>
-    handleRequest(
-      () => api.delete(`/watchlist/${profileId}/${movieId}`),
-      "Failed to remove from watchlist"
-    ),
+    handleRequest(() => api.delete(`/watchlist/${profileId}/${movieId}`), "Failed to remove from watchlist"),
 };
 
 export const historyAPI = {
@@ -190,8 +166,7 @@ export const subscriptionAPI = {
       "Failed to update subscription"
     ),
 
-  getPlans: (): Promise<PlansResponse> =>
-    handleRequest<PlansResponse>(() => api.get("/plans"), "Failed to get plans"),
+  getPlans: (): Promise<PlansResponse> => handleRequest<PlansResponse>(() => api.get("/plans"), "Failed to get plans"),
 };
 
 const TMDB_API_KEY = import.meta.env.VITE_MOVIE_API_KEY;
@@ -203,14 +178,12 @@ const tmdbApi = axios.create({
 
 export const movieAPI = {
   fetchTrending: () => tmdbApi.get(`/trending/all/week?api_key=${TMDB_API_KEY}&language=en-US`),
-  fetchSharkStreamerOriginals: () =>
-    tmdbApi.get(`/discover/tv?api_key=${TMDB_API_KEY}&with_networks=213`),
+  fetchSharkStreamerOriginals: () => tmdbApi.get(`/discover/tv?api_key=${TMDB_API_KEY}&with_networks=213`),
   fetchTopRated: () => tmdbApi.get(`/movie/top_rated?api_key=${TMDB_API_KEY}&language=en-US`),
   fetchActionMovies: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=28`),
   fetchComedyMovies: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=35`),
   fetchHorrorMovies: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=27`),
-  fetchRomanceMovies: () =>
-    tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=10749`),
+  fetchRomanceMovies: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=10749`),
   fetchDocumentaries: () => tmdbApi.get(`/discover/movie?api_key=${TMDB_API_KEY}&with_genres=99`),
   fetchMovieDetails: (movieType: string, movieId: string) =>
     tmdbApi.get(`/${movieType}/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`),
@@ -218,42 +191,12 @@ export const movieAPI = {
     tmdbApi.get(`/${movieType}/${movieId}/videos?api_key=${TMDB_API_KEY}`),
   fetchImages: (movieType: string, movieId: string) =>
     tmdbApi.get(`/${movieType}/${movieId}/images?api_key=${TMDB_API_KEY}`),
-  fetchReleaseDates: (movieId: string) =>
-    tmdbApi.get(`/movie/${movieId}/release_dates?api_key=${TMDB_API_KEY}`),
-  fetchContentRatings: (tvId: string) =>
-    tmdbApi.get(`/tv/${tvId}/content_ratings?api_key=${TMDB_API_KEY}`),
+  fetchReleaseDates: (movieId: string) => tmdbApi.get(`/movie/${movieId}/release_dates?api_key=${TMDB_API_KEY}`),
+  fetchContentRatings: (tvId: string) => tmdbApi.get(`/tv/${tvId}/content_ratings?api_key=${TMDB_API_KEY}`),
   fetchCredits: (movieType: string, movieId: string) =>
     tmdbApi.get(`/${movieType}/${movieId}/credits?api_key=${TMDB_API_KEY}`),
-  fetchSimilar: async (movieType: string, movieId: string) => {
-    const response = await tmdbApi.get(`/${movieType}/${movieId}/similar?api_key=${TMDB_API_KEY}`);
-
-    const filteredResults = [];
-
-    for (const item of response.data.results) {
-      if (!(item.poster_path || item.backdrop_path)) {
-        continue;
-      }
-
-      try {
-        const videosResponse = await tmdbApi.get(
-          `/${movieType}/${item.id}/videos?api_key=${TMDB_API_KEY}`
-        );
-        if (videosResponse.data.results && videosResponse.data.results.length > 0) {
-          filteredResults.push(item);
-        }
-      } catch (error) {
-        console.error(`Error checking videos for ${item.id}:`, error);
-      }
-    }
-
-    return {
-      ...response,
-      data: {
-        ...response.data,
-        results: filteredResults,
-      },
-    };
-  },
+  fetchSimilar: (movieType: string, movieId: string) =>
+    tmdbApi.get(`/${movieType}/${movieId}/similar?api_key=${TMDB_API_KEY}`),
 
   searchMovies: (searchTerm: string, page = 1) => {
     const params = {
@@ -321,9 +264,7 @@ export const movieAPI = {
         media_type: "tv",
       }));
 
-      const combinedResults = [...movieResults, ...tvResults].sort(
-        (a, b) => b.popularity - a.popularity
-      );
+      const combinedResults = [...movieResults, ...tvResults].sort((a, b) => b.popularity - a.popularity);
 
       const movieHasMore = page < (movieResponse?.data?.total_pages || 0);
       const tvHasMore = page < (tvResponse?.data?.total_pages || 0);
@@ -332,10 +273,7 @@ export const movieAPI = {
       return {
         results: combinedResults,
         hasNextPage,
-        totalPages: Math.max(
-          movieResponse?.data?.total_pages || 0,
-          tvResponse?.data?.total_pages || 0
-        ),
+        totalPages: Math.max(movieResponse?.data?.total_pages || 0, tvResponse?.data?.total_pages || 0),
         currentPage: page,
       };
     } catch (error) {

@@ -93,8 +93,7 @@ export const Banner = () => {
 
         if (request.data.logos && request.data.logos.length > 0) {
           const englishLogo = request.data.logos.find(
-            (logo: { iso_639_1: string | null }) =>
-              logo.iso_639_1 === "en" || logo.iso_639_1 === null
+            (logo: { iso_639_1: string | null }) => logo.iso_639_1 === "en" || logo.iso_639_1 === null
           );
 
           const selectedLogo = englishLogo || request.data.logos[0];
@@ -158,10 +157,7 @@ export const Banner = () => {
     }
   };
 
-  const renderBannerContent = (
-    showPlayButton = true,
-    onPlayClick: (() => void) | null | undefined = undefined
-  ) => (
+  const renderBannerContent = (showPlayButton = true, onPlayClick: (() => void) | null | undefined = undefined) => (
     <BannerContent>
       { logo ? (
         <MovieIcon
@@ -185,10 +181,7 @@ export const Banner = () => {
             dispatch(openModal());
           } }
         >
-          <InfoIcon
-            src="https://img.icons8.com/pastel-glyph/64/FFFFFF/info--v1.png"
-            alt="more movie info"
-          />
+          <InfoIcon src="https://img.icons8.com/pastel-glyph/64/FFFFFF/info--v1.png" alt="more movie info" />
           More Info
         </InfoButton>
       </ButtonsContainer>
@@ -196,8 +189,7 @@ export const Banner = () => {
   );
 
   const renderTrailer = () => {
-    const trailer =
-      videos?.find((vid: { key: string; type: string }) => vid.type === "Trailer") || videos[0];
+    const trailer = videos?.find((vid: { key: string; type: string }) => vid.type === "Trailer") || videos[0];
 
     if (!trailer || !trailer.key) return null;
 

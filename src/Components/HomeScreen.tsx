@@ -14,11 +14,7 @@ export const HomeScreen = () => {
   return (
     <>
       <Banner />
-      <Row
-        title="SHARK STREAMER ORIGINALS"
-        fetchRequest={ movieAPI.fetchSharkStreamerOriginals }
-        isLargeRow
-      />
+      <Row title="SHARK STREAMER ORIGINALS" fetchRequest={ movieAPI.fetchSharkStreamerOriginals } isLargeRow />
       <Row title="Trending Now" fetchRequest={ movieAPI.fetchTrending } />
       <Row title="Top Rated" fetchRequest={ movieAPI.fetchTopRated } />
       <Row title="My List" isWatchlist />

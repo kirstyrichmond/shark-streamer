@@ -91,12 +91,7 @@ export const PlayerWrapper = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.8) 0%,
-      rgba(0, 0, 0, 0.4) 40%,
-      rgba(0, 0, 0, 0) 100%
-    );
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0) 100%);
     z-index: 2;
   }
 `;

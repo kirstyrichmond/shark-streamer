@@ -1,12 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo, ReactNode } from "react";
 import { movieAPI } from "../services/api";
 import { debounce } from "lodash";
-import {
-  SearchContext,
-  SearchContextType,
-  SearchKeyChangeEvent,
-  Movie,
-} from "./SearchContextTypes";
+import { SearchContext, SearchContextType, SearchKeyChangeEvent, Movie } from "./SearchContextTypes";
 
 interface SearchProviderProps {
   children: ReactNode;

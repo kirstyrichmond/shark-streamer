@@ -1,11 +1,7 @@
 // Testing Redux state changes (the "brain" of our app)
 import { vi } from "vitest";
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer, {
-  addToWatchlist,
-  removeFromWatchlist,
-  fetchWatchlist,
-} from "../../store/slices/userSlice";
+import userReducer, { addToWatchlist, removeFromWatchlist, fetchWatchlist } from "../../store/slices/userSlice";
 
 // We "mock" the API so tests run fast and don't depend on internet
 vi.mock("../../services/api", () => ({
@@ -135,9 +131,7 @@ describe("Watchlist Redux Logic", () => {
   describe("Loading States", () => {
     it("should show loading when fetching watchlist", () => {
       // Mock API call that takes time
-      watchlistAPI.getWatchlist.mockImplementation(
-        () => new Promise((resolve) => setTimeout(resolve, 100))
-      );
+      watchlistAPI.getWatchlist.mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 100)));
 
       // Start fetching
       store.dispatch(fetchWatchlist("profile-1"));

@@ -21,8 +21,7 @@ export const useInfiniteScroll = (
   const handleScroll = useCallback((): void => {
     if (isLoading || !hasNextPage) return;
 
-    const scrolledNearBottom =
-      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - threshold;
+    const scrolledNearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - threshold;
 
     if (scrolledNearBottom) {
       loadMoreRef.current();

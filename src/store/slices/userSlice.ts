@@ -69,6 +69,7 @@ export interface UserState {
     watchlist: AsyncState<WatchlistItem>;
   };
   selectedProfile: Profile | null;
+  editingProfile: Profile | null;
   plans: AsyncState<Plan>;
   avatars: {
     default: Avatar[];
@@ -141,33 +142,27 @@ export const createProfile = createAsyncThunk<
   }
 });
 
-export const updateProfile = createAsyncThunk<
-  Profile,
-  { profileId: string; updates: Partial<Profile> }
->("user/updateProfile", async ({ profileId, updates }) => {
-  const response = (await profileAPI.updateProfile(profileId, updates)) as { profile: Profile };
-  return response.profile;
+export const updateProfile = createAsyncThunk<Profile, { profileId: string; updates: Partial<Profile> }>(
+  "user/updateProfile",
+  async ({ profileId, updates }) => {
+    const response = (await profileAPI.updateProfile(profileId, updates)) as { profile: Profile };
+    return response.profile;
+  }
+);
+
+export const deleteProfile = createAsyncThunk<string, string>("user/deleteProfile", async (profileId: string) => {
+  await profileAPI.deleteProfile(profileId);
+  return profileId;
 });
 
-export const deleteProfile = createAsyncThunk<string, string>(
-  "user/deleteProfile",
-  async (profileId: string) => {
-    await profileAPI.deleteProfile(profileId);
-    return profileId;
+export const fetchPlans = createAsyncThunk<Plan[], void>("user/fetchPlans", async (_, { rejectWithValue }) => {
+  try {
+    const response = await subscriptionAPI.getPlans();
+    return response.plans;
+  } catch (error) {
+    return rejectWithValue(handleAsyncError(error));
   }
-);
-
-export const fetchPlans = createAsyncThunk<Plan[], void>(
-  "user/fetchPlans",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await subscriptionAPI.getPlans();
-      return response.plans;
-    } catch (error) {
-      return rejectWithValue(handleAsyncError(error));
-    }
-  }
-);
+});
 
 export const updateSubscription = createAsyncThunk(
   "user/updateSubscription",
@@ -177,37 +172,37 @@ export const updateSubscription = createAsyncThunk(
   }
 );
 
-export const updateProfileAvatar = createAsyncThunk<
-  Profile,
-  { profileId: string; avatarData: string }
->("user/updateProfileAvatar", async ({ profileId, avatarData }) => {
-  const response = await profileAPI.updateProfileAvatar(profileId, avatarData);
-  return response.profile;
-});
-
-export const fetchPredefinedAvatars = createAsyncThunk<
-  { category: string; avatars: Avatar[] },
-  { category?: string }
->("user/fetchPredefinedAvatars", async ({ category = "default" }, { rejectWithValue }) => {
-  try {
-    const response = await profileAPI.getPredefinedAvatars(category);
-    return { category, avatars: response.avatars };
-  } catch (error) {
-    return rejectWithValue(handleAsyncError(error));
+export const updateProfileAvatar = createAsyncThunk<Profile, { profileId: string; avatarData: string }>(
+  "user/updateProfileAvatar",
+  async ({ profileId, avatarData }) => {
+    const response = await profileAPI.updateProfileAvatar(profileId, avatarData);
+    return response.profile;
   }
-});
+);
 
-export const fetchWatchlist = createAsyncThunk<
-  { profileId: string; watchlist: WatchlistItem[] },
-  string
->("user/fetchWatchlist", async (profileId: string, { rejectWithValue }) => {
-  try {
-    const watchlist = await watchlistAPI.getWatchlist(profileId);
-    return { profileId, watchlist };
-  } catch (error) {
-    return rejectWithValue(handleAsyncError(error));
+export const fetchPredefinedAvatars = createAsyncThunk<{ category: string; avatars: Avatar[] }, { category?: string }>(
+  "user/fetchPredefinedAvatars",
+  async ({ category = "default" }, { rejectWithValue }) => {
+    try {
+      const response = await profileAPI.getPredefinedAvatars(category);
+      return { category, avatars: response.avatars };
+    } catch (error) {
+      return rejectWithValue(handleAsyncError(error));
+    }
   }
-});
+);
+
+export const fetchWatchlist = createAsyncThunk<{ profileId: string; watchlist: WatchlistItem[] }, string>(
+  "user/fetchWatchlist",
+  async (profileId: string, { rejectWithValue }) => {
+    try {
+      const watchlist = await watchlistAPI.getWatchlist(profileId);
+      return { profileId, watchlist };
+    } catch (error) {
+      return rejectWithValue(handleAsyncError(error));
+    }
+  }
+);
 
 export const addToWatchlist = createAsyncThunk<
   { profileId: string; movieId: string; movieData: WatchlistItem },
@@ -240,6 +235,7 @@ const initialState: UserState = {
     },
   },
   selectedProfile: null,
+  editingProfile: null,
   plans: {
     items: [],
     loading: false,
@@ -271,16 +267,11 @@ export const userSlice = createSlice({
         state.user.profiles.push(action.payload);
       }
     },
-    editProfile: (
-      state,
-      action: PayloadAction<{ selectedProfile: Profile; newUsername: string }>
-    ) => {
+    editProfile: (state, action: PayloadAction<{ selectedProfile: Profile; newUsername: string }>) => {
       const selectedProfile = action.payload.selectedProfile;
       const newUsername = action.payload.newUsername;
 
-      const profileIndex = state.user.profiles.findIndex(
-        (profile: Profile) => profile.name === selectedProfile.name
-      );
+      const profileIndex = state.user.profiles.findIndex((profile: Profile) => profile.name === selectedProfile.name);
 
       if (profileIndex !== -1) {
         (state.user.profiles as Profile[])[profileIndex].name = newUsername;
@@ -305,6 +296,12 @@ export const userSlice = createSlice({
     },
     clearSelectedProfile: (state) => {
       state.selectedProfile = null;
+    },
+    setEditingProfile: (state, action: PayloadAction<Profile | null>) => {
+      state.editingProfile = action.payload;
+    },
+    clearEditingProfile: (state) => {
+      state.editingProfile = null;
     },
     openModal: (state) => {
       state.interface.isAnyModalOpen = true;
@@ -457,9 +454,7 @@ export const userSlice = createSlice({
         if (!state.user.watchlist) {
           state.user.watchlist = { items: [], loading: false, error: null };
         }
-        const existingIndex = state.user.watchlist.items.findIndex(
-          (item) => item.movie_id === action.payload.movieId
-        );
+        const existingIndex = state.user.watchlist.items.findIndex((item) => item.movie_id === action.payload.movieId);
         if (existingIndex === -1) {
           state.user.watchlist.items.push(action.payload.movieData);
         }
@@ -482,41 +477,35 @@ export const {
   showSignIn,
   setSelectedProfile,
   clearSelectedProfile,
+  setEditingProfile,
+  clearEditingProfile,
   openModal,
   closeModal,
 } = userSlice.actions;
 
 export const selectUserInfo = (state: RootState) => state.user.user.info;
 export const selectUserProfiles = (state: RootState) => state.user.user.profiles;
-export const selectUser = createSelector(
-  [selectUserInfo, selectUserProfiles],
-  (userInfo, profiles) => (userInfo ? { ...userInfo, profiles } : null)
+export const selectUser = createSelector([selectUserInfo, selectUserProfiles], (userInfo, profiles) =>
+  userInfo ? { ...userInfo, profiles } : null
 );
 export const selectPlans = (state: RootState) => state.user.plans;
 export const selectSelectedProfile = (state: RootState) => state.user.selectedProfile;
+export const selectEditingProfile = (state: RootState) => state.user.editingProfile;
 export const selectWatchlist = (state: RootState) =>
   state.user.user?.watchlist || { items: [], loading: false, error: null };
-export const selectIsAnyModalOpen = (state: RootState) =>
-  state.user.interface?.isAnyModalOpen || false;
+export const selectIsAnyModalOpen = (state: RootState) => state.user.interface?.isAnyModalOpen || false;
 export const selectWatchlistItems = (state: RootState) => state.user.user.watchlist?.items || [];
-export const selectWatchlistLoading = (state: RootState) =>
-  state.user.user.watchlist?.loading ?? true;
+export const selectWatchlistLoading = (state: RootState) => state.user.user.watchlist?.loading ?? true;
 export const selectWatchlistError = (state: RootState) => state.user.user.watchlist?.error || null;
 
-export const selectAvatars = createSelector(
-  [(state: RootState) => state.user.avatars],
-  (avatars) => avatars
-);
+export const selectAvatars = createSelector([(state: RootState) => state.user.avatars], (avatars) => avatars);
 
-export const selectSortedWatchlistItems = createSelector(
-  [selectWatchlistItems],
-  (items: WatchlistItem[]) => {
-    if (!items.length) return [];
-    return [...items].sort((a, b) => {
-      const dateComparison = new Date(b.added_at).getTime() - new Date(a.added_at).getTime();
-      return dateComparison !== 0 ? dateComparison : parseInt(b.id) - parseInt(a.id);
-    });
-  }
-);
+export const selectSortedWatchlistItems = createSelector([selectWatchlistItems], (items: WatchlistItem[]) => {
+  if (!items.length) return [];
+  return [...items].sort((a, b) => {
+    const dateComparison = new Date(b.added_at).getTime() - new Date(a.added_at).getTime();
+    return dateComparison !== 0 ? dateComparison : parseInt(b.id) - parseInt(a.id);
+  });
+});
 
 export default userSlice.reducer;

@@ -12,15 +12,9 @@ import {
 } from "../store/slices/userSlice";
 import { movieAPI } from "../services/api";
 import { getMovieType, Movie } from "../utils/movieUtils";
+import { useMovieFiltering } from "../hooks/useMovieFiltering";
 import "react-loading-skeleton/dist/skeleton.css";
-import {
-  Container,
-  PosterLarge,
-  Posters,
-  RowContainer,
-  Title,
-  ResponsiveSkeleton,
-} from "../styles/Row.styles";
+import { Container, PosterLarge, Posters, RowContainer, Title, ResponsiveSkeleton } from "../styles/Row.styles";
 import { useAppDispatch } from "../app/store";
 import { useSelector } from "react-redux";
 
@@ -31,21 +25,22 @@ type RowProps = {
   isWatchlist?: boolean;
 };
 
-const Row: React.FC<RowProps> = ({
-  title,
-  fetchRequest,
-  isLargeRow = false,
-  isWatchlist = false,
-}) => {
+interface MovieDetailsResponse {
+  data: Movie;
+}
+
+const Row: React.FC<RowProps> = ({ title, fetchRequest, isLargeRow = false, isWatchlist = false }) => {
   const dispatch = useAppDispatch();
   const watchlistItems = useSelector(selectSortedWatchlistItems);
   const watchlistLoading = useSelector(selectWatchlistLoading);
   const selectedProfile = useSelector(selectSelectedProfile);
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
   const [selectedMovie, setSelectedMovie] = useState<Movie | WatchlistItem | null>(null);
   const [openMovieModal, setOpenMovieModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+  
+  const { filterMovies, isFiltering } = useMovieFiltering();
 
   useEffect(() => {
     if (isWatchlist) {
@@ -57,7 +52,12 @@ const Row: React.FC<RowProps> = ({
         try {
           if (fetchRequest) {
             const request = await fetchRequest();
-            setMovies(request.data.results);
+            const rawMovies = request.data.results;
+
+            const validMovies = await filterMovies(rawMovies, {
+              isLargeRow,
+            });
+            setFilteredMovies(validMovies);
             setLoading(false);
             return request;
           }
@@ -69,7 +69,7 @@ const Row: React.FC<RowProps> = ({
       };
       fetchData();
     }
-  }, [fetchRequest, isWatchlist, dispatch, selectedProfile?.id]);
+  }, [fetchRequest, isWatchlist, dispatch, selectedProfile?.id, filterMovies, isLargeRow]);
 
   useEffect(() => {
     if (isWatchlist) {
@@ -86,10 +86,6 @@ const Row: React.FC<RowProps> = ({
     [dispatch]
   );
 
-  interface MovieDetailsResponse {
-    data: Movie;
-  }
-
   const handleClick = useCallback(
     async (item: Movie) => {
       if (isWatchlist) {
@@ -99,10 +95,7 @@ const Row: React.FC<RowProps> = ({
             console.error("Movie ID is undefined");
             return;
           }
-          const response: MovieDetailsResponse = await movieAPI.fetchMovieDetails(
-            movieType,
-            item.movie_id
-          );
+          const response: MovieDetailsResponse = await movieAPI.fetchMovieDetails(movieType, item.movie_id);
 
           const movieData: Movie = {
             ...response.data,
@@ -134,12 +127,8 @@ const Row: React.FC<RowProps> = ({
       return watchlistItems;
     }
 
-    return (
-      movies?.filter(
-        (movie) => (isLargeRow && movie.poster_path) || (!isLargeRow && movie.backdrop_path)
-      ) || []
-    );
-  }, [isWatchlist, watchlistItems, movies, isLargeRow]);
+    return filteredMovies || [];
+  }, [isWatchlist, watchlistItems, filteredMovies]);
 
   if (isWatchlist && !loading && displayData.length === 0) {
     return null;
@@ -151,8 +140,8 @@ const Row: React.FC<RowProps> = ({
         <Title>{ title }</Title>
         <RowContainer>
           <Posters>
-            { loading
-              ? Array.from({ length: isWatchlist ? 5 : 8 }).map((_, index) => (
+            { loading || isFiltering
+              ? Array.from({ length: isWatchlist ? 5 : 12 }).map((_, index) => (
                   <div key={ `skeleton-${index}` }>
                     <ResponsiveSkeleton baseColor="#202020" highlightColor="#444" />
                   </div>
@@ -178,10 +167,7 @@ const Row: React.FC<RowProps> = ({
                             }
                           } }
                           onError={ (e) => {
-                            console.error(
-                              "Image failed to load:",
-                              (e.target as HTMLImageElement).src
-                            );
+                            console.error("Image failed to load:", (e.target as HTMLImageElement).src);
                             // Optionally set a fallback image
                             // e.target.src = '/path/to/fallback-image.jpg';
                           } }
@@ -200,11 +186,7 @@ const Row: React.FC<RowProps> = ({
               handleClose={ handleCloseModal }
               selectedMovie={ selectedMovie }
               fetchUrl={
-                isWatchlist
-                  ? selectedMovie.media_type === "tv"
-                    ? "tv"
-                    : "movie"
-                  : getMovieType(selectedMovie)
+                isWatchlist ? (selectedMovie.media_type === "tv" ? "tv" : "movie") : getMovieType(selectedMovie)
               }
               onMovieChange={ (newMovie: WatchlistItem | Movie) => {
                 setSelectedMovie(newMovie);

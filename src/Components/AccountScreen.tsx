@@ -52,10 +52,7 @@ export const AccountScreen = () => {
         <TopContainer>
           <Title>Account</Title>
           <TopInnerContainer>
-            <MemberIcon
-              src="https://assets.nflxext.com/ffe/siteui/account/svg/membersince.svg"
-              alt="member icon"
-            />
+            <MemberIcon src="https://assets.nflxext.com/ffe/siteui/account/svg/membersince.svg" alt="member icon" />
             <MemberSinceText>Member Since September 2022</MemberSinceText>
           </TopInnerContainer>
         </TopContainer>
@@ -74,9 +71,7 @@ export const AccountScreen = () => {
           <ChangePlanContainer>
             <PlanTypeContainer>
               <PlanTypeTitle>{ planDisplayName }</PlanTypeTitle>
-              { showHdIcon && (
-                <HdIcon src="https://img.icons8.com/ios/100/000000/hd.png" alt="hd icon" />
-              ) }
+              { showHdIcon && <HdIcon src="https://img.icons8.com/ios/100/000000/hd.png" alt="hd icon" /> }
             </PlanTypeContainer>
             <div>
               <ChangePlanButtonLink to="/change-plan">Change Plan</ChangePlanButtonLink>

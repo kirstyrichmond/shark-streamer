@@ -65,9 +65,7 @@ export const ChangePlanScreen = () => {
         { user?.subscription_plan && (
           <CurrentPlan>
             Current Plan:{ " " }
-            <strong>
-              { user.subscription_plan.charAt(0).toUpperCase() + user.subscription_plan.slice(1) }
-            </strong>
+            <strong>{ user.subscription_plan.charAt(0).toUpperCase() + user.subscription_plan.slice(1) }</strong>
           </CurrentPlan>
         ) }
 

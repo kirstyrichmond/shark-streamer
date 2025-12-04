@@ -1,11 +1,6 @@
 import React from "react";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
-import {
-  ErrorContainer,
-  ErrorMessage,
-  ErrorTitle,
-  RetryButton,
-} from "../styles/ErrorBoundary.styles";
+import { ErrorContainer, ErrorMessage, ErrorTitle, RetryButton } from "../styles/ErrorBoundary.styles";
 
 const ErrorFallback = ({
   error,
@@ -22,15 +17,11 @@ const ErrorFallback = ({
 }) => (
   <ErrorContainer>
     <ErrorTitle>{ title || "Something went wrong" }</ErrorTitle>
-    <ErrorMessage>
-      { message || "We encountered an error loading this content. Please try again." }
-    </ErrorMessage>
+    <ErrorMessage>{ message || "We encountered an error loading this content. Please try again." }</ErrorMessage>
     { showRetry && <RetryButton onClick={ resetErrorBoundary }>Try Again</RetryButton> }
     { import.meta.env.DEV && error && (
       <details style={ { marginTop: "1rem", textAlign: "left" } }>
-        <summary style={ { cursor: "pointer", color: "#e50914" } }>
-          Debug Info (Development Only)
-        </summary>
+        <summary style={ { cursor: "pointer", color: "#e50914" } }>Debug Info (Development Only)</summary>
         <pre
           style={ {
             background: "#333",
@@ -69,10 +60,7 @@ const CustomErrorBoundary = ({
 }) => (
   <ErrorBoundary
     FallbackComponent={
-      fallback ||
-      ((props) => (
-        <ErrorFallback { ...props } title={ title } message={ message } showRetry={ showRetry } />
-      ))
+      fallback || ((props) => <ErrorFallback { ...props } title={ title } message={ message } showRetry={ showRetry } />)
     }
     onError={ (error, errorInfo) => {
       console.error("ErrorBoundary caught an error:", error, errorInfo);

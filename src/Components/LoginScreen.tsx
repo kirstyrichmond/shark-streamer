@@ -17,8 +17,7 @@ import { SignUpScreen } from "./SignUpScreen";
 export const LoginScreen = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const uiState = useSelector(
-    (state: { user: { interface: { showSignUp?: boolean; showSignIn?: boolean } } }) =>
-      state.user?.interface
+    (state: { user: { interface: { showSignUp?: boolean; showSignIn?: boolean } } }) => state.user?.interface
   );
   const dispatch = useDispatch();
 

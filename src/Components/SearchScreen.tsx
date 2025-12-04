@@ -41,9 +41,7 @@ const SearchScreen = () => {
         { movies.length < 1 ? (
           <NoResultsContainer>
             <NoResultsTitle>No results found</NoResultsTitle>
-            <NoResultsMessage>
-              We couldn't find any movies or TV shows matching your search.
-            </NoResultsMessage>
+            <NoResultsMessage>We couldn't find any movies or TV shows matching your search.</NoResultsMessage>
           </NoResultsContainer>
         ) : (
           <Content>

@@ -2,12 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FaPlus } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
-import {
-  addToWatchlist,
-  removeFromWatchlist,
-  selectWatchlist,
-  selectSelectedProfile,
-} from "../store/slices/userSlice";
+import { addToWatchlist, removeFromWatchlist, selectWatchlist, selectSelectedProfile } from "../store/slices/userSlice";
 import { WatchlistButtonContainer, WatchlistIcon } from "../styles/WatchlistButton.styles";
 import { getMovieType, Movie } from "../utils/movieUtils";
 import { useAppDispatch } from "../app/store";
@@ -68,14 +63,8 @@ export const WatchlistButton = ({ movie }: { movie: Movie }) => {
   if (!selectedProfile) return null;
 
   return (
-    <WatchlistButtonContainer
-      onClick={ handleWatchlistToggle }
-      disabled={ loading }
-      $isInWatchlist={ isInWatchlist }
-    >
-      <WatchlistIcon $isInWatchlist={ isInWatchlist }>
-        { isInWatchlist ? <TiTick /> : <FaPlus /> }
-      </WatchlistIcon>
+    <WatchlistButtonContainer onClick={ handleWatchlistToggle } disabled={ loading } $isInWatchlist={ isInWatchlist }>
+      <WatchlistIcon $isInWatchlist={ isInWatchlist }>{ isInWatchlist ? <TiTick /> : <FaPlus /> }</WatchlistIcon>
     </WatchlistButtonContainer>
   );
 };
