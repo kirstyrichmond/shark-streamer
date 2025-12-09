@@ -17,6 +17,28 @@ export interface Movie {
   added_at?: string;
 }
 
+interface ReleaseDate {
+  iso_3166_1: string;
+  release_dates: Array<{
+    certification: string;
+    type: number;
+  }>;
+}
+
+interface ContentRating {
+  iso_3166_1: string;
+  rating: string;
+}
+
+interface MovieWithRatings {
+  release_dates?: {
+    results: ReleaseDate[];
+  };
+  content_ratings?: {
+    results: ContentRating[];
+  };
+}
+
 export const getMovieType = (movie: Movie): "movie" | "tv" => {
   if (movie.media_type === "tv" || movie.media_type === "movie") return movie.media_type;
   if (movie.first_air_date || (movie.name && !movie.title)) return "tv";
@@ -42,28 +64,6 @@ export const getImageUrl = (path: string, size = "w500") => {
   if (!path) return null;
   return `https://image.tmdb.org/t/p/${size}${path}`;
 };
-
-interface ReleaseDate {
-  iso_3166_1: string;
-  release_dates: Array<{
-    certification: string;
-    type: number;
-  }>;
-}
-
-interface ContentRating {
-  iso_3166_1: string;
-  rating: string;
-}
-
-interface MovieWithRatings {
-  release_dates?: {
-    results: ReleaseDate[];
-  };
-  content_ratings?: {
-    results: ContentRating[];
-  };
-}
 
 export const getAgeRating = (movie: MovieWithRatings | null): string => {
   if (!movie) return "";
@@ -96,4 +96,14 @@ export const formatRuntime = (runtime: number | undefined): string => {
 
 export const formatGenres = (genres: Array<{ id: number; name: string }> | undefined): string => {
   return genres?.map((genre) => genre.name).join(", ") || "";
+};
+
+
+export const getEnglishLogo = (logos: Array<{ iso_639_1: string | null; file_path: string }>) => {
+  if (!logos || logos.length === 0) return null;
+  const englishLogo = logos.find(
+    (logo) => logo.iso_639_1 === "en" || logo.iso_639_1 === null
+  );
+  const selectedLogo = englishLogo || logos[0];
+  return selectedLogo.file_path;
 };

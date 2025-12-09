@@ -9,7 +9,7 @@ import prettierConfig from "eslint-config-prettier";
 
 export default [
   {
-    ignores: ["dist", "node_modules", "public/favicon.js", "**/*.css", "**/*.scss"],
+    ignores: ["dist", "build", "node_modules", "public/favicon.js", "**/*.css", "**/*.scss"],
   },
   {
     files: ["**/*.{ts,tsx}"],
@@ -47,6 +47,7 @@ export default [
       quotes: ["error", "double", { avoidEscape: true }],
       "react/prop-types": ["error", { ignore: ["className"] }],
       "react/jsx-curly-spacing": ["error", { when: "always", children: true }],
+      "react-hooks/set-state-in-effect": "off",
     },
   },
   {

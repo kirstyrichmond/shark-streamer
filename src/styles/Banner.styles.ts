@@ -114,18 +114,18 @@ export const BannerTitle = styled.h1`
 export const BannerDescription = styled.p`
   line-height: 1.3;
   color: #fff;
-  padding-bottom: 1.2rem;
-  font-size: 2.2vw;
+  margin-bottom: 1.2rem;
+  font-size: 1.6vw;
   font-weight: 400;
   max-height: 80px;
 
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 1.2vw;
     line-height: 1.2;
-    padding-bottom: 1.5rem;
+    margin-bottom: 1.6rem;
   }
   @media (min-width: ${breakpoints.desktop}px) {
-    padding-bottom: 1.8rem;
+    margin-bottom: 1.6rem;
     padding-right: 7rem;
     font-size: 0.9vw;
   }

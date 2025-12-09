@@ -13,7 +13,7 @@ import {
 } from "../styles/SearchScreen.styles";
 
 const SearchScreen = () => {
-  const { movies, hasNextPage, isLoadingMore, loadMoreMovies } = useSearch();
+  const { movies, hasNextPage, isLoadingMore, loadMoreMovies, isLoading } = useSearch();
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [openMovieModal, setOpenMovieModal] = useState<boolean>(false);
 
@@ -35,10 +35,14 @@ const SearchScreen = () => {
     }, 300);
   }, []);
 
+  const handleMovieChange = useCallback((movie: { id: number | string; title?: string; name?: string; overview?: string; media_type?: string }) => {
+    setSelectedMovie(movie);
+  }, []);
+
   return (
     <>
       <Container>
-        { movies.length < 1 ? (
+        { movies.length < 1 && !isLoading ? (
           <NoResultsContainer>
             <NoResultsTitle>No results found</NoResultsTitle>
             <NoResultsMessage>We couldn't find any movies or TV shows matching your search.</NoResultsMessage>
@@ -62,6 +66,7 @@ const SearchScreen = () => {
           handleClose={ handleCloseModal }
           selectedMovie={ selectedMovie }
           fetchUrl={ getApiUrl(selectedMovie) }
+          onMovieChange={ handleMovieChange }
         />
       ) }
     </>

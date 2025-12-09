@@ -3,7 +3,9 @@ import Modal from "react-modal";
 import YouTube from "react-youtube";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useYouTubePlayer } from "../hooks/useYouTubePlayer";
-import { useMovieModal } from "../hooks/useMovieModal";
+import { useQuery } from "@tanstack/react-query";
+import { movieQueries } from "../queries/movieQueries";
+import { movieAPI } from "../services/api";
 import { useModalScrollLock } from "../hooks/useModalScrollLock";
 import { getAgeRating } from "../utils/movieUtils";
 import { MovieActionButtons } from "./MovieActionButtons";
@@ -116,11 +118,82 @@ export const MovieModal = ({
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const type2 = fetchUrl?.includes("tv") ? "tv" : "movie";
 
-  const { videos, movieDetails, castAndCrew, similarMovies, isLoading, getEnglishLogo } = useMovieModal({
-    movieId: selectedMovie?.id,
-    movieType: type2,
-    isEnabled: isOpen && !!selectedMovie?.id,
+  const movieIdString = selectedMovie?.id ? String(selectedMovie.id) : "";
+
+  const { data: videos = [], isLoading: videosLoading } = useQuery({
+    ...movieQueries.videos(type2, movieIdString),
+    enabled: isOpen && !!selectedMovie?.id,
   });
+
+  const { data: images, isLoading: imagesLoading } = useQuery({
+    ...movieQueries.images(type2, movieIdString),
+    enabled: isOpen && !!selectedMovie?.id,
+  });
+
+  const { data: movieDetails, isLoading: detailsLoading } = useQuery({
+    ...movieQueries.details(type2, movieIdString),
+    enabled: isOpen && !!selectedMovie?.id,
+  });
+
+  const { data: castAndCrew, isLoading: creditsLoading } = useQuery({
+    ...movieQueries.credits(type2, movieIdString),
+    enabled: isOpen && !!selectedMovie?.id,
+  });
+
+  const { data: rawSimilarMovies = [], isLoading: similarLoading } = useQuery({
+    ...movieQueries.similar(type2, movieIdString),
+    enabled: isOpen && !!selectedMovie?.id,
+  });
+
+  const { data: releaseDates } = useQuery({
+    ...movieQueries.releaseDates(movieIdString),
+    enabled: isOpen && !!selectedMovie?.id && type2 === "movie",
+  });
+
+  const { data: contentRatings } = useQuery({
+    ...movieQueries.contentRatings(movieIdString),
+    enabled: isOpen && !!selectedMovie?.id && type2 === "tv",
+  });
+
+  const { data: filteredSimilarMovies = [] } = useQuery({
+    queryKey: ["movies", "similar", "filtered", movieIdString, type2],
+    queryFn: async () => {
+      if (!rawSimilarMovies.length) return [];
+      
+      const movieChecks = rawSimilarMovies.slice(0, 12).map(async (movie: { id: number | string; title?: string; name?: string; backdrop_path?: string; poster_path?: string; release_date?: string; first_air_date?: string }) => {
+        try {
+          const response = await movieAPI.fetchVideos(type2, String(movie.id));
+          const hasVideos = response.data.results && response.data.results.length > 0;
+          return hasVideos ? movie : null;
+        } catch {
+          return null;
+        }
+      });
+      
+      const results = await Promise.allSettled(movieChecks);
+      return results
+        .filter((result) => result.status === "fulfilled" && result.value !== null)
+        .map((result) => (result as PromiseFulfilledResult<{ id: number | string; title?: string; name?: string; backdrop_path?: string; poster_path?: string; release_date?: string; first_air_date?: string } | null>).value)
+        .slice(0, 6);
+    },
+    enabled: isOpen && !!selectedMovie?.id && rawSimilarMovies.length > 0,
+    staleTime: 1000 * 60 * 15,
+  });
+
+  const similarMovies = filteredSimilarMovies;
+
+  const movieDetailsWithRatings = movieDetails ? {
+    ...movieDetails,
+    ...(type2 === "movie" && releaseDates ? { release_dates: releaseDates } : {}),
+    ...(type2 === "tv" && contentRatings ? { content_ratings: contentRatings } : {}),
+  } : null;
+
+  const logos = images?.logos || [];
+  const isLoading = videosLoading || imagesLoading || detailsLoading || creditsLoading || similarLoading;
+
+  const getEnglishLogo = () => {
+    return logos.find((logo: { iso_639_1: string }) => logo.iso_639_1 === "en") || logos[0];
+  };
 
   useModalScrollLock(isOpen);
 
@@ -134,7 +207,7 @@ export const MovieModal = ({
     handleVideoEnd,
     handleVideoStateChange,
     handleVideoReady,
-    handlePlayPause,
+    handlePlayPauseAction,
     toggleMute,
     getYouTubeOptions,
     resetPlayer,
@@ -150,7 +223,7 @@ export const MovieModal = ({
         youtubePlayerRef.current = null;
       }, 0);
     }
-  }, [isOpen, resetPlayer, youtubePlayerRef]);
+  }, [isOpen, resetPlayer]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setTimeout(() => {
@@ -216,15 +289,8 @@ export const MovieModal = ({
     return `${mins}m`;
   };
 
-  const handlePlayPauseAction = () => {
-    const action = handlePlayPause();
-    if (action === "restart") {
-      setPlayTrailer(true);
-    }
-  };
-
   const renderTrailer = () => {
-    const trailer = selectedVideo || videos?.find((vid) => vid.type === "Trailer") || videos[0];
+    const trailer = selectedVideo || videos?.find((vid: Video) => vid.type === "Trailer") || videos[0];
 
     if (!trailer) return <div>No trailer available</div>;
 
@@ -250,7 +316,7 @@ export const MovieModal = ({
           />
           <MovieActionButtons
             movie={ selectedMovie }
-            onPlayPause={ handlePlayPauseAction }
+            onPlayPause={ () => handlePlayPauseAction(() => setPlayTrailer(true)) }
             isPlaying={ isPlaying }
             videoEnded={ videoEnded }
           />
@@ -313,15 +379,15 @@ export const MovieModal = ({
                         "Year unknown" }
                     </ReleaseDate>
 
-                    { getAgeRating(movieDetails) && <AgeRating>{ getAgeRating(movieDetails) }</AgeRating> }
+                    { getAgeRating(movieDetailsWithRatings) && <AgeRating>{ getAgeRating(movieDetailsWithRatings) }</AgeRating> }
 
-                    { movieDetails &&
-                      (movieDetails.runtime ||
-                        (movieDetails.episode_run_time && movieDetails.episode_run_time.length > 0)) && (
+                    { movieDetailsWithRatings &&
+                      (movieDetailsWithRatings.runtime ||
+                        (movieDetailsWithRatings.episode_run_time && movieDetailsWithRatings.episode_run_time.length > 0)) && (
                         <Duration>
-                          { movieDetails.runtime
-                            ? formatDuration(movieDetails.runtime)
-                            : formatDuration(movieDetails.episode_run_time?.[0] || 0) }
+                          { movieDetailsWithRatings.runtime
+                            ? formatDuration(movieDetailsWithRatings.runtime)
+                            : formatDuration(movieDetailsWithRatings.episode_run_time?.[0] || 0) }
                         </Duration>
                       ) }
                   </DescriptionHeader>
@@ -334,20 +400,20 @@ export const MovieModal = ({
                       <MetaValue>
                         { castAndCrew.cast
                           .slice(0, 10)
-                          .map((actor) => actor.name)
+                          .map((actor: { name: string }) => actor.name)
                           .join(", ") }
                       </MetaValue>
                     </MovieDetails>
                   ) }
-                  { movieDetails?.genres && (
+                  { movieDetailsWithRatings?.genres && (
                     <MovieDetails>
                       <MetaLabel>Genres:</MetaLabel>
-                      <MetaValue>{ movieDetails.genres.map((genre) => genre.name).join(", ") }</MetaValue>
+                      <MetaValue>{ movieDetailsWithRatings.genres.map((genre: { id: number; name: string }) => genre.name).join(", ") }</MetaValue>
                     </MovieDetails>
                   ) }
                   <MovieDetails>
                     <MetaLabel>This { type2 === "tv" ? "show" : "film" } is:</MetaLabel>
-                    <MetaValue>{ getAgeRating(movieDetails) || "Not Rated" }</MetaValue>
+                    <MetaValue>{ getAgeRating(movieDetailsWithRatings) || "Not Rated" }</MetaValue>
                   </MovieDetails>
                 </div>
               </MovieMetaRow>
@@ -355,7 +421,7 @@ export const MovieModal = ({
                 <SimilarSection>
                   <SimilarTitle>More Like This</SimilarTitle>
                   <SimilarGrid>
-                    { similarMovies.slice(0, 6).map((movie) => (
+                    { similarMovies.slice(0, 6).map((movie: { id: number | string; title?: string; name?: string; backdrop_path?: string; poster_path?: string; release_date?: string; first_air_date?: string }) => (
                       <SimilarCard key={ movie.id } onClick={ () => handleSimilarMovieClick(movie) }>
                         <SimilarImage
                           src={ `${base_url}${movie.backdrop_path || movie.poster_path}` }
@@ -374,7 +440,7 @@ export const MovieModal = ({
                 <TrailersSection>
                   <SimilarTitle>Trailers & More</SimilarTitle>
                   <TrailerGrid>
-                    { videos.slice(0, 4).map((video) => (
+                    { videos.slice(0, 4).map((video: Video) => (
                       <TrailerCard key={ video.id } onClick={ () => handleTrailerClick(video) }>
                         <TrailerThumbnail
                           src={ `https://img.youtube.com/vi/${video.key}/maxresdefault.jpg` }

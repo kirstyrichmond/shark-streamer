@@ -28,7 +28,6 @@ export interface SearchContextType {
   showSearchBar: boolean;
   toggleSearchBar: (show: boolean) => void;
   isSearching: boolean;
-  setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
   movies: Movie[];
   isLoading: boolean;
   handleSearchSubmit: (e?: React.FormEvent) => void;

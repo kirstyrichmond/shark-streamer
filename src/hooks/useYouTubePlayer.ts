@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import YouTube, { YouTubeEvent } from "react-youtube";
 
 interface YouTubePlayerConfig {
@@ -96,7 +96,7 @@ export const useYouTubePlayer = () => {
     }
   };
 
-  const handlePlayPause = () => {
+  const handlePlayPause = useCallback(() => {
     if (videoEnded) {
       setVideoEnded(false);
       setIsPlaying(true);
@@ -112,7 +112,7 @@ export const useYouTubePlayer = () => {
       }
       return isPlaying ? "pause" : "play";
     }
-  };
+  }, [videoEnded, isPlaying]);
 
   const toggleMute = () => {
     const player = youtubePlayerRef.current?.internalPlayer;
@@ -177,6 +177,13 @@ export const useYouTubePlayer = () => {
     setIsPlaying(false);
   };
 
+  const handlePlayPauseAction = useCallback((onRestart?: () => void) => {
+    const action = handlePlayPause();
+    if (action === "restart" && onRestart) {
+      onRestart();
+    }
+  }, [handlePlayPause]);
+
   return {
     isPlaying,
     videoEnded,
@@ -187,6 +194,7 @@ export const useYouTubePlayer = () => {
     handleVideoStateChange,
     handleVideoReady,
     handlePlayPause,
+    handlePlayPauseAction,
     toggleMute,
     getYouTubeOptions,
     resetPlayer,

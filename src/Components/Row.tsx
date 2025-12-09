@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { MovieModal } from "./MovieModal";
 import { RowErrorBoundary, MovieModalErrorBoundary, ImageErrorBoundary } from "./ErrorBoundary";
 import {
-  fetchWatchlist,
-  selectWatchlistLoading,
-  selectSortedWatchlistItems,
   selectSelectedProfile,
   openModal,
   closeModal,
@@ -13,6 +11,7 @@ import {
 import { movieAPI } from "../services/api";
 import { getMovieType, Movie } from "../utils/movieUtils";
 import { useMovieFiltering } from "../hooks/useMovieFiltering";
+import { movieQueries } from "../queries/movieQueries";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Container, PosterLarge, Posters, RowContainer, Title, ResponsiveSkeleton } from "../styles/Row.styles";
 import { useAppDispatch } from "../app/store";
@@ -31,51 +30,51 @@ interface MovieDetailsResponse {
 
 const Row: React.FC<RowProps> = ({ title, fetchRequest, isLargeRow = false, isWatchlist = false }) => {
   const dispatch = useAppDispatch();
-  const watchlistItems = useSelector(selectSortedWatchlistItems);
-  const watchlistLoading = useSelector(selectWatchlistLoading);
   const selectedProfile = useSelector(selectSelectedProfile);
-  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
   const [selectedMovie, setSelectedMovie] = useState<Movie | WatchlistItem | null>(null);
   const [openMovieModal, setOpenMovieModal] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   const { filterMovies, isFiltering } = useMovieFiltering();
 
-  useEffect(() => {
-    if (isWatchlist) {
-      if (selectedProfile?.id) {
-        dispatch(fetchWatchlist(selectedProfile.id));
-      }
-    } else {
-      const fetchData = async () => {
-        try {
-          if (fetchRequest) {
-            const request = await fetchRequest();
-            const rawMovies = request.data.results;
+  const {
+    data: rawMovies = [],
+    isLoading: isQueryLoading,
+  } = useQuery({
+    ...movieQueries.row(title, fetchRequest!),
+    enabled: !isWatchlist && !!fetchRequest,
+  });
 
-            const validMovies = await filterMovies(rawMovies, {
-              isLargeRow,
-            });
-            setFilteredMovies(validMovies);
-            setLoading(false);
-            return request;
-          }
-          setLoading(false);
+  const {
+    data: watchlistItems = [],
+    isLoading: watchlistLoading,
+  } = useQuery({
+    ...movieQueries.watchlist(selectedProfile?.id || ""),
+    enabled: isWatchlist && !!selectedProfile?.id,
+  });
+
+  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    if (!isWatchlist && rawMovies.length > 0) {
+      const filterData = async () => {
+        try {
+          const validMovies = await filterMovies(rawMovies, {
+            isLargeRow,
+            requireVideos: false,
+            requireLogos: false,
+          });
+          setFilteredMovies(validMovies);
         } catch (error) {
-          console.error("Error fetching row data:", error);
-          setLoading(false);
+          console.error("Error filtering movies:", error);
+          setFilteredMovies(rawMovies);
         }
       };
-      fetchData();
+      filterData();
     }
-  }, [fetchRequest, isWatchlist, dispatch, selectedProfile?.id, filterMovies, isLargeRow]);
+  }, [rawMovies, isWatchlist, filterMovies, isLargeRow]);
 
-  useEffect(() => {
-    if (isWatchlist) {
-      setTimeout(() => setLoading(watchlistLoading), 0);
-    }
-  }, [isWatchlist, watchlistLoading]);
+  const loading = isWatchlist ? watchlistLoading : isQueryLoading;
 
   const showMovieModal = useCallback(
     (movieData: Movie | WatchlistItem) => {
@@ -122,13 +121,21 @@ const Row: React.FC<RowProps> = ({ title, fetchRequest, isLargeRow = false, isWa
     }, 300);
   }, [dispatch]);
 
+  const sortedWatchlistItems = useMemo(() => {
+    if (!isWatchlist || !watchlistItems.length) return watchlistItems;
+    return [...watchlistItems].sort((a, b) => {
+      const dateComparison = new Date(b.added_at).getTime() - new Date(a.added_at).getTime();
+      return dateComparison !== 0 ? dateComparison : parseInt(b.id) - parseInt(a.id);
+    });
+  }, [isWatchlist, watchlistItems]);
+
   const displayData = useMemo(() => {
     if (isWatchlist) {
-      return watchlistItems;
+      return sortedWatchlistItems;
     }
 
-    return filteredMovies || [];
-  }, [isWatchlist, watchlistItems, filteredMovies]);
+    return filteredMovies.length > 0 ? filteredMovies : (isFiltering ? rawMovies : []);
+  }, [isWatchlist, sortedWatchlistItems, filteredMovies, isFiltering, rawMovies]);
 
   if (isWatchlist && !loading && displayData.length === 0) {
     return null;
