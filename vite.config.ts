@@ -10,5 +10,16 @@ export default defineConfig({
   },
   build: {
     outDir: "build",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['@coreui/react', 'styled-components'],
+          query: ['@tanstack/react-query'],
+          redux: ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
+        },
+      },
+    },
   },
 });

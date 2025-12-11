@@ -112,12 +112,20 @@ export const SignUpButton = styled.button`
   font-size: 18px;
   font-weight: 700;
   margin: 24px 0 28px;
-  background: #00acee;
+  background: #0066cc;
   line-height: 1rem;
   padding: 20px;
   cursor: pointer;
   border: none;
   color: #fff;
+
+  &:hover {
+    background: #0052a3;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
 
   @media (min-width: ${breakpoints.tablet}px) {
     max-width: 500px;

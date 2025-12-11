@@ -9,7 +9,9 @@ const Layout = () => {
   return (
     <>
       <Nav />
-      <AuthGuard>{ element }</AuthGuard>
+      <main>
+        <AuthGuard>{ element }</AuthGuard>
+      </main>
     </>
   );
 };
