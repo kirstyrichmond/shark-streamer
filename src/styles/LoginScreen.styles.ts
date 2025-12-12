@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { breakpoints } from "../breakpoints";
 
 export const Container = styled.div`
-  background: url("https://assets.nflxext.com/ffe/siteui/vlv3/b321426e-35ae-4661-b899-d63bca17648a/e30a1639-d705-4d84-9835-b06b9c013e2c/GB-en-20220926-popsignuptwoweeks-perspective_alpha_website_large.jpg")
+  background: url("/assets/shark-streamer-login-background-image.jpg")
     center no-repeat;
   background-size: cover;
   background-position: center;
