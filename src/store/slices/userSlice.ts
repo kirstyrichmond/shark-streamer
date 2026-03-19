@@ -291,6 +291,13 @@ export const userSlice = createSlice({
       state.interface.showSignIn = true;
       state.interface.showSignUp = false;
     },
+    hideAuthScreens: (state) => {
+      if (!state.interface) {
+        state.interface = { showSignUp: false, showSignIn: false, isAnyModalOpen: false };
+      }
+      state.interface.showSignIn = false;
+      state.interface.showSignUp = false;
+    },
     setSelectedProfile: (state, action: PayloadAction<Profile | null>) => {
       state.selectedProfile = action.payload;
     },
@@ -475,6 +482,7 @@ export const {
   editProfile,
   showSignUp,
   showSignIn,
+  hideAuthScreens,
   setSelectedProfile,
   clearSelectedProfile,
   setEditingProfile,

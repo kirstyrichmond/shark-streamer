@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Field } from "formik";
+import { useState } from "react";
+import { useField } from "formik";
 import {
   PasswordInputWrapper,
   PasswordInput,
@@ -8,30 +8,25 @@ import {
   EyeSlashIcon,
 } from "../styles/SignUpScreen.styles";
 
-interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface PasswordFieldProps {
   name: string;
   placeholder: string;
 }
 
-export const PasswordField = ({ name, placeholder, ...props }: PasswordFieldProps) => {
+export const PasswordField = ({ name, placeholder }: PasswordFieldProps) => {
+  const [field] = useField(name);
   const [showPassword, setShowPassword] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
 
   return (
     <PasswordInputWrapper>
-      <Field
-        as={ PasswordInput }
-        name={ name }
+      <PasswordInput
+        { ...field }
         type={ showPassword ? "text" : "password" }
         placeholder={ placeholder }
-        { ...props }
       />
       <PasswordToggleButton
         type="button"
-        onClick={ togglePasswordVisibility }
+        onClick={ () => setShowPassword(!showPassword) }
         aria-label={ showPassword ? "Hide password" : "Show password" }
       >
         { showPassword ? <EyeSlashIcon /> : <EyeIcon /> }

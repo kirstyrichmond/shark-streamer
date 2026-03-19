@@ -14,15 +14,15 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          ui: ['@coreui/react', 'styled-components'],
-          query: ['@tanstack/react-query'],
-          redux: ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
+          vendor: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          ui: ["@coreui/react", "styled-components"],
+          query: ["@tanstack/react-query"],
+          redux: ["@reduxjs/toolkit", "react-redux", "redux-persist"],
         },
       },
     },
     cssCodeSplit: true,
-    minify: 'esbuild',
+    minify: "esbuild",
   },
 });

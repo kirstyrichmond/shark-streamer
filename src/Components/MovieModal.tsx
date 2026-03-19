@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import Modal from "react-modal";
 import YouTube from "react-youtube";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { movieQueries } from "../queries/movieQueries";
 import { movieAPI } from "../services/api";
 import { useModalScrollLock } from "../hooks/useModalScrollLock";
-import { getAgeRating } from "../utils/movieUtils";
+import { getAgeRating, getEnglishLogo } from "../utils/movieUtils";
 import { MovieActionButtons } from "./MovieActionButtons";
 import { MovieCover } from "./MovieCover";
 import { ModalHeaderSkeleton, ModalContentSkeleton } from "./ModalSkeletons";
@@ -188,12 +188,8 @@ export const MovieModal = ({
     ...(type2 === "tv" && contentRatings ? { content_ratings: contentRatings } : {}),
   } : null;
 
-  const logos = images?.logos || [];
+  const logos = useMemo(() => images?.logos || [], [images]);
   const isLoading = videosLoading || imagesLoading || detailsLoading || creditsLoading || similarLoading;
-
-  const getEnglishLogo = () => {
-    return logos.find((logo: { iso_639_1: string }) => logo.iso_639_1 === "en") || logos[0];
-  };
 
   useModalScrollLock(isOpen);
 
@@ -289,7 +285,7 @@ export const MovieModal = ({
     return `${mins}m`;
   };
 
-  const renderTrailer = () => {
+  const renderTrailer = useCallback(() => {
     const trailer = selectedVideo || videos?.find((vid: Video) => vid.type === "Trailer") || videos[0];
 
     if (!trailer) return <div>No trailer available</div>;
@@ -311,7 +307,7 @@ export const MovieModal = ({
         { videoEnded && <MovieCover movie={ selectedMovie } baseUrl={ base_url } /> }
         <ModalContent>
           <MovieLogo
-            src={ `${base_url}${getEnglishLogo()?.file_path}` }
+            src={ `${base_url}${getEnglishLogo(logos)}` }
             alt={ selectedMovie?.title || selectedMovie?.name }
           />
           <MovieActionButtons
@@ -326,7 +322,7 @@ export const MovieModal = ({
         ) }
       </PlayerWrapper>
     );
-  };
+  }, [videos, selectedVideo, videoEnded, isPlaying, isMuted, handleVideoReady, handleVideoEnd, handleVideoStateChange, getYouTubeOptions, toggleMute, handlePlayPauseAction, selectedMovie, logos, base_url, setPlayTrailer, youtubePlayerRef]);
 
   return (
     <Modal
@@ -350,7 +346,7 @@ export const MovieModal = ({
             <>
               <MovieCover movie={ selectedMovie } baseUrl={ base_url } />
               <MovieLogo
-                src={ `${base_url}${getEnglishLogo()?.file_path}` }
+                src={ `${base_url}${getEnglishLogo(logos)}` }
                 alt={ selectedMovie?.title || selectedMovie?.name }
               />
               <PlayButton

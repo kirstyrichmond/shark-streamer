@@ -61,7 +61,7 @@ const Row: React.FC<RowProps> = ({ title, fetchRequest, isLargeRow = false, isWa
         try {
           const validMovies = await filterMovies(rawMovies, {
             isLargeRow,
-            requireVideos: false,
+            requireVideos: true,
             requireLogos: false,
           });
           setFilteredMovies(validMovies);

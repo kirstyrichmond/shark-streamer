@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectUser, selectPlans, fetchPlans, updateSubscription } from "../store/slices/userSlice";
@@ -38,7 +38,7 @@ export const ChangePlanScreen = () => {
     planId: string;
   }
 
-  const changePlan = async (planId: string): Promise<void> => {
+  const changePlan = useCallback(async (planId: string): Promise<void> => {
     if (planId === user?.subscription_plan) return;
 
     setLoading(true);
@@ -51,7 +51,7 @@ export const ChangePlanScreen = () => {
       ).unwrap();
       setLoading(false);
     }
-  };
+  }, [dispatch, user, setLoading]);
 
   return (
     <Container>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import YouTube from "react-youtube";
 import { useSelector, useDispatch } from "react-redux";
 import { selectIsAnyModalOpen, openModal, closeModal } from "../store/slices/userSlice";
@@ -36,6 +36,7 @@ export const Banner = () => {
   const [playTrailer, setPlayTrailer] = useState<boolean>(false);
   const [openMovieModal, setOpenMovieModal] = useState<boolean>(false);
   const [trailerWasPlaying, setTrailerWasPlaying] = useState<boolean>(false);
+  const [hasPlayerError, setHasPlayerError] = useState<boolean>(false);
   const isAnyModalOpen = useSelector(selectIsAnyModalOpen);
 
   const {
@@ -70,6 +71,7 @@ export const Banner = () => {
   useEffect(() => {
     if (bannerMovie && !displayedMovie) {
       setDisplayedMovie(bannerMovie);
+      setHasPlayerError(false);
     }
   }, [bannerMovie, displayedMovie]);
 
@@ -80,10 +82,17 @@ export const Banner = () => {
   }, [openMovieModal, bannerMovie, modalSelectedMovie]);
 
   useEffect(() => {
-    if (videos && videos.length > 0 && !playTrailer) {
+    if (movieId) {
+      setHasPlayerError(false);
+      setPlayTrailer(false);
+    }
+  }, [movieId]);
+
+  useEffect(() => {
+    if (videos && videos.length > 0 && !playTrailer && !hasPlayerError) {
       setPlayTrailer(true);
     }
-  }, [videos, playTrailer]);
+  }, [videos, playTrailer, hasPlayerError]);
 
   useEffect(() => {
     if (isAnyModalOpen) {
@@ -113,16 +122,16 @@ export const Banner = () => {
     }
   }, [isAnyModalOpen, playTrailer, videoEnded, isPlaying, youtubePlayerRef, trailerWasPlaying]);
 
-  const truncate: TruncateFunction = (string) => {
+  const truncate: TruncateFunction = useCallback((string) => {
     if (!string) return "";
     
     const sentences = string.split(". ");
     const firstSentence = sentences[0];
     
     return firstSentence + (firstSentence.endsWith(".") ? "" : ".");
-  };
+  }, []);
 
-  const renderBannerContent = (showPlayButton = true, onPlayClick: (() => void) | null | undefined = undefined) => (
+  const renderBannerContent = useCallback((showPlayButton = true, onPlayClick: (() => void) | null | undefined = undefined) => (
     <BannerContent>
       { logo ? (
         <MovieIcon
@@ -151,9 +160,9 @@ export const Banner = () => {
         </InfoButton>
       </ButtonsContainer>
     </BannerContent>
-  );
+  ), [imagesLoading, logo, movie, truncate, videoEnded, isPlaying, handlePlayPauseAction, setPlayTrailer, setOpenMovieModal, dispatch]);
 
-  const renderTrailer = () => {
+  const renderTrailer = useCallback(() => {
     const trailer = videos?.find((vid: { key: string; type: string }) => vid.type === "Trailer") || videos[0];
 
     if (!trailer || !trailer.key) return null;
@@ -184,6 +193,7 @@ export const Banner = () => {
             onError={ (error) => {
               console.error("YouTube player error:", error);
               setPlayTrailer(false);
+              setHasPlayerError(true);
             } }
             ref={ youtubePlayerRef }
           />
@@ -194,7 +204,7 @@ export const Banner = () => {
         </CustomMuteButton>
       </BannerPlayerWrapper>
     );
-  };
+  }, [renderBannerContent, videoEnded, handleVideoReady, handleVideoEnd, handleVideoStateChange, toggleMute, isMuted, setPlayTrailer, getYouTubeOptions, movie, videos, youtubePlayerRef]);
 
   return (
     <>

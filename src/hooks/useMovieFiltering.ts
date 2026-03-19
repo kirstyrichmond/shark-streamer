@@ -29,7 +29,7 @@ export const useMovieFiltering = () => {
     async <T extends FilterableMovie>(movies: T[], options: FilterOptions = {}, movieType?: string): Promise<T[]> => {
       const {
         requireImages = true,
-        requireLogos = true,
+        requireLogos = false,
         requireVideos = true,
         isLargeRow = false,
         maxMovies = 20,

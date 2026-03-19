@@ -47,7 +47,7 @@ Created by Kirsty Richmond.
 2. **Create and activate virtual environment**
 
    ```bash
-   $ python -m venv shark-streamer
+   $ python3 -m venv shark-streamer
    $ source shark-streamer/bin/activate  # On Windows: shark-streamer\Scripts\activate
    ```
 
@@ -71,7 +71,7 @@ Created by Kirsty Richmond.
 
 6. **Start the backend server**
    ```bash
-   $ python run.py
+   $ python3 run.py
    ```
    The backend API will run on `http://localhost:5001`
 
@@ -103,7 +103,12 @@ Currently in the project you can:
 
 Future implementations:
 
-- Personalized recommendations
+- Rate content for personalised recommendations
+- Personalised recommendations
+- Add 'My Watchlist' page
+- Add Movies page with genre filter
+- Add Series page with genre filter
+- Add 'Top 10' filter
 - Download for offline viewing
 
 Design choices:

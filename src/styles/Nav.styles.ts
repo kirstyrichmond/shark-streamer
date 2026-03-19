@@ -87,7 +87,7 @@ export const SignInButton = styled.button`
   padding: 6px 14px;
   font-size: 0.9rem;
   color: white;
-  background-color: #00acee;
+  background-color: #0066cc;
   border: none;
   cursor: pointer;
   border-radius: 3px;
@@ -98,7 +98,7 @@ export const SignInButton = styled.button`
   white-space: nowrap;
 
   &:hover {
-    background-color: #303f9f;
+    background-color: #0052a3;
   }
 
   &:active {

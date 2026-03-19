@@ -15,14 +15,6 @@ export const InnerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  @media (min-width: ${breakpoints.tablet}px) {
-    align-items: flex-start;
-    padding-top: 300px;
-  }
-  @media (min-width: ${breakpoints.desktop}px) {
-    padding-top: 360px;
-  }
 `;
 
 export const Form = styled.form`
@@ -48,7 +40,7 @@ export const Title = styled.h1`
 export const Input = styled.input`
   outline-width: 0;
   outline: none;
-
+  width: 100%;
   height: 50px;
   margin-bottom: 18px;
   padding: 0px 20px 0px;
@@ -71,19 +63,19 @@ export const PasswordInput = styled.input`
   outline: none;
   width: 100%;
   height: 50px;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   padding: 0px 50px 0px 20px;
   font-size: 1.2rem;
   background: #333;
   border: none;
   border-radius: 4px;
-  top: 50%;
   color: #8c8c8c;
 `;
 
 export const PasswordToggleButton = styled.button`
   position: absolute;
   right: 15px;
+  top: 25px;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -108,6 +100,7 @@ export const EyeSlashIcon = styled(AiOutlineEyeInvisible)`
 `;
 
 export const SignUpButton = styled.button`
+  width: 100%;
   border-radius: 4px;
   font-size: 18px;
   font-weight: 700;
@@ -157,8 +150,7 @@ export const SpanLink = styled(DescriptionSpan)`
 `;
 
 export const ErrorText = styled.div`
-  color: #e87c03;
+  color: #dc2626;
   font-size: 14px;
-  margin-top: 5px;
   margin-bottom: 16px;
 `;

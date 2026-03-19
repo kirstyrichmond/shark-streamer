@@ -25,27 +25,36 @@ export const BodyContainer = styled.div`
   text-align: center;
   height: 100vh;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.85) 100%);
 
   @media (min-width: ${breakpoints.mobile}px) {
     padding: 20px;
   }
 
   @media (min-width: ${breakpoints.tablet}px) {
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: flex-start;
-    padding-top: 300px;
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    padding-top: 340px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%);
   }
 `;
 
-export const InputContainer = styled.div`
+export const InputContainer = styled.div<{ hasError?: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  ${props => props.hasError && `
+    &::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+      pointer-events: none;
+    }
+  `}
 
   @media (min-width: ${breakpoints.tablet}px) {
     flex-direction: row;
@@ -53,11 +62,11 @@ export const InputContainer = styled.div`
   }
 `;
 
-export const Input = styled.input`
-  padding: 1rem 0.8rem;
+export const Input = styled.input<{ hasError?: boolean }>`
+  padding: 0.8rem 0.6rem;
   outline-width: 0;
   width: 100%;
-  border: none;
+  border: 2px solid ${props => props.hasError ? "#dc2626" : "transparent"};
   max-width: 280px;
   font-size: 1rem;
   border-radius: 4px;
@@ -69,23 +78,16 @@ export const Input = styled.input`
     color: #757575;
   }
 
-  @media (min-width: ${breakpoints.mobile}px) {
-    max-width: 298px;
-    font-size: 1.1rem;
+  &:focus {
+    border-color: ${props => props.hasError ? "#dc2626" : "#fff"};
   }
 
   @media (min-width: ${breakpoints.tablet}px) {
     border-radius: 2px 0 0 2px;
-    padding: 1rem 2.4rem 1rem 0.8rem;
-    font-size: 1.2rem;
-    max-width: 320px;
+    font-size: 1rem;
+    max-width: 280px;
+    padding: 0.6rem 1.5rem 0.6rem 0.9rem;
     margin: 0;
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    font-size: 1.2rem;
-    max-width: 360px;
-    padding: 1rem 2.4rem 1rem 1rem;
   }
 `;
 
@@ -99,38 +101,26 @@ export const GetStartedButton = styled.button`
   margin-bottom: 10px;
   border: none;
   color: #fff;
-  background-color: #00acee;
+  background-color: #0066cc;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #303f9f;
+    background-color: #0052a3;
   }
 
   &:active {
     transform: translateY(1px);
   }
 
-  @media (min-width: ${breakpoints.mobile}px) {
-    max-width: 298px;
-    font-size: 1.1rem;
-  }
-
   @media (min-width: ${breakpoints.tablet}px) {
     padding: 1rem 1.4rem;
     height: auto;
     margin: 0;
-    font-size: 1.2rem;
     border-radius: 0 2px 2px 0;
     max-width: 150px;
     width: auto;
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    font-size: 1.2rem;
-    max-width: 180px;
-    padding: 1rem 2.4rem 1rem 2rem;
   }
 `;
 
@@ -165,11 +155,7 @@ export const Title = styled.h1`
 
   @media (min-width: ${breakpoints.tablet}px) {
     font-size: 3.2rem;
-    max-width: 900px;
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    font-size: 4.2rem;
+    max-width: 700px;
   }
 `;
 
@@ -186,43 +172,59 @@ export const DescOne = styled.h2`
   }
 
   @media (min-width: ${breakpoints.tablet}px) {
-    font-size: 1.7rem;
+    font-size: 1.6rem;
     margin-bottom: 18px;
     max-width: none;
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    font-size: 2rem;
   }
 `;
 
 export const DescTwo = styled.h3`
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 400;
   margin-bottom: 20px;
   line-height: 1.4;
   max-width: 320px;
 
   @media (min-width: ${breakpoints.mobile}px) {
-    font-size: 1rem;
+    font-size: 0.8rem;
     max-width: 400px;
   }
 
   @media (min-width: ${breakpoints.tablet}px) {
-    font-size: 1.2rem;
-    margin-bottom: 32px;
     max-width: none;
-  }
-
-  @media (min-width: ${breakpoints.desktop}px) {
-    font-size: 1.4rem;
-    margin-bottom: 32px;
   }
 `;
 
 export const Gradient = styled.div`
   width: 100%;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.8) 100%);
+  background: rgba(0, 0, 0, 0.95);
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.98) 0, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0.6) 100%);
+`;
+
+export const ErrorText = styled.div`
+  color: #ff4444;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 12px;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+
+  @media (min-width: ${breakpoints.mobile}px) {
+    max-width: 298px;
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    max-width: 470px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  @media (min-width: ${breakpoints.desktop}px) {
+    max-width: 540px;
+  }
 `;

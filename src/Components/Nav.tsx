@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   selectUser,
   logoutUser,
   showSignIn,
+  hideAuthScreens,
   selectSelectedProfile,
   setSelectedProfile,
 } from "../store/slices/userSlice";
@@ -75,20 +76,12 @@ export const Nav = () => {
     }
   }, [user?.profiles, selectedProfile, dispatch]);
 
-  const handleSearchIconClick = () => {
-    toggleSearchBar(true);
-  };
-
-  const handleSearchCancel = () => {
-    toggleSearchBar(false);
-  };
-
-  const getBackgroundStyle = () => {
+  const getBackgroundStyle = useCallback(() => {
     if (!isHomeScreen || show) return { backgroundColor: "#111" };
     return {
       background: `linear-gradient(to bottom, rgba(0, 0, 0, ${0.8 + scrollOpacity * 0.9}) 0%, rgba(0, 0, 0, ${scrollOpacity * 0.1}) 100%)`,
     };
-  };
+  }, [isHomeScreen, show, scrollOpacity]);
 
   return (
     <Container style={ getBackgroundStyle() }>
@@ -96,6 +89,7 @@ export const Nav = () => {
         onClick={ () => {
           toggleSearchBar(false);
           setShowMenu(false);
+          dispatch(hideAuthScreens());
           navigate(RoutePaths.Home);
         } }
         style={ {
@@ -131,7 +125,7 @@ export const Nav = () => {
                         }
                       } }
                     />
-                    <CancelButton onClick={ handleSearchCancel } type="button">
+                    <CancelButton onClick={ () => toggleSearchBar(false) } type="button">
                       X
                     </CancelButton>
                   </InputContainer>
@@ -140,7 +134,7 @@ export const Nav = () => {
                 <SearchIcon
                   src="https://img.icons8.com/sf-regular/48/FFFFFF/search.png"
                   alt="search icon"
-                  onClick={ handleSearchIconClick }
+                  onClick={ () => toggleSearchBar(true) }
                 />
               ) }
             </div>

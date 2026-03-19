@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 import { FaPlus } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { addToWatchlist, removeFromWatchlist, selectWatchlist, selectSelectedProfile } from "../store/slices/userSlice";
@@ -9,6 +10,7 @@ import { useAppDispatch } from "../app/store";
 
 export const WatchlistButton = ({ movie }: { movie: Movie }) => {
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
   const watchlist = useSelector(selectWatchlist);
   const selectedProfile = useSelector(selectSelectedProfile);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
@@ -53,6 +55,8 @@ export const WatchlistButton = ({ movie }: { movie: Movie }) => {
           })
         ).unwrap();
       }
+
+      queryClient.invalidateQueries({ queryKey: ["watchlist", selectedProfile.id] });
     } catch (error) {
       console.error("Error updating watchlist:", error);
     } finally {

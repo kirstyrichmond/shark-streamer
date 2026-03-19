@@ -1,7 +1,8 @@
 import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { movieAPI } from "../services/api";
 import { Movie } from "../utils/movieUtils";
+import { useMovieFiltering } from "./useMovieFiltering";
 
 interface SearchResponse {
   results: Movie[];
@@ -9,6 +10,9 @@ interface SearchResponse {
 }
 
 export const useSearchQuery = (searchTerm: string) => {
+  const { filterMovies } = useMovieFiltering();
+  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
+
   const {
     data,
     fetchNextPage,
@@ -42,8 +46,30 @@ export const useSearchQuery = (searchTerm: string) => {
     return flattened;
   }, [data]);
 
+  useEffect(() => {
+    if (movies.length > 0) {
+      const filterData = async () => {
+        try {
+          const validMovies = await filterMovies(movies, {
+            requireVideos: true,
+            requireLogos: false,
+            requireImages: true,
+            isLargeRow: false,
+          });
+          setFilteredMovies(validMovies);
+        } catch (error) {
+          console.error("Error filtering search results:", error);
+          setFilteredMovies(movies);
+        }
+      };
+      filterData();
+    } else {
+      setFilteredMovies([]);
+    }
+  }, [movies, filterMovies]);
+
   return {
-    movies,
+    movies: filteredMovies,
     hasNextPage: !!hasNextPage,
     isLoading,
     isLoadingMore: isFetchingNextPage,

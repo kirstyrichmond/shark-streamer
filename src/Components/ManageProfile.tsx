@@ -60,6 +60,12 @@ interface UpdateProfileAvatarProps {
   avatarData: string;
 }
 
+interface AvatarChangeEvent extends React.ChangeEvent<HTMLInputElement> {
+  target: HTMLInputElement & {
+    files: FileList | null;
+  };
+}
+
 export const ManageProfile: React.FC<ManageProfileProps> = ({
   setEditProfilePage,
   isCreating = false,
@@ -90,10 +96,12 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
         otherwise: (schema) => schema.nullable(),
       }),
   });
+
   const defaultValues = {
     name: isCreating ? "" : editingProfile?.name || "",
     avatar: avatarPreview,
   };
+  
   const {
     register,
     handleSubmit,
@@ -144,12 +152,6 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({
       alert("Error saving profile. Please try again.");
     }
   };
-
-  interface AvatarChangeEvent extends React.ChangeEvent<HTMLInputElement> {
-    target: HTMLInputElement & {
-      files: FileList | null;
-    };
-  }
 
   const handleAvatarChange = async (event: AvatarChangeEvent): Promise<void> => {
     const file = event.target.files?.[0];
