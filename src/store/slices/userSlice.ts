@@ -366,11 +366,6 @@ export const userSlice = createSlice({
       .addCase(getCurrentUser.rejected, (state) => {
         state.user.info = null;
         state.user.profiles = [];
-        if (!state.interface) {
-          state.interface = { showSignUp: false, showSignIn: false, isAnyModalOpen: false };
-        }
-        state.interface.showSignIn = false;
-        state.interface.showSignUp = false;
       })
       .addCase(fetchUserProfiles.fulfilled, (state, action) => {
         state.user.profiles = action.payload;
