@@ -1,19 +1,5 @@
 import React, { createContext } from "react";
-
-export interface Movie {
-  id: number;
-  title?: string;
-  name?: string;
-  overview: string;
-  poster_path?: string;
-  backdrop_path?: string;
-  popularity: number;
-  media_type?: string;
-  release_date?: string;
-  first_air_date?: string;
-  vote_average?: number;
-  genre_ids?: number[];
-}
+import { Movie } from "../utils/movieUtils";
 
 export interface SearchKeyChangeEvent {
   target: {

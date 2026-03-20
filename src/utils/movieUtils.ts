@@ -15,6 +15,9 @@ export interface Movie {
   poster_path?: string;
   movie_poster?: string;
   added_at?: string;
+  popularity?: number;
+  vote_average?: number;
+  genre_ids?: number[];
 }
 
 interface ReleaseDate {

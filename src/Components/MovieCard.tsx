@@ -2,21 +2,7 @@ import React, { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Container, Image } from "../styles/MovieCard.styles";
-import { getImageUrl, getMovieTitle } from "../utils/movieUtils";
-
-interface Movie {
-  id: number;
-  poster_path?: string;
-  backdrop_path?: string;
-  title?: string;
-  name?: string;
-  overview?: string;
-  release_date?: string;
-  first_air_date?: string;
-  vote_average?: number;
-  media_type?: string;
-  genre_ids?: number[];
-}
+import { getImageUrl, getMovieTitle, Movie } from "../utils/movieUtils";
 
 const MovieCard = ({
   movie,
