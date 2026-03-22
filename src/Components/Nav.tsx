@@ -95,7 +95,7 @@ export const Nav = () => {
         style={ {
           fontFamily: "Boogaloo",
           fontSize: "28px",
-          color: "#00acee",
+          color: "#0066cc",
           fontWeight: 400,
           textTransform: "uppercase",
           letterSpacing: "1px",

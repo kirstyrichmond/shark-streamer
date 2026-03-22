@@ -29,7 +29,7 @@ export const Container = styled.div<{ $isSelected: boolean }>`
   ${(props) =>
     props.$isSelected &&
     `
-    border: 2px solid #00acee;
+    border: 2px solid #0066cc;
   `}
 `;
 
