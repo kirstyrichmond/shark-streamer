@@ -1,54 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import YouTube, { YouTubeEvent } from "react-youtube";
 
-interface YouTubePlayerConfig {
-  height?: string | number;
-  width?: string | number;
-  videoId?: string;
-  playerVars?: Record<string, string | number>;
-  events?: {
-    onReady?: (event: YouTubeEvent) => void;
-    onStateChange?: (event: YouTubeEvent) => void;
-    onError?: (event: YouTubeEvent) => void;
-  };
-}
-
-interface YouTubePlayer {
-  playVideo(): void;
-  pauseVideo(): void;
-  stopVideo(): void;
-  mute(): void;
-  unMute(): void;
-  isMuted(): boolean;
-  setVolume(volume: number): void;
-  getVolume(): number;
-  seekTo(seconds: number, allowSeekAhead?: boolean): void;
-  getPlayerState(): number;
-  getCurrentTime(): number;
-  getDuration(): number;
-  destroy(): void;
-}
-
-interface YouTubeAPI {
-  Player: new (elementId: string, config: YouTubePlayerConfig) => YouTubePlayer;
-  PlayerState: {
-    UNSTARTED: number;
-    ENDED: number;
-    PLAYING: number;
-    PAUSED: number;
-    BUFFERING: number;
-    CUED: number;
-  };
-  loaded: boolean;
-}
-
-declare global {
-  interface Window {
-    YT: YouTubeAPI;
-    onYouTubeIframeAPIReady: () => void;
-  }
-}
-
 export const useYouTubePlayer = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [videoEnded, setVideoEnded] = useState<boolean>(false);
@@ -60,23 +12,6 @@ export const useYouTubePlayer = () => {
     const userAgent = navigator.userAgent.toLowerCase();
     const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
     setTimeout(() => setIsMobile(isMobileDevice), 0);
-
-    if (window.YT) return;
-
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName("script")[0];
-    if (firstScriptTag.parentNode) {
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }
-
-    window.onYouTubeIframeAPIReady = function () {
-      console.log("YouTube API is ready");
-    };
-
-    return () => {
-      window.onYouTubeIframeAPIReady = () => {};
-    };
   }, []);
 
   const handleVideoEnd = () => {
