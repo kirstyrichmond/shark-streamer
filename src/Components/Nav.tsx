@@ -40,6 +40,7 @@ export const Nav = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [scrollOpacity, setScrollOpacity] = useState<number>(0);
   const isHomeScreen = window.location.pathname === RoutePaths.Home;
+  const isProfilesScreen = window.location.pathname === RoutePaths.Profiles;
 
   const { searchKey, setSearchKey, showSearchBar, toggleSearchBar, handleSearchSubmit } = useSearch();
 
@@ -109,35 +110,37 @@ export const Nav = () => {
           <SignInButton onClick={ () => dispatch(showSignIn()) }>Sign In</SignInButton>
         ) : (
           <>
-            <div>
-              { showSearchBar ? (
-                <Form onSubmit={ handleSearchSubmit }>
-                  <InputContainer>
-                    <Input
-                      autoFocus
-                      type="text"
-                      value={ searchKey }
-                      placeholder="Titles, people, genres"
-                      onChange={ (e) => setSearchKey(e.target.value) }
-                      onKeyDown={ (e) => {
-                        if (e.key === "Enter") {
-                          handleSearchSubmit(e);
-                        }
-                      } }
-                    />
-                    <CancelButton onClick={ () => toggleSearchBar(false) } type="button">
-                      X
-                    </CancelButton>
-                  </InputContainer>
-                </Form>
-              ) : (
-                <SearchIcon
-                  src="https://img.icons8.com/sf-regular/48/FFFFFF/search.png"
-                  alt="search icon"
-                  onClick={ () => toggleSearchBar(true) }
-                />
-              ) }
-            </div>
+            { !isProfilesScreen && (
+              <div>
+                { showSearchBar ? (
+                  <Form onSubmit={ handleSearchSubmit }>
+                    <InputContainer>
+                      <Input
+                        autoFocus
+                        type="text"
+                        value={ searchKey }
+                        placeholder="Titles, people, genres"
+                        onChange={ (e) => setSearchKey(e.target.value) }
+                        onKeyDown={ (e) => {
+                          if (e.key === "Enter") {
+                            handleSearchSubmit(e);
+                          }
+                        } }
+                      />
+                      <CancelButton onClick={ () => toggleSearchBar(false) } type="button">
+                        X
+                      </CancelButton>
+                    </InputContainer>
+                  </Form>
+                ) : (
+                  <SearchIcon
+                    src="https://img.icons8.com/sf-regular/48/FFFFFF/search.png"
+                    alt="search icon"
+                    onClick={ () => toggleSearchBar(true) }
+                  />
+                ) }
+              </div>
+            ) }
             { selectedProfile && (
               <>
                 <NavAvatar
