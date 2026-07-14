@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Avatar, fetchPredefinedAvatars, selectAvatars } from "../store/slices/userSlice";
+import React, { useState, useRef } from "react";
+import { Avatar } from "../store/slices/userSlice";
+import { defaultAvatars, kidsAvatars } from "../constants/avatars";
 import {
   AvatarPickerOverlay,
   AvatarPickerModal,
@@ -16,9 +16,7 @@ import {
   UploadSection,
   UploadButton,
   HiddenFileInput,
-  LoadingText,
 } from "../styles/AvatarPicker.styles";
-import { AppDispatch } from "../app/store";
 
 interface AvatarPickerProps {
   isOpen: boolean;
@@ -27,18 +25,12 @@ interface AvatarPickerProps {
   onAvatarUpdate?: (avatarUrl: string) => void;
 }
 
+const avatarsByCategory = { default: defaultAvatars, kids: kidsAvatars };
+
 export const AvatarPicker = ({ isOpen, onClose, currentAvatar, onAvatarUpdate }: AvatarPickerProps) => {
   const [selectedCategory, setSelectedCategory] = useState<"default" | "kids">("default");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const dispatch = useDispatch<AppDispatch>();
-  const avatarsState = useSelector(selectAvatars);
-
-  useEffect(() => {
-    if (isOpen) {
-      dispatch(fetchPredefinedAvatars({ category: selectedCategory }));
-    }
-  }, [isOpen, selectedCategory, dispatch]);
 
   const handleAvatarSelect = (avatarUrl: string) => {
     onAvatarUpdate?.(avatarUrl);
@@ -98,27 +90,23 @@ export const AvatarPicker = ({ isOpen, onClose, currentAvatar, onAvatarUpdate }:
               Kids
             </CategoryTab>
           </CategoryTabs>
-          { avatarsState.loading ? (
-            <LoadingText>Loading avatars...</LoadingText>
-          ) : (
-            <AvatarGrid>
-              { (avatarsState[selectedCategory as "default" | "kids"] || []).map((avatar: Avatar) => (
-                <AvatarOption
-                  key={ avatar.id }
-                  onClick={ () => handleAvatarSelect(avatar.image_url) }
-                  $selected={ currentAvatar === avatar.image_url }
-                >
-                  <AvatarImage
-                    src={ avatar.image_url }
-                    alt={ avatar.name }
-                    onError={ (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                      e.currentTarget.style.display = "none";
-                    } }
-                  />
-                </AvatarOption>
-              )) }
-            </AvatarGrid>
-          ) }
+          <AvatarGrid>
+            { avatarsByCategory[selectedCategory].map((avatar: Avatar) => (
+              <AvatarOption
+                key={ avatar.id }
+                onClick={ () => handleAvatarSelect(avatar.image_url) }
+                $selected={ currentAvatar === avatar.image_url }
+              >
+                <AvatarImage
+                  src={ avatar.image_url }
+                  alt={ avatar.name }
+                  onError={ (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                    e.currentTarget.style.display = "none";
+                  } }
+                />
+              </AvatarOption>
+            )) }
+          </AvatarGrid>
           <UploadSection>
             <UploadButton onClick={ () => fileInputRef.current?.click() } disabled={ uploading }>
               { uploading ? "Uploading..." : "Upload Custom Image" }

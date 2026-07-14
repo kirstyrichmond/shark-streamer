@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from .models import User, Profile, WatchlistItem, ViewingHistory, PredefinedAvatar
+from .models import User, Profile, WatchlistItem, ViewingHistory
 from . import db
 from datetime import datetime, timezone
 import json
@@ -569,23 +569,4 @@ def update_profile_avatar(profile_id):
             
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 500
-
-@api.route("/avatars", methods=['GET'])
-def get_predefined_avatars():
-    """Get all predefined avatar options"""
-    try:
-        category = request.args.get('category', 'default')
-        
-        avatars = PredefinedAvatar.query.filter_by(
-            category=category, 
-            is_active=True
-        ).all()
-        
-        return jsonify({
-            'success': True,
-            'avatars': [avatar.to_dict() for avatar in avatars]
-        }), 200
-        
-    except Exception as e:
         return jsonify({'error': str(e)}), 500

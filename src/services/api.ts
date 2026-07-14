@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Profile, WatchlistItem, User, Plan, Avatar } from "../store/slices/userSlice";
+import { Profile, WatchlistItem, User, Plan } from "../store/slices/userSlice";
 
 interface AuthResponse {
   access_token: string;
@@ -12,10 +12,6 @@ interface ProfileResponse {
 
 interface PlansResponse {
   plans: Plan[];
-}
-
-interface AvatarsResponse {
-  avatars: Avatar[];
 }
 
 interface WatchlistItemResponse {
@@ -128,9 +124,6 @@ export const profileAPI = {
       () => api.put(`/profiles/${profileId}/avatar`, { avatar_data: avatarData }),
       "Failed to update avatar"
     ),
-
-  getPredefinedAvatars: (category = "default"): Promise<AvatarsResponse> =>
-    handleRequest<AvatarsResponse>(() => api.get(`/avatars?category=${category}`), "Failed to get predefined avatars"),
 };
 
 export const watchlistAPI = {

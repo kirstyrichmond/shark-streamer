@@ -71,12 +71,6 @@ export interface UserState {
   selectedProfile: Profile | null;
   editingProfile: Profile | null;
   plans: AsyncState<Plan>;
-  avatars: {
-    default: Avatar[];
-    kids: Avatar[];
-    loading: boolean;
-    error: string | null;
-  };
   interface: {
     showSignIn: boolean;
     showSignUp: boolean;
@@ -180,18 +174,6 @@ export const updateProfileAvatar = createAsyncThunk<Profile, { profileId: string
   }
 );
 
-export const fetchPredefinedAvatars = createAsyncThunk<{ category: string; avatars: Avatar[] }, { category?: string }>(
-  "user/fetchPredefinedAvatars",
-  async ({ category = "default" }, { rejectWithValue }) => {
-    try {
-      const response = await profileAPI.getPredefinedAvatars(category);
-      return { category, avatars: response.avatars };
-    } catch (error) {
-      return rejectWithValue(handleAsyncError(error));
-    }
-  }
-);
-
 export const fetchWatchlist = createAsyncThunk<{ profileId: string; watchlist: WatchlistItem[] }, string>(
   "user/fetchWatchlist",
   async (profileId: string, { rejectWithValue }) => {
@@ -238,12 +220,6 @@ const initialState: UserState = {
   editingProfile: null,
   plans: {
     items: [],
-    loading: false,
-    error: null,
-  },
-  avatars: {
-    default: [],
-    kids: [],
     loading: false,
     error: null,
   },
@@ -412,24 +388,6 @@ export const userSlice = createSlice({
           }
         }
       })
-      .addCase(fetchPredefinedAvatars.pending, (state) => {
-        state.avatars.loading = true;
-        state.avatars.error = null;
-      })
-      .addCase(fetchPredefinedAvatars.fulfilled, (state, action) => {
-        state.avatars.loading = false;
-        state.avatars.error = null;
-        const { category, avatars } = action.payload;
-        if (category === "default") {
-          state.avatars.default = avatars;
-        } else if (category === "kids") {
-          state.avatars.kids = avatars;
-        }
-      })
-      .addCase(fetchPredefinedAvatars.rejected, (state, action) => {
-        state.avatars.loading = false;
-        state.avatars.error = action.error.message || "Failed to fetch avatars";
-      })
       .addCase(fetchWatchlist.pending, (state) => {
         if (!state.user.watchlist) {
           state.user.watchlist = { items: [], loading: false, error: null };
@@ -500,8 +458,6 @@ export const selectIsAnyModalOpen = (state: RootState) => state.user.interface?.
 export const selectWatchlistItems = (state: RootState) => state.user.user.watchlist?.items || [];
 export const selectWatchlistLoading = (state: RootState) => state.user.user.watchlist?.loading ?? true;
 export const selectWatchlistError = (state: RootState) => state.user.user.watchlist?.error || null;
-
-export const selectAvatars = createSelector([(state: RootState) => state.user.avatars], (avatars) => avatars);
 
 export const selectSortedWatchlistItems = createSelector([selectWatchlistItems], (items: WatchlistItem[]) => {
   if (!items.length) return [];

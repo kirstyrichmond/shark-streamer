@@ -63,13 +63,7 @@ Created by Kirsty Richmond.
    $ python -c "from app import create_app, db; app = create_app(); app.app_context().push(); db.create_all(); print('Database created!')"
    ```
 
-5. **Seed avatar data (optional)**
-
-   ```bash
-   $ python seed_avatars.py
-   ```
-
-6. **Start the backend server**
+5. **Start the backend server**
    ```bash
    $ python3 run.py
    ```

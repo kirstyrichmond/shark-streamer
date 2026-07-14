@@ -84,24 +84,6 @@ class WatchlistItem(db.Model):
     def __repr__(self):
         return f"<WatchlistItem {self.movie_title}>"
 
-class PredefinedAvatar(db.Model):
-    __tablename__ = 'predefined_avatars'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    image_url = db.Column(db.Text, nullable=False)
-    category = db.Column(db.String(50), default='default')
-    is_active = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=lambda: datetime.now(tz=timezone.utc))
-    
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'image_url': self.image_url,
-            'category': self.category
-        }
-
 class ViewingHistory(db.Model):
     __tablename__ = "viewing_history"
     
