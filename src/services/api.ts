@@ -26,13 +26,13 @@ export const getApiUrl = () => {
 
   const hostname = window.location.hostname;
 
-  if (hostname.includes("render.com") || hostname.includes("onrender.com")) {
-    const prodUrl = "https://shark-streamer-dcjp.onrender.com/api";
-    return prodUrl;
-  } else {
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
     const devUrl = "http://localhost:5001/api";
     return devUrl;
   }
+
+  const prodUrl = "https://shark-streamer-dcjp.onrender.com/api";
+  return prodUrl;
 };
 
 const API_BASE_URL = getApiUrl();
