@@ -16,7 +16,7 @@ import {
   CloseButtonContainer,
   HeaderContainer,
   ModalContainer,
-  MovieDescription,
+  MovieDescriptionText,
   MovieInfoContainer,
   PlayButton,
   PlayIcon,
@@ -41,6 +41,8 @@ import {
   TrailerTitle,
   TrailerDuration,
   MovieMetaRow,
+  MovieDescription,
+  MovieCast,
   MetaLabel,
   MetaValue,
   AgeRating,
@@ -367,7 +369,7 @@ export const MovieModal = ({
           <MovieInfo>
             <MovieInfoContainer>
               <MovieMetaRow>
-                <div>
+                <MovieDescription>
                   <DescriptionHeader>
                     <ReleaseDate>
                       { selectedMovie?.release_date?.substring(0, 4) ||
@@ -387,9 +389,9 @@ export const MovieModal = ({
                         </Duration>
                       ) }
                   </DescriptionHeader>
-                  <MovieDescription>{ selectedMovie?.overview || "No description available" }</MovieDescription>
-                </div>
-                <div>
+                  <MovieDescriptionText>{ selectedMovie?.overview || "No description available" }</MovieDescriptionText>
+                </MovieDescription>
+                <MovieCast>
                   { castAndCrew?.cast && (
                     <MovieDetails>
                       <MetaLabel>Cast:</MetaLabel>
@@ -411,7 +413,7 @@ export const MovieModal = ({
                     <MetaLabel>This { type2 === "tv" ? "show" : "film" } is:</MetaLabel>
                     <MetaValue>{ getAgeRating(movieDetailsWithRatings) || "Not Rated" }</MetaValue>
                   </MovieDetails>
-                </div>
+                </MovieCast>
               </MovieMetaRow>
               { similarMovies.length > 0 && (
                 <SimilarSection>

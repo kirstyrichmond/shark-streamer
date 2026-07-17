@@ -252,7 +252,7 @@ export const ReleaseDate = styled.p`
   align-items: center;
 `;
 
-export const MovieDescription = styled.p`
+export const MovieDescriptionText = styled.p`
   color: #e8e8e8;
   font-weight: 400;
   font-size: 0.85rem;
@@ -618,12 +618,26 @@ export const MovieMetaRow = styled.div`
 
   @media (min-width: ${breakpoints.tablet}px) {
     flex-direction: row;
-    gap: 12px;
+    gap: 24px;
   }
 
   & > span {
     color: #fff;
     font-size: 0.9rem;
+  }
+`;
+
+export const MovieDescription = styled.div`
+  @media (min-width: ${breakpoints.tablet}px) {
+    flex: 1.5;
+    min-width: 0;
+  }
+`;
+
+export const MovieCast = styled.div`
+  @media (min-width: ${breakpoints.tablet}px) {
+    flex: 1;
+    min-width: 0;
   }
 `;
 
@@ -638,6 +652,11 @@ export const MetaValue = styled.span`
   color: #e8e8e8;
   font-size: 0.75rem;
   flex: 1;
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
 `;
 
 export const AgeRating = styled.span`
