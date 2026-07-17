@@ -21,7 +21,7 @@ import { RoutePaths } from "../router/types";
 import { useAppDispatch } from "../app/store";
 
 export const ChangePlanScreen = () => {
-  const [loading, setLoading] = useState(false);
+  const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
   const plans = useSelector(selectPlans);
   const user = useSelector(selectUser);
   const dispatch = useAppDispatch();
@@ -39,19 +39,22 @@ export const ChangePlanScreen = () => {
   }
 
   const changePlan = useCallback(async (planId: string): Promise<void> => {
-    if (planId === user?.subscription_plan) return;
+    if (planId === user?.subscription_plan || loadingPlanId) return;
 
-    setLoading(true);
+    setLoadingPlanId(planId);
     if (user) {
-      await dispatch(
-        updateSubscription({
-          userId: user.id,
-          planId,
-        } as ChangePlanParams)
-      ).unwrap();
-      setLoading(false);
+      try {
+        await dispatch(
+          updateSubscription({
+            userId: user.id,
+            planId,
+          } as ChangePlanParams)
+        ).unwrap();
+      } finally {
+        setLoadingPlanId(null);
+      }
     }
-  }, [dispatch, user, setLoading]);
+  }, [dispatch, user, loadingPlanId]);
 
   return (
     <Container>
@@ -76,6 +79,7 @@ export const ChangePlanScreen = () => {
         ) : (
           plans.items.map((plan) => {
             const isCurrentPlan = plan.id === user?.subscription_plan;
+            const isLoading = loadingPlanId === plan.id;
 
             return (
               <PlanContainer key={ plan.id }>
@@ -85,13 +89,13 @@ export const ChangePlanScreen = () => {
                   <PlanPrice>{ plan.price }</PlanPrice>
                   <SubscribeButton
                     onClick={ () => changePlan(plan.id) }
-                    disabled={ isCurrentPlan || loading }
+                    disabled={ isCurrentPlan || isLoading }
                     style={ {
-                      opacity: isCurrentPlan || loading ? 0.6 : 1,
-                      cursor: isCurrentPlan || loading ? "not-allowed" : "pointer",
+                      opacity: isCurrentPlan || isLoading ? 0.6 : 1,
+                      cursor: isCurrentPlan || isLoading ? "not-allowed" : "pointer",
                     } }
                   >
-                    { isCurrentPlan ? "Current Plan" : loading ? "Updating..." : "Select Plan" }
+                    { isCurrentPlan ? "Current Plan" : isLoading ? "Updating..." : "Select Plan" }
                   </SubscribeButton>
                 </PlanActions>
               </PlanContainer>
