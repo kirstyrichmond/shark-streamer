@@ -364,6 +364,25 @@ export const MovieLogo = styled.img`
   }
 `;
 
+export const MovieLogoFallback = styled.h1`
+  max-width: 60%;
+  margin-bottom: 0.75rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.9);
+
+  @media (min-width: ${breakpoints.tablet}px) {
+    font-size: 2.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: ${breakpoints.desktop}px) {
+    font-size: 2.75rem;
+  }
+`;
+
 export const ModalButtonsContainer = styled.div`
   display: flex;
 `;

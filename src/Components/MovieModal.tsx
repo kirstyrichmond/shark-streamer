@@ -50,6 +50,7 @@ import {
   MovieInfo,
   DescriptionHeader,
   MovieLogo,
+  MovieLogoFallback,
 } from "../styles/MovieModal.styles";
 
 interface Video {
@@ -60,6 +61,22 @@ interface Video {
   site?: string;
   official?: boolean;
 }
+
+interface MovieLogoDisplayProps {
+  logos: Array<{ iso_639_1: string | null; file_path: string }>;
+  title?: string;
+  baseUrl: string;
+}
+
+const MovieLogoDisplay = ({ logos, title, baseUrl }: MovieLogoDisplayProps) => {
+  const logoPath = getEnglishLogo(logos);
+
+  if (!logoPath) {
+    return <MovieLogoFallback>{ title }</MovieLogoFallback>;
+  }
+
+  return <MovieLogo src={ `${baseUrl}${logoPath}` } alt={ title } />;
+};
 
 const customStyles = {
   content: {
@@ -308,10 +325,7 @@ export const MovieModal = ({
         ) }
         { videoEnded && <MovieCover movie={ selectedMovie } baseUrl={ base_url } /> }
         <ModalContent>
-          <MovieLogo
-            src={ `${base_url}${getEnglishLogo(logos)}` }
-            alt={ selectedMovie?.title || selectedMovie?.name }
-          />
+          <MovieLogoDisplay logos={ logos } title={ selectedMovie?.title || selectedMovie?.name } baseUrl={ base_url } />
           <MovieActionButtons
             movie={ selectedMovie }
             onPlayPause={ () => handlePlayPauseAction(() => setPlayTrailer(true)) }
@@ -347,10 +361,7 @@ export const MovieModal = ({
           ) : (
             <>
               <MovieCover movie={ selectedMovie } baseUrl={ base_url } />
-              <MovieLogo
-                src={ `${base_url}${getEnglishLogo(logos)}` }
-                alt={ selectedMovie?.title || selectedMovie?.name }
-              />
+              <MovieLogoDisplay logos={ logos } title={ selectedMovie?.title || selectedMovie?.name } baseUrl={ base_url } />
               <PlayButton
                 onClick={ (e) => {
                   setPlayTrailer(true);
