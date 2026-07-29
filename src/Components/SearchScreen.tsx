@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useSearch } from "../hooks/useSearch";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
-import { getApiUrl, Movie } from "../utils/movieUtils";
+import { getApiUrl, getMovieKey, Movie } from "../utils/movieUtils";
 import MovieCard from "./MovieCard";
 import { MovieModal } from "./MovieModal";
 import {
@@ -51,7 +51,7 @@ const SearchScreen = () => {
           <Content>
             { movies.map((movie) => (
               <MovieCard
-                key={ movie.id }
+                key={ getMovieKey(movie) }
                 movie={ movie }
                 onClick={ () => handleMovieClick(movie) }
                 isSelected={ selectedMovie?.id === movie.id }

@@ -58,6 +58,10 @@ export const getMovieTitle = (movie: Movie) => {
   return movie.title || movie.name || movie.original_title || movie.original_name || "Unknown Title";
 };
 
+export const getMovieKey = (movie: { id: number | string; media_type?: string }) => {
+  return `${movie.media_type}-${movie.id}`;
+};
+
 export const getMovieYear = (movie: Movie) => {
   const date = movie.release_date || movie.first_air_date;
   return date ? new Date(date).getFullYear() : null;
