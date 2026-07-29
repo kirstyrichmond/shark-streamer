@@ -88,6 +88,7 @@ export const Nav = () => {
     <Container style={ getBackgroundStyle() }>
       <div
         onClick={ () => {
+          if (user && (!user.profiles || user.profiles.length === 0)) return;
           toggleSearchBar(false);
           setShowMenu(false);
           dispatch(hideAuthScreens());
