@@ -64,6 +64,7 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: ./
+          vercel-version: latest
 
       - name: ✅ Frontend deployment complete
         run: echo "🎉 Frontend deployed to Vercel successfully!"
